@@ -1,0 +1,80 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { SignInFormCard } from "@/components/auth/SignInFormCard";
+import { validateReturnTo, parseExpiredParam } from "@/lib/auth/validation";
+import type { SessionExpiryReason } from "@/lib/auth/types";
+
+// Disable prerendering for this page as it needs to access query params
+export const prerender = false;
+
+// Parse and validate query parameters
+const urlParams = Astro.url.searchParams;
+const returnToParam = urlParams.get("returnTo");
+const expiredParam = urlParams.get("expired");
+
+const returnTo = validateReturnTo(returnToParam);
+const isExpired = parseExpiredParam(expiredParam);
+
+// Determine session expiry reason
+let sessionExpiryReason: SessionExpiryReason = null;
+if (isExpired) {
+  const reason = urlParams.get("reason");
+  if (reason === "timeout") {
+    sessionExpiryReason = "timeout";
+  } else if (reason === "signed-out") {
+    sessionExpiryReason = "signed-out";
+  } else {
+    sessionExpiryReason = "timeout"; // Default
+  }
+}
+
+// Pass Supabase credentials to client
+const supabaseUrl = import.meta.env.SUPABASE_URL;
+const supabaseKey = import.meta.env.SUPABASE_KEY;
+
+const pageTitle = "Logowanie | RouteCheck";
+---
+
+<Layout title={pageTitle}>
+  <main class="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted p-4">
+    <div class="w-full max-w-lg">
+      {/* Hero Section */}
+      <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold tracking-tight mb-2">
+          RouteCheck
+        </h1>
+        <p class="text-muted-foreground text-lg">
+          System raportowania tras i zarządzania flotą
+        </p>
+      </div>
+
+      {/* Sign In Form Card */}
+      <SignInFormCard
+        client:only="react"
+        returnTo={returnTo}
+        sessionExpiryReason={sessionExpiryReason}
+        supabaseUrl={supabaseUrl}
+        supabaseKey={supabaseKey}
+      />
+    </div>
+  </main>
+</Layout>
+
+<style>
+  /* Additional styling if needed */
+  main {
+    animation: fadeIn 0.3s ease-in;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+

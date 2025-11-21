@@ -16,6 +16,9 @@ interface ImportMetaEnv {
   readonly SUPABASE_SERVICE_ROLE_KEY: string;
   readonly PRIVATE_TOKEN_PEPPER: string;
   readonly OPENROUTER_API_KEY: string;
+  // Public env vars for client-side access (browser)
+  readonly PUBLIC_SUPABASE_URL: string;
+  readonly PUBLIC_SUPABASE_KEY: string;
   // more env variables...
 }
 

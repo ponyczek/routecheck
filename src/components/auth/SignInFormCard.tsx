@@ -57,7 +57,7 @@ export function SignInFormCard({ returnTo, sessionExpiryReason, supabaseUrl, sup
           />
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
-          <SignInFooterLinks supportEmail="support@routecheck.app" />
+          <SignInFooterLinks supportEmail="support@routecheck.app" returnTo={returnTo} />
         </CardFooter>
       </Card>
     </QueryProvider>

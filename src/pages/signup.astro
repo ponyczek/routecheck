@@ -1,0 +1,64 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { SignUpFormCard } from "@/components/auth/SignUpFormCard";
+import { validateReturnTo } from "@/lib/auth/validation";
+
+// Disable prerendering for this page as it needs to access query params
+export const prerender = false;
+
+// Parse and validate query parameters
+const urlParams = Astro.url.searchParams;
+const returnToParam = urlParams.get("returnTo");
+
+const returnTo = validateReturnTo(returnToParam);
+
+// Pass Supabase credentials to client
+const supabaseUrl = import.meta.env.SUPABASE_URL;
+const supabaseKey = import.meta.env.SUPABASE_KEY;
+
+const pageTitle = "Rejestracja | RouteCheck";
+---
+
+<Layout title={pageTitle}>
+  <main class="min-h-screen flex items-center justify-center bg-gradient-to-br from-background to-muted p-4">
+    <div class="w-full max-w-lg">
+      {/* Hero Section */}
+      <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold tracking-tight mb-2">
+          RouteCheck
+        </h1>
+        <p class="text-muted-foreground text-lg">
+          System raportowania tras i zarządzania flotą
+        </p>
+      </div>
+
+      {/* Sign Up Form Card */}
+      <SignUpFormCard
+        client:only="react"
+        returnTo={returnTo}
+        supabaseUrl={supabaseUrl}
+        supabaseKey={supabaseKey}
+      />
+    </div>
+  </main>
+</Layout>
+
+<style>
+  /* Fade-in animation for smooth page load */
+  main {
+    animation: fadeIn 0.3s ease-in;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+

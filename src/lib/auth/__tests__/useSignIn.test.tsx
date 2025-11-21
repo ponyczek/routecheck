@@ -35,10 +35,25 @@ describe("useSignIn", () => {
   beforeEach(() => {
     mockSupabase = createMockSupabase();
     vi.clearAllMocks();
+
+    // Mock global fetch for /api/auth/set-session endpoint
+    global.fetch = vi.fn((url) => {
+      if (url === "/api/auth/set-session") {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ success: true }),
+        } as Response);
+      }
+      return Promise.reject(new Error(`Unexpected fetch to ${url}`));
+    });
   });
 
   it("should successfully sign in with valid credentials", async () => {
-    const mockSession = { access_token: "token", user: { id: "123", email: "test@example.com" } };
+    const mockSession = { 
+      access_token: "token", 
+      refresh_token: "refresh_token",
+      user: { id: "123", email: "test@example.com" } 
+    };
     const mockData = { session: mockSession, user: mockSession.user };
 
     vi.mocked(mockSupabase.auth.signInWithPassword).mockResolvedValue({
@@ -184,7 +199,11 @@ describe("useSignIn", () => {
   });
 
   it("should use default /dashboard when returnTo is not provided", async () => {
-    const mockSession = { access_token: "token", user: { id: "123", email: "test@example.com" } };
+    const mockSession = { 
+      access_token: "token", 
+      refresh_token: "refresh_token",
+      user: { id: "123", email: "test@example.com" } 
+    };
     const mockData = { session: mockSession, user: mockSession.user };
 
     vi.mocked(mockSupabase.auth.signInWithPassword).mockResolvedValue({

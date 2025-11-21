@@ -1,0 +1,29 @@
+---
+import AuthenticatedLayout from "@/layouts/AuthenticatedLayout.astro";
+---
+
+<AuthenticatedLayout title="Kierowcy - RouteCheck" description="Lista kierowców w systemie RouteCheck">
+  <div class="container mx-auto space-y-6 p-6">
+    <!-- Page header -->
+    <div class="flex items-center justify-between">
+      <div class="space-y-2">
+        <h1 class="text-3xl font-bold tracking-tight">Kierowcy</h1>
+        <p class="text-muted-foreground">
+          Zarządzaj kierowcami w Twojej firmie.
+        </p>
+      </div>
+      <button class="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50" disabled>
+        Dodaj kierowcę
+      </button>
+    </div>
+
+    <!-- Coming soon message -->
+    <div class="rounded-lg border border-border bg-muted/50 p-8 text-center">
+      <h2 class="text-xl font-semibold">Moduł Kierowcy w przygotowaniu</h2>
+      <p class="mt-2 text-muted-foreground">
+        Lista kierowców i funkcje zarządzania będą dostępne wkrótce.
+      </p>
+    </div>
+  </div>
+</AuthenticatedLayout>
+

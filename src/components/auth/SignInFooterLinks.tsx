@@ -1,10 +1,22 @@
 interface SignInFooterLinksProps {
   supportEmail: string;
+  returnTo?: string;
 }
 
-export function SignInFooterLinks({ supportEmail }: SignInFooterLinksProps) {
+export function SignInFooterLinks({ supportEmail, returnTo }: SignInFooterLinksProps) {
+  const signUpUrl = returnTo ? `/signup?returnTo=${encodeURIComponent(returnTo)}` : "/signup";
+
   return (
     <div className="text-center space-y-2">
+      <p className="text-sm text-muted-foreground">
+        Nie masz konta?{" "}
+        <a
+          href={signUpUrl}
+          className="underline underline-offset-4 hover:text-primary transition-colors font-medium"
+        >
+          Zarejestruj się
+        </a>
+      </p>
       <p className="text-sm text-muted-foreground">
         <a
           href="/auth/reset"

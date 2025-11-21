@@ -11,6 +11,12 @@ interface UseSignInOptions {
 
 /**
  * Hook for handling sign-in with Supabase Auth
+ * 
+ * Process:
+ * 1. Sign in with Supabase Auth (session stored in localStorage)
+ * 2. Sync session to cookies (required for server-side middleware)
+ * 3. Handle success/error callbacks
+ * 
  * Uses React Query for state management
  */
 export function useSignIn({ supabase, returnTo, onSuccess, onError }: UseSignInOptions) {
@@ -58,6 +64,28 @@ export function useSignIn({ supabase, returnTo, onSuccess, onError }: UseSignInO
           message: "Nie udało się utworzyć sesji. Spróbuj ponownie.",
         };
         throw errorState;
+      }
+
+      // 2. Sync session to cookies for server-side middleware
+      // This is crucial: browser stores session in localStorage, but server needs it in cookies
+      const syncResponse = await fetch("/api/auth/set-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          access_token: authData.session.access_token,
+          refresh_token: authData.session.refresh_token,
+        }),
+      });
+
+      if (!syncResponse.ok) {
+        const errorData = await syncResponse.json().catch(() => ({}));
+        throw {
+          code: "session_sync_failed",
+          message: "Nie udało się zsynchronizować sesji. Spróbuj zalogować się ponownie.",
+          details: errorData,
+        } as AuthErrorState;
       }
 
       return authData;

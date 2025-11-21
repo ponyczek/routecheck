@@ -1,0 +1,37 @@
+---
+import AuthenticatedLayout from "@/layouts/AuthenticatedLayout.astro";
+---
+
+<AuthenticatedLayout title="Profil firmy - Ustawienia - RouteCheck" description="Ustawienia profilu firmy">
+  <div class="container mx-auto space-y-6 p-6">
+    <!-- Page header -->
+    <div class="space-y-2">
+      <h1 class="text-3xl font-bold tracking-tight">Profil firmy</h1>
+      <p class="text-muted-foreground">
+        Zarządzaj danymi swojej firmy.
+      </p>
+    </div>
+
+    <!-- Settings navigation tabs -->
+    <div class="flex gap-4 border-b border-border">
+      <a href="/settings/profile" class="border-b-2 border-primary px-4 py-2 text-sm font-medium text-primary">
+        Profil
+      </a>
+      <a href="/settings/alerts" class="border-b-2 border-transparent px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+        Alerty
+      </a>
+      <a href="/settings/account" class="border-b-2 border-transparent px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+        Konto
+      </a>
+    </div>
+
+    <!-- Coming soon message -->
+    <div class="rounded-lg border border-border bg-muted/50 p-8 text-center">
+      <h2 class="text-xl font-semibold">Ustawienia profilu w przygotowaniu</h2>
+      <p class="mt-2 text-muted-foreground">
+        Możliwość edycji danych firmy będzie dostępna wkrótce.
+      </p>
+    </div>
+  </div>
+</AuthenticatedLayout>
+

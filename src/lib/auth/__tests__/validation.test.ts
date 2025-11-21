@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { signInFormSchema, validateReturnTo, parseExpiredParam } from "../validation";
+import { signInFormSchema, signUpFormSchema, validateReturnTo, parseExpiredParam } from "../validation";
 
 describe("signInFormSchema", () => {
   it("validates correct email and password", () => {
@@ -170,6 +170,311 @@ describe("parseExpiredParam", () => {
 
   it("returns false for random string", () => {
     expect(parseExpiredParam("random")).toBe(false);
+  });
+});
+
+describe("signUpFormSchema", () => {
+  it("validates correct sign up data", () => {
+    const result = signUpFormSchema.safeParse({
+      companyName: "Test Company",
+      email: "test@example.com",
+      password: "SecurePass123",
+      confirmPassword: "SecurePass123",
+    });
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.companyName).toBe("Test Company");
+      expect(result.data.email).toBe("test@example.com");
+    }
+  });
+
+  it("transforms company name by trimming whitespace", () => {
+    const result = signUpFormSchema.safeParse({
+      companyName: "  Test Company  ",
+      email: "test@example.com",
+      password: "SecurePass123",
+      confirmPassword: "SecurePass123",
+    });
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.companyName).toBe("Test Company");
+    }
+  });
+
+  it("transforms email to lowercase and trims whitespace", () => {
+    const result = signUpFormSchema.safeParse({
+      companyName: "Test Company",
+      email: "TEST@EXAMPLE.COM",
+      password: "SecurePass123",
+      confirmPassword: "SecurePass123",
+    });
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.email).toBe("test@example.com");
+    }
+  });
+
+  describe("companyName validation", () => {
+    it("rejects empty company name", () => {
+      const result = signUpFormSchema.safeParse({
+        companyName: "",
+        email: "test@example.com",
+        password: "SecurePass123",
+        confirmPassword: "SecurePass123",
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.issues[0].path[0]).toBe("companyName");
+        expect(result.error.issues[0].message).toContain("Podaj nazwę firmy");
+      }
+    });
+
+    it("rejects company name with only 1 character", () => {
+      const result = signUpFormSchema.safeParse({
+        companyName: "T",
+        email: "test@example.com",
+        password: "SecurePass123",
+        confirmPassword: "SecurePass123",
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const companyNameError = result.error.issues.find((i) => i.path[0] === "companyName");
+        expect(companyNameError?.message).toContain("co najmniej 2 znaki");
+      }
+    });
+
+    it("accepts company name with exactly 2 characters", () => {
+      const result = signUpFormSchema.safeParse({
+        companyName: "AB",
+        email: "test@example.com",
+        password: "SecurePass123",
+        confirmPassword: "SecurePass123",
+      });
+
+      expect(result.success).toBe(true);
+    });
+
+    it("rejects company name longer than 100 characters", () => {
+      const result = signUpFormSchema.safeParse({
+        companyName: "A".repeat(101),
+        email: "test@example.com",
+        password: "SecurePass123",
+        confirmPassword: "SecurePass123",
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const companyNameError = result.error.issues.find((i) => i.path[0] === "companyName");
+        expect(companyNameError?.message).toContain("za długa");
+      }
+    });
+
+    it("accepts company name with exactly 100 characters", () => {
+      const result = signUpFormSchema.safeParse({
+        companyName: "A".repeat(100),
+        email: "test@example.com",
+        password: "SecurePass123",
+        confirmPassword: "SecurePass123",
+      });
+
+      expect(result.success).toBe(true);
+    });
+  });
+
+  describe("email validation", () => {
+    it("rejects invalid email format", () => {
+      const result = signUpFormSchema.safeParse({
+        companyName: "Test Company",
+        email: "invalid-email",
+        password: "SecurePass123",
+        confirmPassword: "SecurePass123",
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const emailError = result.error.issues.find((i) => i.path[0] === "email");
+        expect(emailError?.message).toContain("poprawny adres e-mail");
+      }
+    });
+
+    it("rejects empty email", () => {
+      const result = signUpFormSchema.safeParse({
+        companyName: "Test Company",
+        email: "",
+        password: "SecurePass123",
+        confirmPassword: "SecurePass123",
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const emailError = result.error.issues.find((i) => i.path[0] === "email");
+        expect(emailError?.message).toContain("Podaj adres e-mail");
+      }
+    });
+
+    it("rejects email longer than 150 characters", () => {
+      const longEmail = "a".repeat(150) + "@example.com";
+      const result = signUpFormSchema.safeParse({
+        companyName: "Test Company",
+        email: longEmail,
+        password: "SecurePass123",
+        confirmPassword: "SecurePass123",
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const emailError = result.error.issues.find((i) => i.path[0] === "email");
+        expect(emailError?.message).toContain("za długi");
+      }
+    });
+  });
+
+  describe("password validation", () => {
+    it("rejects password shorter than 8 characters", () => {
+      const result = signUpFormSchema.safeParse({
+        companyName: "Test Company",
+        email: "test@example.com",
+        password: "Pass123",
+        confirmPassword: "Pass123",
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const passwordError = result.error.issues.find((i) => i.path[0] === "password");
+        expect(passwordError?.message).toContain("min. 8 znaków");
+      }
+    });
+
+    it("accepts password with exactly 8 characters", () => {
+      const result = signUpFormSchema.safeParse({
+        companyName: "Test Company",
+        email: "test@example.com",
+        password: "Pass1234",
+        confirmPassword: "Pass1234",
+      });
+
+      expect(result.success).toBe(true);
+    });
+
+    it("rejects password longer than 128 characters", () => {
+      const longPassword = "A1a" + "a".repeat(126);
+      const result = signUpFormSchema.safeParse({
+        companyName: "Test Company",
+        email: "test@example.com",
+        password: longPassword,
+        confirmPassword: longPassword,
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const passwordError = result.error.issues.find((i) => i.path[0] === "password");
+        expect(passwordError?.message).toContain("za długie");
+      }
+    });
+
+    it("rejects password without uppercase letter", () => {
+      const result = signUpFormSchema.safeParse({
+        companyName: "Test Company",
+        email: "test@example.com",
+        password: "password123",
+        confirmPassword: "password123",
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const passwordError = result.error.issues.find((i) => i.path[0] === "password");
+        expect(passwordError?.message).toContain("małe i wielkie litery oraz cyfry");
+      }
+    });
+
+    it("rejects password without lowercase letter", () => {
+      const result = signUpFormSchema.safeParse({
+        companyName: "Test Company",
+        email: "test@example.com",
+        password: "PASSWORD123",
+        confirmPassword: "PASSWORD123",
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const passwordError = result.error.issues.find((i) => i.path[0] === "password");
+        expect(passwordError?.message).toContain("małe i wielkie litery oraz cyfry");
+      }
+    });
+
+    it("rejects password without digit", () => {
+      const result = signUpFormSchema.safeParse({
+        companyName: "Test Company",
+        email: "test@example.com",
+        password: "PasswordOnly",
+        confirmPassword: "PasswordOnly",
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const passwordError = result.error.issues.find((i) => i.path[0] === "password");
+        expect(passwordError?.message).toContain("małe i wielkie litery oraz cyfry");
+      }
+    });
+
+    it("accepts password with special characters", () => {
+      const result = signUpFormSchema.safeParse({
+        companyName: "Test Company",
+        email: "test@example.com",
+        password: "SecureP@ss123!",
+        confirmPassword: "SecureP@ss123!",
+      });
+
+      expect(result.success).toBe(true);
+    });
+  });
+
+  describe("confirmPassword validation", () => {
+    it("rejects when passwords don't match", () => {
+      const result = signUpFormSchema.safeParse({
+        companyName: "Test Company",
+        email: "test@example.com",
+        password: "SecurePass123",
+        confirmPassword: "DifferentPass456",
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const confirmError = result.error.issues.find((i) => i.path[0] === "confirmPassword");
+        expect(confirmError?.message).toContain("Hasła muszą być takie same");
+      }
+    });
+
+    it("rejects empty confirm password", () => {
+      const result = signUpFormSchema.safeParse({
+        companyName: "Test Company",
+        email: "test@example.com",
+        password: "SecurePass123",
+        confirmPassword: "",
+      });
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        const confirmError = result.error.issues.find((i) => i.path[0] === "confirmPassword");
+        expect(confirmError?.message).toContain("Potwierdź hasło");
+      }
+    });
+
+    it("accepts when passwords match exactly", () => {
+      const result = signUpFormSchema.safeParse({
+        companyName: "Test Company",
+        email: "test@example.com",
+        password: "SecurePass123",
+        confirmPassword: "SecurePass123",
+      });
+
+      expect(result.success).toBe(true);
+    });
   });
 });
 

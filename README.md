@@ -41,9 +41,9 @@ Missing information:
 - Confirmed license; currently unspecified.
   </readme_planning>
 
-## RouteLog MVP
+## RouteCheck MVP
 
-![Status](https://img.shields.io/badge/status-MVP%20complete-green) ![Node](https://img.shields.io/badge/node-22.14.0-43853d) ![AI](https://img.shields.io/badge/AI-Mock%20(Rule--Based)-yellow) ![Tests](https://img.shields.io/badge/tests-52%20passing-success) ![CI](https://img.shields.io/badge/CI-automated-brightgreen)
+![Status](https://img.shields.io/badge/status-MVP%20complete-green) ![Node](https://img.shields.io/badge/node-22.14.0-43853d) ![AI](https://img.shields.io/badge/AI-Mock%20(Rule--Based)-yellow) ![Tests](https://img.shields.io/badge/tests-650%20passing-success) ![CI](https://img.shields.io/badge/CI-automated-brightgreen)
 
 ## Table of Contents
 
@@ -58,7 +58,7 @@ Missing information:
 
 ## Project Description
 
-RouteLog is a lightweight SaaS platform that helps small and mid-sized transport companies collect standardized daily reports from drivers. Each driver receives a single-use email link, submits a one-click “All OK” update or a more detailed problem report, and the system generates an AI-powered summary with a risk rating for dispatchers. Dispatchers gain a live “Today” dashboard, a rolling seven-day history, and CSV export tools geared toward high conversion from link to full report.
+RouteCheck is a lightweight SaaS platform that helps small and mid-sized transport companies collect standardized daily reports from drivers. Each driver receives a single-use email link, submits a one-click “All OK” update or a more detailed problem report, and the system generates an AI-powered summary with a risk rating for dispatchers. Dispatchers gain a live “Today” dashboard, a rolling seven-day history, and CSV export tools geared toward high conversion from link to full report.
 
 ## Tech Stack
 
@@ -534,13 +534,13 @@ npm test
 
 ✅ **Expected output**:
 ```
- ✓ src/lib/ai/__tests__/mockAiService.test.ts (10)
- ✓ src/lib/auth/__tests__/validation.test.ts (8)
- ✓ src/lib/public-report/__tests__/validation.test.ts (12)
- ... (52 tests total)
- 
- Test Files  18 passed (18)
-      Tests  52 passed (52)
+ ✓ src/lib/ai/__tests__/mockAiService.test.ts (9 tests)
+ ✓ src/components/dashboard/__tests__/RiskBadge.test.tsx (12 tests)
+ ✓ src/lib/auth/__tests__/validation.test.ts (47 tests)
+ ... (650 tests total across 53 files)
+
+ Test Files  53 passed (53)
+      Tests  650 passed (650)
 ```
 
 #### 8.2 E2E Tests
@@ -746,14 +746,12 @@ npm run generate-test-token
 
 - Shared-company authentication with registrational flow.
 - CRUD management for drivers with vehicle number uniqueness.
-- Daily cron-driven emails dispatching 24-hour single-use tokens.
-- Public report form with happy-path “All OK” shortcut and problem workflow capturing delays, reasons, damages, blockers, and partial completion.
+- Public report form with happy-path "All OK" shortcut and problem workflow capturing delays, reasons, damages, blockers, and partial completion.
 - Ten-minute self-edit window for drivers with regenerated AI summaries.
-- AI-generated Polish summaries, four-level risk classifications, and controlled cause tagging.
+- Mock AI-generated Polish summaries, four-level risk classifications, and controlled cause tagging.
 - Dispatcher-facing Today dashboard (auto-refresh) with pending section and risk badges.
-- Seven-day history view with sorting/filtering and detailed drill-down.
-- Manual dispatcher report entry, mirrored to AI pipeline and audit logs.
-- Email alert when expected reports are missing after 24 hours.
+- Reports history view with sorting/filtering and detailed drill-down.
+- Manual dispatcher report entry, mirrored to AI pipeline.
 - CSV export by date range, containing form fields and AI outputs.
 - Telemetry of form completion time and link conversion (PII-free).
 - GitHub Actions CI workflow running at least one automated test per push or PR.
@@ -769,7 +767,7 @@ npm run generate-test-token
 
 ## Project Status
 
-![CI Status](https://img.shields.io/badge/CI-passing-brightgreen) ![Tests](https://img.shields.io/badge/tests-52%20passing-success) ![Coverage](https://img.shields.io/badge/coverage-85%25-green)
+![CI Status](https://img.shields.io/badge/CI-passing-brightgreen) ![Tests](https://img.shields.io/badge/tests-650%20passing-success) ![Coverage](https://img.shields.io/badge/coverage-85%25-green)
 
 ### Current Stage: MVP Complete ✅
 
@@ -783,15 +781,16 @@ npm run generate-test-token
 - ✅ Reports History (filtering, sorting, pagination)
 - ✅ CSV Export
 - ✅ Mock AI Summaries (rule-based risk assessment)
-- ✅ Telemetry tracking
+- ✅ Mock Telemetry tracking
 - ✅ Unit Tests (52 tests)
 - ✅ E2E Tests (Playwright)
 - ✅ CI/CD Pipeline (GitHub Actions)
 
 **MVP Simplifications:**
 - ⚠️ AI uses mock/rule-based logic (not OpenRouter API)
-- ⚠️ Email links generated manually via script (no cron automation)
-- ⚠️ No 24h missing report alerts
+- ⚠️ Email links generated manually via script (no automated cron emails)
+- ⚠️ No email alerts for missing reports after 24h
+- ⚠️ No audit logs for report modifications
 
 **Production Ready:** No - requires email automation and real AI integration
 
@@ -804,10 +803,10 @@ npm run generate-test-token
 - CI pipeline: Always green ✅
 
 **Next Steps for Production:**
-1. Integrate Resend for automated email sending
+1. Integrate email service (Resend/SendGrid) for automated email sending
 2. Setup daily cron job for link generation
 3. Add OpenRouter AI for real summaries
-4. Deploy to Vercel/production
+4. Deploy to DigitalOcean with Docker
 5. Setup monitoring and alerts
 
 Refer to:

@@ -76,7 +76,6 @@ export function PublicReportForm({ token, onSuccess, onError }: PublicReportForm
     formState: { errors },
     watch,
     setValue,
-    reset,
   } = form;
   const watchIsProblem = watch("isProblem");
 

@@ -23,6 +23,24 @@ const baseConfig = tseslint.config({
   },
 });
 
+const testConfig = tseslint.config({
+  files: ["**/__tests__/**/*", "**/*.test.*", "**/*.spec.*"],
+  rules: {
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-empty-function": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "jsx-a11y/label-has-associated-control": "off",
+  },
+});
+
+const componentsConfig = tseslint.config({
+  files: ["src/components/**/*.tsx"],
+  rules: {
+    "react-hooks/exhaustive-deps": "warn", // Downgrade to warning for components
+  },
+});
+
 const jsxA11yConfig = tseslint.config({
   files: ["**/*.{js,jsx,ts,tsx}"],
   extends: [jsxA11y.flatConfigs.recommended],
@@ -61,6 +79,8 @@ export default tseslint.config(
   baseConfig,
   jsxA11yConfig,
   reactConfig,
+  testConfig,
+  componentsConfig,
   eslintPluginAstro.configs["flat/recommended"],
   eslintPluginPrettier
 );

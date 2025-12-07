@@ -1,13 +1,7 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -98,7 +92,7 @@ export function AssignmentFormModal({
       // onClose will be called by parent after successful submit
     } catch (error: unknown) {
       // Błąd 409 (konflikt) wyświetlamy w formularzu jako Alert
-      if (error && typeof error === 'object' && 'code' in error && error.code === "ASSIGNMENT_OVERLAP") {
+      if (error && typeof error === "object" && "code" in error && error.code === "ASSIGNMENT_OVERLAP") {
         setConflictError(error as AssignmentConflictError);
       }
       // Inne błędy są obsługiwane przez toast w hooku mutacji

@@ -6,7 +6,7 @@ import { ReportRiskBadge } from "../ReportRiskBadge";
 import { ReportStatusBadge } from "../ReportStatusBadge";
 import { DriverSelect } from "../DriverSelect";
 import { DateRangePicker } from "../DateRangePicker";
-import type { ReportRiskLevel, ReportRouteStatus } from "@/types";
+import type { ReportRiskLevel } from "@/types";
 
 // Helper to wrap components with QueryClient
 const createWrapper = () => {

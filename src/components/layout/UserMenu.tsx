@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import type { UserDTO, CompanyDTO } from "@/types";
+import type { CompanyDTO } from "@/types";
 import { cn } from "@/lib/utils";
 
 interface UserMenuProps {

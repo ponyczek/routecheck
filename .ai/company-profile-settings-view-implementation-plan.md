@@ -929,7 +929,7 @@ try {
 - `UseUpdateCompanyOptions`
 - `CompanyApiError`
 
-1.4. Utwórz plik `src/lib/settings/validation.ts` ze schematem Zod:
+  1.4. Utwórz plik `src/lib/settings/validation.ts` ze schematem Zod:
 
 - `editCompanyNameSchema`
 
@@ -954,12 +954,12 @@ export const companyKeys = {
 - `queryFn`: wywołanie `GET /api/companies/me`
 - `staleTime: 5 * 60 * 1000` (5 minut)
 
-2.4. Zaimplementuj `useUpdateCompany()` mutation:
+  2.4. Zaimplementuj `useUpdateCompany()` mutation:
 
 - `mutationFn`: wywołanie `PATCH /api/companies/me`
 - `onSuccess`: aktualizacja cache (`setQueryData` + opcjonalnie `invalidateQueries`)
 
-2.5. Dodaj obsługę błędów HTTP w obu funkcjach (sprawdź `response.ok`, parsuj JSON error)
+  2.5. Dodaj obsługę błędów HTTP w obu funkcjach (sprawdź `response.ok`, parsuj JSON error)
 
 ---
 
@@ -989,13 +989,13 @@ export const companyKeys = {
 - Renderuj nagłówek z h1 i opcjonalnym paragrafem
 - Użyj Tailwind dla stylowania
 
-4.3. Utwórz `src/components/settings/HelpLink.tsx`:
+  4.3. Utwórz `src/components/settings/HelpLink.tsx`:
 
 - Props: `href`, `children?`
 - Renderuj link z ikoną `HelpCircleIcon` z `lucide-react`
 - Użyj stylów shadcn/ui dla linków
 
-4.4. Utwórz `src/components/settings/InfoRow.tsx`:
+  4.4. Utwórz `src/components/settings/InfoRow.tsx`:
 
 - Props: `label`, `value`, `copyable?`
 - Renderuj wiersz klucz-wartość
@@ -1021,7 +1021,7 @@ export const companyKeys = {
   - Data utworzenia: `formatDate(company.createdAt)` (użyj helpera do formatowania daty)
 - `CardFooter` z `HelpLink`
 
-5.5. Utwórz helper do formatowania daty:
+  5.5. Utwórz helper do formatowania daty:
 
 ```typescript
 // src/lib/utils/date.ts
@@ -1051,7 +1051,7 @@ export function formatDate(isoString: string): string {
 - `Button` z `@/components/ui/button`
 - `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent` z `@/components/ui/card`
 
-6.5. Renderuj formularz w strukturze:
+  6.5. Renderuj formularz w strukturze:
 
 ```tsx
 <Card>
@@ -1367,7 +1367,7 @@ export const PATCH: APIRoute = async ({ request, locals }) => {
 - Wprowadź nazwę za długą (>100 znaków) → sprawdź komunikat walidacji
 - Nie zmieniaj nazwy → sprawdź, czy przycisk jest wyłączony
 
-11.7. Symuluj błędy API (np. odłącz sieć) → sprawdź toasty błędów
+  11.7. Symuluj błędy API (np. odłącz sieć) → sprawdź toasty błędów
 
 ---
 
@@ -1377,13 +1377,13 @@ export const PATCH: APIRoute = async ({ request, locals }) => {
 
 - Przetestuj schema `editCompanyNameSchema` dla różnych przypadków (poprawne, za krótkie, za długie, puste)
 
-12.2. Utwórz `src/components/settings/__tests__/EditCompanyNameForm.test.tsx`:
+  12.2. Utwórz `src/components/settings/__tests__/EditCompanyNameForm.test.tsx`:
 
 - Przetestuj renderowanie formularza
 - Przetestuj walidację (używając `@testing-library/react`)
 - Przetestuj submit i obsługę błędów (mockuj `useUpdateCompany`)
 
-12.3. Uruchom testy: `npm test`
+  12.3. Uruchom testy: `npm test`
 
 ---
 

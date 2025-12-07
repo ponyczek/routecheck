@@ -34,17 +34,18 @@ export function DriverForm({ defaultValues, onSubmit, isSubmitting }: DriverForm
   const handleSubmit = async (data: DriverFormData) => {
     try {
       await onSubmit(data);
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Obsługa błędów z API
       // Np. 409 Conflict dla duplikatu emaila
-      if (error.response?.status === 409) {
+      const apiError = error as any;
+      if (apiError?.response?.status === 409) {
         form.setError("email", {
           type: "manual",
           message: "Kierowca z tym adresem e-mail już istnieje",
         });
-      } else if (error.response?.data?.errors) {
+      } else if (apiError?.response?.data?.errors) {
         // Mapowanie błędów walidacji z API na pola formularza
-        Object.entries(error.response.data.errors).forEach(([field, message]) => {
+        Object.entries(apiError.response.data.errors).forEach(([field, message]) => {
           form.setError(field as keyof DriverFormData, {
             type: "manual",
             message: message as string,

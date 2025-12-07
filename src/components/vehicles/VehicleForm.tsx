@@ -32,17 +32,18 @@ export function VehicleForm({ defaultValues, onSubmit, isSubmitting }: VehicleFo
   const handleSubmit = async (data: VehicleFormData) => {
     try {
       await onSubmit(data);
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Obsługa błędów z API
       // Np. 409 Conflict dla duplikatu numeru rejestracyjnego
-      if (error.response?.status === 409) {
+      const apiError = error as any;
+      if (apiError?.response?.status === 409) {
         form.setError("registrationNumber", {
           type: "manual",
           message: "Pojazd o tym numerze rejestracyjnym już istnieje",
         });
-      } else if (error.response?.data?.errors) {
+      } else if (apiError?.response?.data?.errors) {
         // Mapowanie błędów walidacji z API na pola formularza
-        Object.entries(error.response.data.errors).forEach(([field, message]) => {
+        Object.entries(apiError.response.data.errors).forEach(([field, message]) => {
           form.setError(field as keyof VehicleFormData, {
             type: "manual",
             message: message as string,

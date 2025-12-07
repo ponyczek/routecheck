@@ -7,7 +7,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings 250",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "test": "vitest run",

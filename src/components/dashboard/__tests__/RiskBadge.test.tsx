@@ -1,7 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { RiskBadge } from "../RiskBadge";
-import type { ReportRiskLevel } from "@/types";
 
 describe("RiskBadge", () => {
   it("renders with NONE level", () => {

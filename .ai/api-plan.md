@@ -223,7 +223,7 @@ Business rule: no overlapping date ranges per driver or per vehicle.
   - Description: Dashboard “Today” aggregation: submitted vs pending per active drivers, risk breakdown.
   - Query: `?includePending=true|false` (default true), `?timezone=Europe/Warsaw` (for local date calculation if needed).
 
-- GET `/api/reports/export.csv`
+- GET `/api/reports/export`
   - Description: CSV export (US-016).
   - Query: `?from=YYYY-MM-DD&to=YYYY-MM-DD&includeAi=true|false&includeTags=true|false`
   - Response: `text/csv` with filename `reports_<company>_<YYYYMMDD>.csv`.

@@ -1,17 +1,75 @@
 ---
 import AuthenticatedLayout from "@/layouts/AuthenticatedLayout.astro";
+import { AlertsAndTelemetryViewWithProvider } from "@/components/settings/AlertsAndTelemetryViewWithProvider";
+import type { TelemetryAggregatesDTO, EmailLogDTO } from "@/types";
+
+// Get Supabase client from middleware (Astro.locals is set by middleware)
+const supabase = Astro.locals.supabase;
+
+// Check authentication
+const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
+if (sessionError || !session) {
+  return Astro.redirect("/signin?returnUrl=/settings/alerts");
+}
+
+// Fetch initial data server-side (optional - for better UX)
+let telemetryData: TelemetryAggregatesDTO | null = null;
+let emailLogs: EmailLogDTO[] | null = null;
+
+// Fetch telemetry data
+try {
+  const to = new Date();
+  const from = new Date();
+  from.setDate(from.getDate() - 7);
+  
+  const telemetryParams = new URLSearchParams({
+    eventType: "FORM_SUBMIT",
+    bucket: "day",
+    from: from.toISOString().split("T")[0],
+    to: to.toISOString().split("T")[0],
+  });
+
+  const telemetryResponse = await fetch(`${Astro.url.origin}/api/telemetry?${telemetryParams}`, {
+    headers: {
+      Cookie: Astro.request.headers.get("Cookie") || "",
+    },
+  });
+
+  if (telemetryResponse.ok) {
+    telemetryData = await telemetryResponse.json();
+  }
+} catch (err) {
+  console.error("Failed to fetch telemetry data:", err);
+  // Non-critical error - component will fetch again client-side
+}
+
+// Fetch email logs
+try {
+  const logsParams = new URLSearchParams({
+    limit: "10",
+    sortBy: "sentAt",
+    sortDir: "desc",
+  });
+
+  const logsResponse = await fetch(`${Astro.url.origin}/api/email-logs?${logsParams}`, {
+    headers: {
+      Cookie: Astro.request.headers.get("Cookie") || "",
+    },
+  });
+
+  if (logsResponse.ok) {
+    const logsData = await logsResponse.json();
+    emailLogs = logsData.items;
+  }
+} catch (err) {
+  console.error("Failed to fetch email logs:", err);
+  // Non-critical error - component will fetch again client-side
+}
 ---
 
-<AuthenticatedLayout title="Alerty - Ustawienia - RouteCheck" description="Konfiguracja alertów i powiadomień">
+<AuthenticatedLayout title="Alerty i Telemetria - Ustawienia - RouteCheck" description="Zarządzaj powiadomieniami e-mail i przeglądaj metryki użyteczności formularza kierowcy">
   <div class="container mx-auto space-y-6 p-6">
-    <!-- Page header -->
-    <div class="space-y-2">
-      <h1 class="text-3xl font-bold tracking-tight">Alerty i powiadomienia</h1>
-      <p class="text-muted-foreground">
-        Skonfiguruj zasady wysyłania alertów e-mail.
-      </p>
-    </div>
-
     <!-- Settings navigation tabs -->
     <div class="flex gap-4 border-b border-border">
       <a href="/settings/profile" class="border-b-2 border-transparent px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
@@ -25,13 +83,11 @@ import AuthenticatedLayout from "@/layouts/AuthenticatedLayout.astro";
       </a>
     </div>
 
-    <!-- Coming soon message -->
-    <div class="rounded-lg border border-border bg-muted/50 p-8 text-center">
-      <h2 class="text-xl font-semibold">Konfiguracja alertów w przygotowaniu</h2>
-      <p class="mt-2 text-muted-foreground">
-        Możliwość skonfigurowania alertów e-mail będzie dostępna wkrótce.
-      </p>
-    </div>
+    <!-- Alerts and Telemetry view -->
+    <AlertsAndTelemetryViewWithProvider
+      client:load
+      initialTelemetryData={telemetryData}
+      initialEmailLogs={emailLogs}
+    />
   </div>
 </AuthenticatedLayout>
-

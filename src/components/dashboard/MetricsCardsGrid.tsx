@@ -7,7 +7,10 @@ import { Users, FileCheck, Clock, AlertTriangle } from "lucide-react";
 export interface MetricsCardsGridProps {
   metrics: MetricsData;
   isLoading?: boolean;
+  onActiveDriversClick?: () => void;
+  onSubmittedClick?: () => void;
   onPendingClick?: () => void;
+  onProblemsClick?: () => void;
   className?: string;
 }
 
@@ -20,12 +23,20 @@ export interface MetricsCardsGridProps {
  * - Mobile (<768px): 1 column
  *
  * Cards:
- * 1. Total Active Drivers (Users icon)
- * 2. Submitted Reports (FileCheck icon)
- * 3. Pending Reports (Clock icon, clickable)
- * 4. Risk Breakdown (handled by RiskBreakdownCard - separate component)
+ * 1. Total Active Drivers (Users icon) - clickable → navigates to /drivers
+ * 2. Submitted Reports (FileCheck icon) - clickable → navigates to /reports (today filter)
+ * 3. Pending Reports (Clock icon) - clickable → scrolls to pending section
+ * 4. Problems (AlertTriangle icon) - clickable → navigates to /reports (risk filter)
  */
-export function MetricsCardsGrid({ metrics, isLoading = false, onPendingClick, className }: MetricsCardsGridProps) {
+export function MetricsCardsGrid({ 
+  metrics, 
+  isLoading = false, 
+  onActiveDriversClick,
+  onSubmittedClick,
+  onPendingClick, 
+  onProblemsClick,
+  className 
+}: MetricsCardsGridProps) {
   return (
     <div
       className={cn(
@@ -39,6 +50,8 @@ export function MetricsCardsGrid({ metrics, isLoading = false, onPendingClick, c
         title="Aktywni kierowcy"
         value={metrics.totalActiveDrivers}
         icon={<Users className="size-5" />}
+        description={onActiveDriversClick ? "Kliknij aby zobaczyć listę kierowców" : undefined}
+        onClick={onActiveDriversClick}
         isLoading={isLoading}
       />
 
@@ -46,6 +59,8 @@ export function MetricsCardsGrid({ metrics, isLoading = false, onPendingClick, c
         title="Wysłane raporty"
         value={metrics.submittedCount}
         icon={<FileCheck className="size-5" />}
+        description={onSubmittedClick ? "Kliknij aby zobaczyć dzisiejsze raporty" : undefined}
+        onClick={onSubmittedClick}
         isLoading={isLoading}
         variant="accent"
       />
@@ -67,6 +82,8 @@ export function MetricsCardsGrid({ metrics, isLoading = false, onPendingClick, c
           metrics.riskBreakdown.high
         }
         icon={<AlertTriangle className="size-5" />}
+        description={onProblemsClick ? "Kliknij aby filtrować raporty z ryzykiem" : undefined}
+        onClick={onProblemsClick}
         isLoading={isLoading}
       />
     </div>

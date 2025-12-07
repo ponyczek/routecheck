@@ -1,5 +1,9 @@
+# dependencies
+node_modules/
+
 # build output
 dist/
+.astro/
 
 # generated types
 .astro/
@@ -12,13 +16,36 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+lerna-debug.log*
 
 # environment variables
 .env
 .env.production
+.env.local
+.env.test
 
 # macOS-specific files
 .DS_Store
 
-# jetbrains setting folder
+# JetBrains IDEs
 .idea/
+
+# VS Code
+.vscode/
+!.vscode/extensions.json
+
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
+
+# Testing
+coverage/
+.vitest/
+
+# Editor directories and files
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

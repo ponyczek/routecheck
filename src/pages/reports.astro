@@ -1,39 +1,9 @@
 ---
 import AuthenticatedLayout from "@/layouts/AuthenticatedLayout.astro";
+import { ReportsViewWithProvider } from "@/components/reports";
 ---
 
 <AuthenticatedLayout title="Raporty - RouteCheck" description="Historia raportów kierowców">
-  <div class="container mx-auto space-y-6 p-6">
-    <!-- Page header -->
-    <div class="flex items-center justify-between">
-      <div class="space-y-2">
-        <h1 class="text-3xl font-bold tracking-tight">Raporty</h1>
-        <p class="text-muted-foreground">
-          Przeglądaj historię raportów kierowców.
-        </p>
-      </div>
-    </div>
-
-    <!-- Filters placeholder -->
-    <div class="flex gap-4">
-      <input
-        type="text"
-        placeholder="Szukaj..."
-        class="flex h-10 w-full max-w-sm rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-        disabled
-      />
-      <select class="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50" disabled>
-        <option>Wszystkie statusy</option>
-      </select>
-    </div>
-
-    <!-- Coming soon message -->
-    <div class="rounded-lg border border-border bg-muted/50 p-8 text-center">
-      <h2 class="text-xl font-semibold">Historia raportów w przygotowaniu</h2>
-      <p class="mt-2 text-muted-foreground">
-        Lista raportów i funkcje filtrowania będą dostępne wkrótce.
-      </p>
-    </div>
-  </div>
+  <ReportsViewWithProvider client:load />
 </AuthenticatedLayout>
 

@@ -199,7 +199,6 @@ export const POST: APIRoute = async (context) => {
     };
 
     const duration = Date.now() - startTime;
-    console.log(`[ReportSubmit] Successfully created report ${report.uuid} in ${duration}ms`);
 
     return jsonResponse(response, 201);
   } catch (error) {

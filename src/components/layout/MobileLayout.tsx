@@ -5,9 +5,10 @@ import { UserMenu } from "./UserMenu";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useMobileMenu } from "@/lib/layout/useMobileMenu";
 import { useKeyboardShortcuts, COMMON_SHORTCUTS } from "@/lib/layout/useKeyboardShortcuts";
+import { FEATURE_FLAGS } from "@/lib/features/flags";
 import type { UserDTO, CompanyDTO } from "@/types";
 import type { NavItem } from "@/lib/layout/types";
-import { LayoutDashboard, Users, FileText, Settings } from "lucide-react";
+import { LayoutDashboard, Users, FileText, Settings, Truck, Calendar } from "lucide-react";
 
 interface MobileLayoutProps {
   /** Page content to display */
@@ -42,6 +43,26 @@ const MOBILE_NAV_ITEMS: Omit<NavItem, "isActive">[] = [
     href: "/drivers",
     icon: <Users />,
   },
+  ...(FEATURE_FLAGS.SHOW_VEHICLES
+    ? [
+        {
+          id: "vehicles",
+          label: "Pojazdy",
+          href: "/vehicles",
+          icon: <Truck />,
+        } as const,
+      ]
+    : []),
+  ...(FEATURE_FLAGS.SHOW_ASSIGNMENTS
+    ? [
+        {
+          id: "assignments",
+          label: "Przypisania",
+          href: "/assignments",
+          icon: <Calendar />,
+        } as const,
+      ]
+    : []),
   {
     id: "reports",
     label: "Raporty",

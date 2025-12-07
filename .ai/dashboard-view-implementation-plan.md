@@ -1260,3 +1260,5 @@ Dashboard jest głównie widokiem prezentacyjnym, jednak kilka warunków musi by
 - Supabase client musi być dostępny z helperami do pobierania tokenu JWT.
 
 
+
+

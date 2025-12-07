@@ -19,6 +19,7 @@ interface ImportMetaEnv {
   // Public env vars for client-side access (browser)
   readonly PUBLIC_SUPABASE_URL: string;
   readonly PUBLIC_SUPABASE_KEY: string;
+  readonly PUBLIC_SHOW_VEHICLES?: string; // Feature flag for vehicles module
   // more env variables...
 }
 

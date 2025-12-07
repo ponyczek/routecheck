@@ -119,7 +119,7 @@
 - **UX/A11y/Security:** Walidacja natychmiastowa (zakres ≤31 dni), obsługa stanu „przygotowuję”, fallback przy 413 (komunikat), generowanie nazwy pliku, informacja o wrażliwości danych, focus trap.
 - **Powiązane historyjki:** US-016.
 - **Powiązane wymagania:** FR-10.
-- **Powiązane endpointy:** `GET /api/reports/export.csv`.
+- **Powiązane endpointy:** `GET /api/reports/export`.
 
 ### Ustawienia – profil firmy
 - **Ścieżka:** `/settings/profile`

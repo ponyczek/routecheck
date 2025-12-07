@@ -1,11 +1,18 @@
 import "@testing-library/jest-dom";
 import { cleanup } from "@testing-library/react";
-import { afterEach } from "vitest";
+import { afterEach, vi } from "vitest";
 
 // Cleanup after each test
 afterEach(() => {
   cleanup();
 });
+
+// Mock ResizeObserver (used by cmdk/shadcn components)
+global.ResizeObserver = class ResizeObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};
 
 // Mock window.matchMedia
 Object.defineProperty(window, "matchMedia", {

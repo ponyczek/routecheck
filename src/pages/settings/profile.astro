@@ -1,17 +1,53 @@
 ---
 import AuthenticatedLayout from "@/layouts/AuthenticatedLayout.astro";
+import { CompanyProfileViewWithProvider } from "@/components/settings/CompanyProfileViewWithProvider";
+import type { CompanyDTO } from "@/types";
+
+// Get Supabase client from middleware (Astro.locals is set by middleware)
+const supabase = Astro.locals.supabase;
+
+// Check authentication
+const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
+if (sessionError || !session) {
+  return Astro.redirect("/signin?returnUrl=/settings/profile");
+}
+
+// Fetch company data server-side
+let company: CompanyDTO | null = null;
+let error: string | null = null;
+
+try {
+  const response = await fetch(`${Astro.url.origin}/api/companies/me`, {
+    headers: {
+      Cookie: Astro.request.headers.get("Cookie") || "",
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    error = errorData.message || "Nie udało się pobrać danych firmy";
+    
+    // For critical errors, redirect to error page
+    if (response.status === 500) {
+      return Astro.redirect(`/error?code=500&message=company_fetch_failed`);
+    }
+  } else {
+    company = await response.json();
+  }
+} catch (err) {
+  console.error("Failed to fetch company:", err);
+  return Astro.redirect(`/error?code=500&message=company_fetch_failed`);
+}
+
+// If no company data and no error, something went wrong
+if (!company && !error) {
+  return Astro.redirect(`/error?code=500&message=company_not_found`);
+}
 ---
 
 <AuthenticatedLayout title="Profil firmy - Ustawienia - RouteCheck" description="Ustawienia profilu firmy">
   <div class="container mx-auto space-y-6 p-6">
-    <!-- Page header -->
-    <div class="space-y-2">
-      <h1 class="text-3xl font-bold tracking-tight">Profil firmy</h1>
-      <p class="text-muted-foreground">
-        Zarządzaj danymi swojej firmy.
-      </p>
-    </div>
-
     <!-- Settings navigation tabs -->
     <div class="flex gap-4 border-b border-border">
       <a href="/settings/profile" class="border-b-2 border-primary px-4 py-2 text-sm font-medium text-primary">
@@ -25,13 +61,23 @@ import AuthenticatedLayout from "@/layouts/AuthenticatedLayout.astro";
       </a>
     </div>
 
-    <!-- Coming soon message -->
-    <div class="rounded-lg border border-border bg-muted/50 p-8 text-center">
-      <h2 class="text-xl font-semibold">Ustawienia profilu w przygotowaniu</h2>
-      <p class="mt-2 text-muted-foreground">
-        Możliwość edycji danych firmy będzie dostępna wkrótce.
-      </p>
-    </div>
+    <!-- Company profile view -->
+    {company && (
+      <CompanyProfileViewWithProvider client:load initialCompany={company} />
+    )}
+
+    <!-- Error state (if fetch failed but not critical) -->
+    {error && !company && (
+      <div class="rounded-lg border border-destructive bg-destructive/10 p-6">
+        <h2 class="text-lg font-semibold text-destructive">Błąd ładowania danych</h2>
+        <p class="mt-2 text-sm text-muted-foreground">{error}</p>
+        <button
+          onclick="window.location.reload()"
+          class="mt-4 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+        >
+          Spróbuj ponownie
+        </button>
+      </div>
+    )}
   </div>
 </AuthenticatedLayout>
-

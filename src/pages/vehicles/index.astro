@@ -1,0 +1,15 @@
+---
+import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.astro';
+import { VehiclesViewWithProvider } from '@/components/vehicles';
+import { FEATURE_FLAGS } from '@/lib/features/flags';
+
+// Guard: redirect if feature flag is disabled
+if (!FEATURE_FLAGS.SHOW_VEHICLES) {
+  return Astro.redirect('/dashboard');
+}
+---
+
+<AuthenticatedLayout title="Pojazdy - RouteLog">
+  <VehiclesViewWithProvider client:only="react" />
+</AuthenticatedLayout>
+

@@ -41,7 +41,7 @@ export function SignUpFormCard({ returnTo, supabaseUrl, supabaseKey }: SignUpFor
 
   const handleRetry = () => {
     setAuthError(null);
-  };
+  }
 
   return (
     <QueryProvider>

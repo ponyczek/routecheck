@@ -11,6 +11,7 @@ import { ConnectionBadge } from "./ConnectionBadge";
 import { LoadingSkeletons } from "./LoadingSkeletons";
 import { ErrorState } from "./ErrorState";
 import { useNetworkStatus } from "@/lib/layout/useNetworkStatus";
+import { ReportDetailSheet } from "@/components/reports/ReportDetailSheet";
 
 export interface DashboardViewProps {
   /** IANA timezone identifier (default: "Europe/Warsaw") */
@@ -44,13 +45,24 @@ export function DashboardView({ timezone = "Europe/Warsaw", baseUrl = "" }: Dash
   const { data, isLoading, isRefreshing, error, refetch } = useDashboard({ timezone });
   const isOnline = useNetworkStatus();
 
-  // Handle navigation to report details
+  // State for report detail sheet
+  const [selectedReportId, setSelectedReportId] = React.useState<string | null>(null);
+  const [isDetailSheetOpen, setIsDetailSheetOpen] = React.useState(false);
+
+  // Handle navigation to report details (opens sheet instead of navigation)
   const handleReportClick = React.useCallback(
     (reportUuid: Uuid) => {
-      window.location.href = `${baseUrl}/reports/${reportUuid}`;
+      setSelectedReportId(reportUuid);
+      setIsDetailSheetOpen(true);
     },
-    [baseUrl]
+    []
   );
+
+  // Handle close detail sheet
+  const handleCloseDetailSheet = React.useCallback(() => {
+    setIsDetailSheetOpen(false);
+    setTimeout(() => setSelectedReportId(null), 300); // Delay clearing to allow animation
+  }, []);
 
   // Handle navigation to driver profile
   const handleDriverClick = React.useCallback(
@@ -60,15 +72,28 @@ export function DashboardView({ timezone = "Europe/Warsaw", baseUrl = "" }: Dash
     [baseUrl]
   );
 
+  // Handle click on active drivers metric (navigate to drivers list)
+  const handleActiveDriversClick = React.useCallback(() => {
+    window.location.href = `${baseUrl}/drivers`;
+  }, [baseUrl]);
+
+  // Handle click on submitted reports metric (navigate to today's reports)
+  const handleSubmittedReportsClick = React.useCallback(() => {
+    const today = new Date().toLocaleDateString('en-CA', { timeZone: timezone }); // YYYY-MM-DD
+    window.location.href = `${baseUrl}/reports?from=${today}&to=${today}`;
+  }, [baseUrl, timezone]);
+
+  // Handle click on problems metric (navigate to reports with risk filter)
+  const handleProblemsClick = React.useCallback(() => {
+    window.location.href = `${baseUrl}/reports?riskLevel=LOW&riskLevel=MEDIUM&riskLevel=HIGH`;
+  }, [baseUrl]);
+
   // Handle risk level filter (scroll to reports section or navigate to filtered view)
   const handleRiskClick = React.useCallback(
     (riskLevel: ReportRiskLevel) => {
       // Option A: Navigate to reports page with filter
       window.location.href = `${baseUrl}/reports?riskLevel=${riskLevel}`;
 
-      // Option B: Scroll to reports section (would need local state for filtering)
-      // const reportsSection = document.getElementById('today-reports-title');
-      // reportsSection?.scrollIntoView({ behavior: 'smooth' });
     },
     [baseUrl]
   );
@@ -126,7 +151,10 @@ export function DashboardView({ timezone = "Europe/Warsaw", baseUrl = "" }: Dash
           pendingCount: data.summary.pendingCount,
           riskBreakdown: data.summary.riskBreakdown,
         }}
+        onActiveDriversClick={handleActiveDriversClick}
+        onSubmittedClick={handleSubmittedReportsClick}
         onPendingClick={handlePendingMetricClick}
+        onProblemsClick={handleProblemsClick}
       />
 
       {/* Risk Breakdown */}
@@ -137,6 +165,13 @@ export function DashboardView({ timezone = "Europe/Warsaw", baseUrl = "" }: Dash
 
       {/* Pending Drivers */}
       <PendingDriversSection pendingDrivers={data.pendingDrivers} onDriverClick={handleDriverClick} />
+
+      {/* Report Detail Sheet */}
+      <ReportDetailSheet
+        reportId={selectedReportId}
+        isOpen={isDetailSheetOpen}
+        onClose={handleCloseDetailSheet}
+      />
 
       {/* Connection Badge (fixed bottom-right) */}
       <ConnectionBadge isOnline={isOnline} refetchInterval={60_000} />

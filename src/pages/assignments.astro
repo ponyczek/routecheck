@@ -1,0 +1,10 @@
+---
+import AuthenticatedLayout from "@/layouts/AuthenticatedLayout.astro";
+import AssignmentsViewWithProvider from "@/components/assignments/AssignmentsViewWithProvider";
+---
+
+<AuthenticatedLayout title="Przypisania">
+  <AssignmentsViewWithProvider client:only="react" />
+</AuthenticatedLayout>
+
+

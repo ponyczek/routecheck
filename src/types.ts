@@ -216,7 +216,7 @@ export type PublicReportLinkValidationDTO =
       driverName: string;
       vehicleRegistration: string | null;
       expiresAt: IsoDateString;
-      editableUntil: IsoDateString;
+      editableUntil: IsoDateString | null;
     }
   | {
       valid: false; // for 404/410/409 we return HTTP error; shape here covers only 200 path
@@ -258,6 +258,57 @@ export type EmailLogDTO = PickCamel<
 >;
 
 export type EmailLogsListResponseDTO = Paginated<EmailLogDTO>;
+
+/**
+ * Settings - Alerts Configuration
+ */
+export interface AlertsConfigDTO {
+  alertsEnabled: boolean;
+  alertRecipientEmail: string; // info-only, from auth.users
+}
+
+export interface UpdateAlertsConfigCommand {
+  alertsEnabled: boolean;
+}
+
+/**
+ * Telemetry Aggregates
+ */
+export interface TelemetryAggregatesDTO {
+  /**
+   * Median form fill duration in seconds
+   */
+  medianFormDurationSeconds: number;
+
+  /**
+   * Total form submissions in analyzed period
+   */
+  totalFormSubmissions: number;
+
+  /**
+   * Conversion rate: % of links that led to report submission
+   */
+  conversionRate: number; // e.g. 0.73 = 73%
+
+  /**
+   * Trend compared to previous period (optional)
+   */
+  trend?: {
+    medianDurationChange: number; // change in seconds (+ or -)
+    conversionRateChange: number; // change in % (+ or -)
+  };
+
+  /**
+   * Daily data for chart (optional)
+   */
+  dailyData?: TelemetryDataPoint[];
+}
+
+export interface TelemetryDataPoint {
+  date: IsoDateOnlyString; // "YYYY-MM-DD"
+  medianDurationSeconds: number;
+  submissionCount: number;
+}
 
 /**
  * Health

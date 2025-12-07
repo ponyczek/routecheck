@@ -145,5 +145,4 @@ export async function scheduleAiReprocess(reportUuid: Uuid): Promise<void> {
   // - Edge function invocation
   // - Message queue publish
   // - Database trigger
-  console.log(`[AI Reprocess] Scheduled for report ${reportUuid}`);
 }

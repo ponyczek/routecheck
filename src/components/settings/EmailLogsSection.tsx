@@ -6,15 +6,17 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 
 interface EmailLogsSectionProps {
-  initialLogs?: Array<{
-    uuid: string;
-    recipient: string;
-    subject: string;
-    status: "SENT" | "FAILED";
-    sentAt: string;
-    errorMessage: string | null;
-    companyUuid: string;
-  }> | null;
+  initialLogs?:
+    | {
+        uuid: string;
+        recipient: string;
+        subject: string;
+        status: "SENT" | "FAILED";
+        sentAt: string;
+        errorMessage: string | null;
+        companyUuid: string;
+      }[]
+    | null;
 }
 
 /**
@@ -42,9 +44,7 @@ export function EmailLogsSection({ initialLogs }: EmailLogsSectionProps) {
         {error && (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
-              Nie udało się załadować logów e-mail. Spróbuj ponownie później.
-            </AlertDescription>
+            <AlertDescription>Nie udało się załadować logów e-mail. Spróbuj ponownie później.</AlertDescription>
           </Alert>
         )}
 
@@ -53,5 +53,3 @@ export function EmailLogsSection({ initialLogs }: EmailLogsSectionProps) {
     </Card>
   );
 }
-
-

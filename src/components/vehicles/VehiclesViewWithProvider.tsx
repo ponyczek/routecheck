@@ -1,6 +1,6 @@
-import { QueryProvider } from '@/lib/query-client';
-import { VehiclesView } from './VehiclesView';
-import { Toaster } from 'sonner';
+import { QueryProvider } from "@/lib/query-client";
+import { VehiclesView } from "./VehiclesView";
+import { Toaster } from "sonner";
 
 /**
  * Wrapper dla VehiclesView z QueryClientProvider i Toaster
@@ -14,5 +14,3 @@ export function VehiclesViewWithProvider() {
     </QueryProvider>
   );
 }
-
-

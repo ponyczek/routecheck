@@ -1,18 +1,10 @@
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Switch } from '@/components/ui/switch';
-import { TimezoneCombobox } from './TimezoneCombobox';
-import { driverFormSchema, type DriverFormData } from '@/lib/drivers/validation';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { TimezoneCombobox } from "./TimezoneCombobox";
+import { driverFormSchema, type DriverFormData } from "@/lib/drivers/validation";
 
 interface DriverFormProps {
   defaultValues?: Partial<DriverFormData>;
@@ -31,12 +23,12 @@ export function DriverForm({ defaultValues, onSubmit, isSubmitting }: DriverForm
   const form = useForm<DriverFormData>({
     resolver: zodResolver(driverFormSchema),
     defaultValues: {
-      name: defaultValues?.name || '',
-      email: defaultValues?.email || '',
-      timezone: defaultValues?.timezone || 'Europe/Warsaw',
+      name: defaultValues?.name || "",
+      email: defaultValues?.email || "",
+      timezone: defaultValues?.timezone || "Europe/Warsaw",
       isActive: defaultValues?.isActive ?? true,
     },
-    mode: 'onBlur', // Walidacja przy onBlur
+    mode: "onBlur", // Walidacja przy onBlur
   });
 
   const handleSubmit = async (data: DriverFormData) => {
@@ -46,15 +38,15 @@ export function DriverForm({ defaultValues, onSubmit, isSubmitting }: DriverForm
       // Obsługa błędów z API
       // Np. 409 Conflict dla duplikatu emaila
       if (error.response?.status === 409) {
-        form.setError('email', {
-          type: 'manual',
-          message: 'Kierowca z tym adresem e-mail już istnieje',
+        form.setError("email", {
+          type: "manual",
+          message: "Kierowca z tym adresem e-mail już istnieje",
         });
       } else if (error.response?.data?.errors) {
         // Mapowanie błędów walidacji z API na pola formularza
         Object.entries(error.response.data.errors).forEach(([field, message]) => {
           form.setError(field as keyof DriverFormData, {
-            type: 'manual',
+            type: "manual",
             message: message as string,
           });
         });
@@ -74,12 +66,7 @@ export function DriverForm({ defaultValues, onSubmit, isSubmitting }: DriverForm
             <FormItem>
               <FormLabel>Imię i nazwisko *</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="Jan Kowalski"
-                  {...field}
-                  disabled={isSubmitting}
-                  autoComplete="name"
-                />
+                <Input placeholder="Jan Kowalski" {...field} disabled={isSubmitting} autoComplete="name" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -102,9 +89,7 @@ export function DriverForm({ defaultValues, onSubmit, isSubmitting }: DriverForm
                   autoComplete="email"
                 />
               </FormControl>
-              <FormDescription>
-                Na ten adres będą wysyłane linki do raportów dziennych.
-              </FormDescription>
+              <FormDescription>Na ten adres będą wysyłane linki do raportów dziennych.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -118,15 +103,9 @@ export function DriverForm({ defaultValues, onSubmit, isSubmitting }: DriverForm
             <FormItem>
               <FormLabel>Strefa czasowa *</FormLabel>
               <FormControl>
-                <TimezoneCombobox
-                  value={field.value}
-                  onChange={field.onChange}
-                  disabled={isSubmitting}
-                />
+                <TimezoneCombobox value={field.value} onChange={field.onChange} disabled={isSubmitting} />
               </FormControl>
-              <FormDescription>
-                Raporty będą generowane zgodnie z tą strefą czasową.
-              </FormDescription>
+              <FormDescription>Raporty będą generowane zgodnie z tą strefą czasową.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -140,9 +119,7 @@ export function DriverForm({ defaultValues, onSubmit, isSubmitting }: DriverForm
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
               <div className="space-y-0.5">
                 <FormLabel className="text-base">Status aktywny</FormLabel>
-                <FormDescription>
-                  Nieaktywni kierowcy nie będą otrzymywać linków do raportów dziennych.
-                </FormDescription>
+                <FormDescription>Nieaktywni kierowcy nie będą otrzymywać linków do raportów dziennych.</FormDescription>
               </div>
               <FormControl>
                 <Switch
@@ -159,6 +136,3 @@ export function DriverForm({ defaultValues, onSubmit, isSubmitting }: DriverForm
     </Form>
   );
 }
-
-
-

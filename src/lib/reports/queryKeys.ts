@@ -24,9 +24,5 @@ export const reportsQueryKeys = {
   /**
    * Key for today's summary
    */
-  todaySummary: (date: string, timezone: string) =>
-    [...reportsQueryKeys.all, "todaySummary", date, timezone] as const,
+  todaySummary: (date: string, timezone: string) => [...reportsQueryKeys.all, "todaySummary", date, timezone] as const,
 };
-
-
-

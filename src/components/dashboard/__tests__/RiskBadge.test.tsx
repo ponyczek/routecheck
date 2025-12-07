@@ -39,10 +39,10 @@ describe("RiskBadge", () => {
   it("calls onClick when clicked", () => {
     const handleClick = vi.fn();
     render(<RiskBadge level="MEDIUM" onClick={handleClick} />);
-    
+
     const badge = screen.getByRole("button");
     badge.click();
-    
+
     expect(handleClick).toHaveBeenCalledOnce();
   });
 
@@ -75,15 +75,14 @@ describe("RiskBadge", () => {
   it("handles keyboard navigation when clickable", () => {
     const handleClick = vi.fn();
     render(<RiskBadge level="HIGH" onClick={handleClick} />);
-    
+
     const badge = screen.getByRole("button");
-    
+
     // Simulate Enter key with fireEvent or user.keyboard
     // Note: React's onKeyDown synthetic event is different from native
     // We'll use the click method which is more reliable in tests
     badge.click();
-    
+
     expect(handleClick).toHaveBeenCalled();
   });
 });
-

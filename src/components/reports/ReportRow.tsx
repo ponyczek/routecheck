@@ -47,9 +47,7 @@ export function ReportRow({ report, onView }: ReportRowProps) {
       </td>
       <td className="p-4">
         <div className="font-medium">{driver?.name || "Nieznany kierowca"}</div>
-        <div className="text-xs text-muted-foreground">
-          {driver?.email || report.driverUuid.substring(0, 8)}
-        </div>
+        <div className="text-xs text-muted-foreground">{driver?.email || report.driverUuid.substring(0, 8)}</div>
       </td>
       <td className="p-4">
         <ReportStatusBadge status={report.routeStatus} />
@@ -66,11 +64,7 @@ export function ReportRow({ report, onView }: ReportRowProps) {
         )}
       </td>
       <td className="p-4">
-        {report.ai && (
-          <div className="text-sm text-muted-foreground line-clamp-2 max-w-xs">
-            {report.ai.aiSummary}
-          </div>
-        )}
+        {report.ai && <div className="text-sm text-muted-foreground line-clamp-2 max-w-xs">{report.ai.aiSummary}</div>}
       </td>
       <td className="p-4 text-right">
         <Button
@@ -89,4 +83,3 @@ export function ReportRow({ report, onView }: ReportRowProps) {
     </tr>
   );
 }
-

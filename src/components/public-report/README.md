@@ -5,6 +5,7 @@ This directory contains the complete implementation of the public report form fo
 ## 📋 Overview
 
 The public report form is a critical component that enables:
+
 - Quick report submission via one-time token link (expires in 24h)
 - Two-path UX: "Happy Path" (all OK) vs "Problem Path" (issues to report)
 - Offline support with automatic queue processing
@@ -164,10 +165,12 @@ src/pages/public/report-links/
 ## ✅ Validation Rules
 
 ### Happy Path
+
 - All problem fields set to null/default
 - Only timezone is sent to API
 
 ### Problem Path
+
 - `routeStatus`: required, one of enum values
 - `delayMinutes`: required, >= 0
 - `delayReason`: required if delayMinutes > 0, min 3 chars
@@ -177,12 +180,14 @@ src/pages/public/report-links/
 ## 🎯 Key Features
 
 ### Mobile-First UX
+
 - Large tap targets (min 44x44px)
 - Responsive grid layouts
 - Touch-friendly interactions
 - Optimized for small screens
 
 ### Accessibility (A11y)
+
 - ARIA labels and live regions
 - Keyboard navigation support
 - Screen reader friendly
@@ -190,12 +195,14 @@ src/pages/public/report-links/
 - Error announcements
 
 ### Performance
+
 - Code splitting ready
 - Lazy component loading
 - Optimized re-renders
 - Minimal bundle size
 
 ### Security
+
 - Token single-use check (SessionStorage)
 - 24-hour expiration
 - 10-minute edit window
@@ -221,19 +228,19 @@ src/pages/public/report-links/
 
 ```tsx
 // In Astro page
-import { PublicReportForm } from '@/components/public-report';
-import { QueryProvider } from '@/lib/query-client';
-import { Toaster } from '@/components/ui/sonner';
+import { PublicReportForm } from "@/components/public-report";
+import { QueryProvider } from "@/lib/query-client";
+import { Toaster } from "@/components/ui/sonner";
 
 <QueryProvider client:only="react">
-  <PublicReportForm 
-    client:only="react" 
+  <PublicReportForm
+    client:only="react"
     token={token}
-    onSuccess={(data) => console.log('Report submitted:', data)}
-    onError={(error) => console.error('Submission failed:', error)}
+    onSuccess={(data) => console.log("Report submitted:", data)}
+    onError={(error) => console.error("Submission failed:", error)}
   />
   <Toaster client:only="react" />
-</QueryProvider>
+</QueryProvider>;
 ```
 
 ## 📝 Future Enhancements
@@ -252,5 +259,3 @@ None at this time.
 ## 📞 Support
 
 For issues or questions, contact the RouteLog development team.
-
-

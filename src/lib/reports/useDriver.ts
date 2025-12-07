@@ -21,6 +21,3 @@ export function useDriver(uuid: string | null) {
     staleTime: 5 * 60 * 1000, // 5 minutes - driver names don't change often
   });
 }
-
-
-

@@ -198,6 +198,8 @@ export const POST: APIRoute = async (context) => {
       editableUntil: editableUntil.toISOString(),
     };
 
+    // Duration calculation (could be used for logging/metrics in production)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const duration = Date.now() - startTime;
 
     return jsonResponse(response, 201);

@@ -1,13 +1,13 @@
 ---
-import Layout from '../../../layouts/Layout.astro';
-import { PublicReportFormWithProvider } from '../../../components/public-report/PublicReportFormWithProvider';
+import Layout from "../../../layouts/Layout.astro";
+import { PublicReportFormWithProvider } from "../../../components/public-report/PublicReportFormWithProvider";
 
 export const prerender = false;
 
 const { token } = Astro.params;
 
 if (!token) {
-  return Astro.redirect('/404');
+  return Astro.redirect("/404");
 }
 ---
 
@@ -16,4 +16,3 @@ if (!token) {
     <PublicReportFormWithProvider client:load token={token} />
   </main>
 </Layout>
-

@@ -5,22 +5,22 @@ import type { AccountActionsCardProps } from "@/lib/settings/types";
 
 /**
  * AccountActionsCard - Karta z akcjami związanymi z kontem użytkownika
- * 
+ *
  * Komponent zawiera główne akcje, które użytkownik może wykonać na swoim koncie:
  * - Wylogowanie z aplikacji (LogoutButton)
  * - Potencjalnie w przyszłości: zmiana hasła, usunięcie konta, itp.
- * 
+ *
  * Karta deleguje obsługę akcji do komponentów potomnych i zarządza
  * wspólnym stanem ładowania dla wszystkich akcji.
- * 
+ *
  * @param props - Props komponentu
  * @param props.onSignOut - Async callback wywoływany podczas wylogowania
  * @param props.isSigningOut - Flaga procesu wylogowania (używana do disabled state)
- * 
+ *
  * @example
  * ```tsx
  * const [isSigningOut, setIsSigningOut] = useState(false);
- * 
+ *
  * const handleSignOut = async () => {
  *   setIsSigningOut(true);
  *   try {
@@ -29,7 +29,7 @@ import type { AccountActionsCardProps } from "@/lib/settings/types";
  *     setIsSigningOut(false);
  *   }
  * };
- * 
+ *
  * <AccountActionsCard
  *   onSignOut={handleSignOut}
  *   isSigningOut={isSigningOut}
@@ -44,9 +44,7 @@ export function AccountActionsCard({ onSignOut, isSigningOut }: AccountActionsCa
           <Settings className="h-5 w-5 text-muted-foreground" />
           <div className="space-y-1">
             <CardTitle>Akcje konta</CardTitle>
-            <CardDescription>
-              Zarządzaj swoim kontem i sesjami
-            </CardDescription>
+            <CardDescription>Zarządzaj swoim kontem i sesjami</CardDescription>
           </div>
         </div>
       </CardHeader>
@@ -56,15 +54,11 @@ export function AccountActionsCard({ onSignOut, isSigningOut }: AccountActionsCa
           <div className="space-y-1">
             <h4 className="text-sm font-medium">Wylogowanie</h4>
             <p className="text-xs text-muted-foreground">
-              Zakończ bieżącą sesję i wyloguj się z aplikacji. 
-              Będziesz musiał zalogować się ponownie, aby uzyskać dostęp.
+              Zakończ bieżącą sesję i wyloguj się z aplikacji. Będziesz musiał zalogować się ponownie, aby uzyskać
+              dostęp.
             </p>
           </div>
-          <LogoutButton 
-            onSignOut={onSignOut}
-            isLoading={isSigningOut}
-            variant="destructive"
-          />
+          <LogoutButton onSignOut={onSignOut} isLoading={isSigningOut} variant="destructive" />
         </div>
 
         {/* Placeholder na przyszłe akcje */}
@@ -85,5 +79,3 @@ export function AccountActionsCard({ onSignOut, isSigningOut }: AccountActionsCa
     </Card>
   );
 }
-
-

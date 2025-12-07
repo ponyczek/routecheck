@@ -43,4 +43,3 @@ export function EmailLogItem({ log }: EmailLogItemProps) {
     </li>
   );
 }
-

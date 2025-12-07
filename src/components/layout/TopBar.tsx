@@ -1,6 +1,5 @@
 import { Menu, X, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 interface TopBarProps {
   /** Page title to display */
@@ -26,7 +25,7 @@ interface TopBarProps {
  */
 export function TopBar({ pageTitle, onMenuToggle, isMenuOpen }: TopBarProps) {
   return (
-    <header 
+    <header
       className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-border bg-background px-4 md:hidden"
       role="banner"
     >
@@ -44,8 +43,8 @@ export function TopBar({ pageTitle, onMenuToggle, isMenuOpen }: TopBarProps) {
       </Button>
 
       {/* Logo */}
-      <a 
-        href="/dashboard" 
+      <a
+        href="/dashboard"
         className="flex items-center gap-2 shrink-0"
         aria-label="RouteCheck - Przejdź do strony głównej"
       >
@@ -59,4 +58,3 @@ export function TopBar({ pageTitle, onMenuToggle, isMenuOpen }: TopBarProps) {
     </header>
   );
 }
-

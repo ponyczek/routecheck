@@ -44,10 +44,14 @@ export const GET: APIRoute = async ({ locals, url }) => {
       );
     }
 
-    // Parse query params
+    // Parse query params (reserved for future use when email_logs table is implemented)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const limit = Math.min(parseInt(url.searchParams.get("limit") || "10"), 100);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const sortBy = url.searchParams.get("sortBy") || "sentAt";
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const sortDir = url.searchParams.get("sortDir") || "desc";
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const statusFilter = url.searchParams.get("status");
 
     // TODO: In production, fetch from email_logs table
@@ -97,5 +101,3 @@ export const GET: APIRoute = async ({ locals, url }) => {
     );
   }
 };
-
-

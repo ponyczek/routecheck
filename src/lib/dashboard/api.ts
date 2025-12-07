@@ -31,19 +31,13 @@ async function getSupabaseToken(): Promise<string> {
  * @param timezone - IANA timezone identifier
  * @returns Summary with metrics and risk breakdown
  */
-export async function fetchReportsTodaySummary(
-  date: string,
-  timezone: string
-): Promise<ReportsTodaySummaryDTO> {
+export async function fetchReportsTodaySummary(date: string, timezone: string): Promise<ReportsTodaySummaryDTO> {
   const token = await getSupabaseToken();
-  const response = await fetch(
-    `/api/reports/today/summary?timezone=${encodeURIComponent(timezone)}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  const response = await fetch(`/api/reports/today/summary?timezone=${encodeURIComponent(timezone)}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
   if (!response.ok) {
     if (response.status === 401) {
@@ -61,19 +55,13 @@ export async function fetchReportsTodaySummary(
  * @param timezone - IANA timezone identifier
  * @returns List of reports with AI analysis
  */
-export async function fetchTodayReports(
-  date: string,
-  timezone: string
-): Promise<ReportListItemDTO[]> {
+export async function fetchTodayReports(date: string, timezone: string): Promise<ReportListItemDTO[]> {
   const token = await getSupabaseToken();
-  const response = await fetch(
-    `/api/reports?from=${date}&to=${date}&includeAi=true&sortBy=reportDate&sortDir=desc`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  const response = await fetch(`/api/reports?from=${date}&to=${date}&includeAi=true&sortBy=reportDate&sortDir=desc`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
   if (!response.ok) {
     if (response.status === 401) {
@@ -92,10 +80,7 @@ export async function fetchTodayReports(
  * @param timezone - IANA timezone identifier
  * @returns List of pending drivers
  */
-export async function fetchPendingDrivers(
-  date: string,
-  timezone: string
-): Promise<PendingDriver[]> {
+export async function fetchPendingDrivers(date: string, timezone: string): Promise<PendingDriver[]> {
   const token = await getSupabaseToken();
 
   // 1. Fetch all active drivers
@@ -170,4 +155,3 @@ export function getErrorMessage(error: unknown): string {
   }
   return "Wystąpił nieoczekiwany błąd.";
 }
-

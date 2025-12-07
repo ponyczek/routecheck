@@ -52,6 +52,3 @@ export function useCompanyNameForm(company: CompanyDTO) {
     isPending,
   };
 }
-
-
-

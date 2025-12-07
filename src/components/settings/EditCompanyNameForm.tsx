@@ -24,7 +24,7 @@ export function EditCompanyNameForm({ company, onUpdate }: EditCompanyNameFormPr
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await onSubmit(e);
-    
+
     // Wywołaj callback jeśli został przekazany
     if (onUpdate && !form.formState.errors.name) {
       // Jeśli nie ma błędów, oznacza to sukces
@@ -74,6 +74,3 @@ export function EditCompanyNameForm({ company, onUpdate }: EditCompanyNameFormPr
     </Card>
   );
 }
-
-
-

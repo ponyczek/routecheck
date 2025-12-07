@@ -1,4 +1,4 @@
-import type { TimezoneOption } from './types';
+import type { TimezoneOption } from "./types";
 
 /**
  * Pobiera offset UTC dla danej strefy czasowej
@@ -6,29 +6,29 @@ import type { TimezoneOption } from './types';
 function getTimezoneOffset(timezone: string): string {
   try {
     const now = new Date();
-    const formatter = new Intl.DateTimeFormat('en-US', {
+    const formatter = new Intl.DateTimeFormat("en-US", {
       timeZone: timezone,
-      timeZoneName: 'shortOffset',
+      timeZoneName: "shortOffset",
     });
-    
+
     const parts = formatter.formatToParts(now);
-    const offsetPart = parts.find((part) => part.type === 'timeZoneName');
-    
-    if (offsetPart?.value && offsetPart.value.startsWith('GMT')) {
-      const offset = offsetPart.value.replace('GMT', '');
-      return offset || '+00:00';
+    const offsetPart = parts.find((part) => part.type === "timeZoneName");
+
+    if (offsetPart?.value && offsetPart.value.startsWith("GMT")) {
+      const offset = offsetPart.value.replace("GMT", "");
+      return offset || "+00:00";
     }
-    
+
     // Fallback: oblicz offset ręcznie
-    const utcDate = new Date(now.toLocaleString('en-US', { timeZone: 'UTC' }));
-    const tzDate = new Date(now.toLocaleString('en-US', { timeZone: timezone }));
+    const utcDate = new Date(now.toLocaleString("en-US", { timeZone: "UTC" }));
+    const tzDate = new Date(now.toLocaleString("en-US", { timeZone: timezone }));
     const offsetMinutes = (tzDate.getTime() - utcDate.getTime()) / 60000;
     const hours = Math.floor(Math.abs(offsetMinutes) / 60);
     const minutes = Math.abs(offsetMinutes) % 60;
-    const sign = offsetMinutes >= 0 ? '+' : '-';
-    return `${sign}${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+    const sign = offsetMinutes >= 0 ? "+" : "-";
+    return `${sign}${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
   } catch {
-    return '+00:00';
+    return "+00:00";
   }
 }
 
@@ -38,8 +38,8 @@ function getTimezoneOffset(timezone: string): string {
 export function getTimezoneOptions(): TimezoneOption[] {
   try {
     // Używamy Intl API do pobrania listy wspieranych stref czasowych
-    const timezones = Intl.supportedValuesOf('timeZone');
-    
+    const timezones = Intl.supportedValuesOf("timeZone");
+
     return timezones.map((tz) => {
       const offset = getTimezoneOffset(tz);
       return {
@@ -51,23 +51,23 @@ export function getTimezoneOptions(): TimezoneOption[] {
   } catch {
     // Fallback: podstawowa lista popularnych stref czasowych
     const fallbackTimezones = [
-      'Europe/Warsaw',
-      'Europe/London',
-      'Europe/Berlin',
-      'Europe/Paris',
-      'Europe/Rome',
-      'Europe/Madrid',
-      'America/New_York',
-      'America/Chicago',
-      'America/Los_Angeles',
-      'America/Toronto',
-      'Asia/Tokyo',
-      'Asia/Shanghai',
-      'Asia/Dubai',
-      'Australia/Sydney',
-      'Pacific/Auckland',
+      "Europe/Warsaw",
+      "Europe/London",
+      "Europe/Berlin",
+      "Europe/Paris",
+      "Europe/Rome",
+      "Europe/Madrid",
+      "America/New_York",
+      "America/Chicago",
+      "America/Los_Angeles",
+      "America/Toronto",
+      "Asia/Tokyo",
+      "Asia/Shanghai",
+      "Asia/Dubai",
+      "Australia/Sydney",
+      "Pacific/Auckland",
     ];
-    
+
     return fallbackTimezones.map((tz) => {
       const offset = getTimezoneOffset(tz);
       return {
@@ -84,13 +84,9 @@ export function getTimezoneOptions(): TimezoneOption[] {
  */
 export function searchTimezones(query: string, options: TimezoneOption[]): TimezoneOption[] {
   if (!query) return options;
-  
+
   const lowerQuery = query.toLowerCase();
-  return options.filter(
-    (option) =>
-      option.value.toLowerCase().includes(lowerQuery) ||
-      option.offset.includes(query)
-  );
+  return options.filter((option) => option.value.toLowerCase().includes(lowerQuery) || option.offset.includes(query));
 }
 
 /**
@@ -104,6 +100,3 @@ export function isValidTimezone(timezone: string): boolean {
     return false;
   }
 }
-
-
-

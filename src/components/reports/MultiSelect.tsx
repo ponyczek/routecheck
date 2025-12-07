@@ -2,14 +2,7 @@ import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 export interface MultiSelectOption {
@@ -52,9 +45,7 @@ export function MultiSelect({
   }, [options, value, placeholder]);
 
   const handleSelect = (optionValue: string) => {
-    const newValue = value.includes(optionValue)
-      ? value.filter((v) => v !== optionValue)
-      : [...value, optionValue];
+    const newValue = value.includes(optionValue) ? value.filter((v) => v !== optionValue) : [...value, optionValue];
     onChange(newValue);
   };
 
@@ -81,14 +72,8 @@ export function MultiSelect({
               {options.map((option) => {
                 const isSelected = value.includes(option.value);
                 return (
-                  <CommandItem
-                    key={option.value}
-                    value={option.value}
-                    onSelect={() => handleSelect(option.value)}
-                  >
-                    <Check
-                      className={cn("mr-2 h-4 w-4", isSelected ? "opacity-100" : "opacity-0")}
-                    />
+                  <CommandItem key={option.value} value={option.value} onSelect={() => handleSelect(option.value)}>
+                    <Check className={cn("mr-2 h-4 w-4", isSelected ? "opacity-100" : "opacity-0")} />
                     {option.label}
                   </CommandItem>
                 );
@@ -100,6 +85,3 @@ export function MultiSelect({
     </Popover>
   );
 }
-
-
-

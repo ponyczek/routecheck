@@ -9,22 +9,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -48,12 +34,7 @@ interface ReportFormDialogProps {
  * Dialog for creating or editing a report
  * Uses React Hook Form with Zod validation
  */
-export function ReportFormDialog({
-  open,
-  initialData,
-  onOpenChange,
-  onSuccess,
-}: ReportFormDialogProps) {
+export function ReportFormDialog({ open, initialData, onOpenChange, onSuccess }: ReportFormDialogProps) {
   const isEditing = !!initialData;
 
   // Mutations
@@ -175,9 +156,7 @@ export function ReportFormDialog({
                         placeholder="Wybierz kierowcę..."
                       />
                     </FormControl>
-                    <FormDescription>
-                      Wybierz kierowcę, dla którego tworzysz raport
-                    </FormDescription>
+                    <FormDescription>Wybierz kierowcę, dla którego tworzysz raport</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -212,11 +191,7 @@ export function ReportFormDialog({
                   <FormItem>
                     <FormLabel>Strefa czasowa *</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Europe/Warsaw"
-                        {...field}
-                        disabled={isSubmitting}
-                      />
+                      <Input placeholder="Europe/Warsaw" {...field} disabled={isSubmitting} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -231,11 +206,7 @@ export function ReportFormDialog({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Status trasy *</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    disabled={isSubmitting}
-                  >
+                  <Select onValueChange={field.onChange} defaultValue={field.value} disabled={isSubmitting}>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Wybierz status" />
@@ -370,17 +341,11 @@ export function ReportFormDialog({
               render={({ field }) => (
                 <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
                   <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      disabled={isSubmitting}
-                    />
+                    <Checkbox checked={field.value} onCheckedChange={field.onChange} disabled={isSubmitting} />
                   </FormControl>
                   <div className="space-y-1 leading-none">
                     <FormLabel>Oznacz jako problem</FormLabel>
-                    <FormDescription>
-                      Zaznacz, jeśli w trasie wystąpił poważny problem wymagający uwagi
-                    </FormDescription>
+                    <FormDescription>Zaznacz, jeśli w trasie wystąpił poważny problem wymagający uwagi</FormDescription>
                   </div>
                 </FormItem>
               )}
@@ -410,21 +375,14 @@ export function ReportFormDialog({
                       <SelectItem value="HIGH">Wysokie</SelectItem>
                     </SelectContent>
                   </Select>
-                  <FormDescription>
-                    AI automatycznie oceni ryzyko, ale możesz też ustawić je ręcznie
-                  </FormDescription>
+                  <FormDescription>AI automatycznie oceni ryzyko, ale możesz też ustawić je ręcznie</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
             <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-                disabled={isSubmitting}
-              >
+              <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
                 Anuluj
               </Button>
               <Button type="submit" disabled={isSubmitting}>
@@ -438,4 +396,3 @@ export function ReportFormDialog({
     </Dialog>
   );
 }
-

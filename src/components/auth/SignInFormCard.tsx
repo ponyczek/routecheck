@@ -20,14 +20,14 @@ export function SignInFormCard({ returnTo, sessionExpiryReason, supabaseUrl, sup
   const handleSuccess = (result: SignInSuccessPayload) => {
     // Clear any errors
     setAuthError(null);
-    
+
     // Redirect to the target page
     window.location.href = result.redirectTo;
   };
 
   const handleError = (error: AuthErrorState) => {
     setAuthError(error);
-    
+
     // Log error for debugging (could be sent to telemetry)
     console.error("Sign in error:", error);
   };
@@ -41,16 +41,14 @@ export function SignInFormCard({ returnTo, sessionExpiryReason, supabaseUrl, sup
       <Card className="w-full max-w-md mx-auto">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">Zaloguj się</CardTitle>
-          <CardDescription className="text-center">
-            Wprowadź swoje dane, aby uzyskać dostęp do panelu
-          </CardDescription>
+          <CardDescription className="text-center">Wprowadź swoje dane, aby uzyskać dostęp do panelu</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <SessionExpiryNotice reason={sessionExpiryReason || null} />
           <AuthErrorAlert error={authError} onRetry={handleRetry} />
-          <SignInForm 
-            returnTo={returnTo} 
-            onSuccess={handleSuccess} 
+          <SignInForm
+            returnTo={returnTo}
+            onSuccess={handleSuccess}
             onError={handleError}
             supabaseUrl={supabaseUrl}
             supabaseKey={supabaseKey}
@@ -63,4 +61,3 @@ export function SignInFormCard({ returnTo, sessionExpiryReason, supabaseUrl, sup
     </QueryProvider>
   );
 }
-

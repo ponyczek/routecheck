@@ -57,4 +57,3 @@ export function ErrorState({ title = "Wystąpił błąd", message, onRetry, clas
     </div>
   );
 }
-

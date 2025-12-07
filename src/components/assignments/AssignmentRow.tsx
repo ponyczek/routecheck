@@ -21,15 +21,11 @@ interface AssignmentRowProps {
 
 /**
  * AssignmentRow
- * 
+ *
  * Pojedynczy wiersz tabeli reprezentujący jedno przypisanie kierowca-pojazd.
  * Zawiera komórki z danymi oraz menu akcji (Edytuj, Usuń).
  */
-export function AssignmentRow({ 
-  assignment, 
-  onEdit, 
-  onDelete 
-}: AssignmentRowProps) {
+export function AssignmentRow({ assignment, onEdit, onDelete }: AssignmentRowProps) {
   const { assignment: assignmentData, driverName, vehicleRegistration, status, daysRemaining } = assignment;
 
   // Status badge variants
@@ -52,25 +48,19 @@ export function AssignmentRow({
 
   // Format dates
   const formatDate = (dateString: string) => {
-    return format(new Date(dateString), 'dd MMM yyyy', { locale: pl });
+    return format(new Date(dateString), "dd MMM yyyy", { locale: pl });
   };
 
   return (
     <TableRow>
       {/* Driver Name */}
-      <TableCell className="font-medium">
-        {driverName}
-      </TableCell>
+      <TableCell className="font-medium">{driverName}</TableCell>
 
       {/* Vehicle Registration */}
-      <TableCell>
-        {vehicleRegistration}
-      </TableCell>
+      <TableCell>{vehicleRegistration}</TableCell>
 
       {/* Start Date */}
-      <TableCell>
-        {formatDate(assignmentData.startDate)}
-      </TableCell>
+      <TableCell>{formatDate(assignmentData.startDate)}</TableCell>
 
       {/* End Date */}
       <TableCell>
@@ -79,7 +69,7 @@ export function AssignmentRow({
             <span>{formatDate(assignmentData.endDate)}</span>
             {daysRemaining !== null && daysRemaining > 0 && (
               <span className="text-xs text-muted-foreground">
-                ({daysRemaining} {daysRemaining === 1 ? 'dzień' : 'dni'} pozostało)
+                ({daysRemaining} {daysRemaining === 1 ? "dzień" : "dni"} pozostało)
               </span>
             )}
           </div>
@@ -90,21 +80,14 @@ export function AssignmentRow({
 
       {/* Status Badge */}
       <TableCell>
-        <Badge variant={statusInfo.variant}>
-          {statusInfo.label}
-        </Badge>
+        <Badge variant={statusInfo.variant}>{statusInfo.label}</Badge>
       </TableCell>
 
       {/* Actions Menu */}
       <TableCell className="text-right">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8 p-0"
-              aria-label="Otwórz menu akcji"
-            >
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" aria-label="Otwórz menu akcji">
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -126,5 +109,3 @@ export function AssignmentRow({
     </TableRow>
   );
 }
-
-

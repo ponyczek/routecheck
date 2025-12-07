@@ -31,6 +31,3 @@ export function ReportsEmptyState({
     </div>
   );
 }
-
-
-

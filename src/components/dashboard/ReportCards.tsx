@@ -23,9 +23,7 @@ export function ReportCards({ reports, onCardClick, className }: ReportCardsProp
     return (
       <div className="text-center py-12 px-4">
         <p className="text-muted-foreground text-lg">Brak raportów na dzisiaj</p>
-        <p className="text-sm text-muted-foreground mt-2">
-          Raporty pojawią się tutaj po ich wysłaniu przez kierowców
-        </p>
+        <p className="text-sm text-muted-foreground mt-2">Raporty pojawią się tutaj po ich wysłaniu przez kierowców</p>
       </div>
     );
   }
@@ -38,4 +36,3 @@ export function ReportCards({ reports, onCardClick, className }: ReportCardsProp
     </div>
   );
 }
-

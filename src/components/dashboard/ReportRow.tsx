@@ -41,10 +41,7 @@ export function ReportRow({ report, onRowClick }: ReportRowProps) {
   const riskLevel = report.ai?.riskLevel || report.riskLevel || "NONE";
 
   return (
-    <TableRow
-      className="cursor-pointer hover:bg-muted/50 transition-colors"
-      onClick={handleClick}
-    >
+    <TableRow className="cursor-pointer hover:bg-muted/50 transition-colors" onClick={handleClick}>
       {/* Driver Name */}
       <TableCell className="font-medium">
         <div className="flex flex-col">
@@ -63,9 +60,7 @@ export function ReportRow({ report, onRowClick }: ReportRowProps) {
       {/* Delay */}
       <TableCell>
         {report.delayMinutes > 0 ? (
-          <span className="text-sm text-orange-600 dark:text-orange-400 font-medium">
-            +{report.delayMinutes} min
-          </span>
+          <span className="text-sm text-orange-600 dark:text-orange-400 font-medium">+{report.delayMinutes} min</span>
         ) : (
           <span className="text-sm text-muted-foreground">—</span>
         )}
@@ -94,4 +89,3 @@ export function ReportRow({ report, onRowClick }: ReportRowProps) {
     </TableRow>
   );
 }
-

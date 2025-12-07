@@ -1,23 +1,23 @@
-import { useQuery } from '@tanstack/react-query';
-import type { VehicleDTO, VehiclesListResponseDTO } from '@/types';
+import { useQuery } from "@tanstack/react-query";
+import type { VehicleDTO, VehiclesListResponseDTO } from "@/types";
 
 /**
  * useVehicles
- * 
+ *
  * Hook do pobierania listy aktywnych pojazdów.
  * Używany w selectach formularza przypisań do wyboru pojazdu.
  * Cache z dłuższym staleTime gdyż lista pojazdów zmienia się rzadziej.
  */
 export function useVehicles() {
   return useQuery({
-    queryKey: ['vehicles', 'active'],
+    queryKey: ["vehicles", "active"],
     queryFn: async (): Promise<VehicleDTO[]> => {
-      const response = await fetch('/api/vehicles?isActive=true');
-      
+      const response = await fetch("/api/vehicles?isActive=true");
+
       if (!response.ok) {
-        throw new Error('Failed to fetch vehicles');
+        throw new Error("Failed to fetch vehicles");
       }
-      
+
       const data: VehiclesListResponseDTO = await response.json();
       return data.items || [];
     },
@@ -25,5 +25,3 @@ export function useVehicles() {
     refetchOnWindowFocus: false, // nie ma potrzeby refresh przy każdym focus
   });
 }
-
-

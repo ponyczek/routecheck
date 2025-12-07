@@ -23,12 +23,7 @@ export interface RiskBreakdownCardProps {
  * - Loading skeleton state
  * - Clicking a badge filters reports or navigates to filtered view
  */
-export function RiskBreakdownCard({
-  breakdown,
-  onRiskClick,
-  isLoading = false,
-  className,
-}: RiskBreakdownCardProps) {
+export function RiskBreakdownCard({ breakdown, onRiskClick, isLoading = false, className }: RiskBreakdownCardProps) {
   if (isLoading) {
     return (
       <Card className={cn("col-span-full", className)}>
@@ -46,7 +41,7 @@ export function RiskBreakdownCard({
     );
   }
 
-  const riskLevels: Array<{ level: ReportRiskLevel; count: number }> = [
+  const riskLevels: { level: ReportRiskLevel; count: number }[] = [
     { level: "NONE", count: breakdown.none },
     { level: "LOW", count: breakdown.low },
     { level: "MEDIUM", count: breakdown.medium },
@@ -89,4 +84,3 @@ export function RiskBreakdownCard({
     </Card>
   );
 }
-

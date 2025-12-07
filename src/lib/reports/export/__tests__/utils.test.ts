@@ -1,10 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {
-  formatDateToIsoDateOnly,
-  getDaysDifference,
-  generateCsvFilename,
-  extractFilenameFromHeader,
-} from "../utils";
+import { formatDateToIsoDateOnly, getDaysDifference, generateCsvFilename, extractFilenameFromHeader } from "../utils";
 
 describe("formatDateToIsoDateOnly", () => {
   it("formats date to YYYY-MM-DD format", () => {
@@ -143,8 +138,7 @@ describe("extractFilenameFromHeader", () => {
   });
 
   it("handles Content-Disposition with multiple parameters", () => {
-    const header =
-      'attachment; filename="report.csv"; creation-date="Mon, 15 Jan 2025 10:00:00 GMT"';
+    const header = 'attachment; filename="report.csv"; creation-date="Mon, 15 Jan 2025 10:00:00 GMT"';
     const result = extractFilenameFromHeader(header);
     expect(result).toBe("report.csv");
   });
@@ -155,4 +149,3 @@ describe("extractFilenameFromHeader", () => {
     expect(result).toBe("raporty_Łódź_20250115.csv");
   });
 });
-

@@ -25,17 +25,10 @@ export interface DashboardHeaderProps {
  */
 export function DashboardHeader({ lastUpdatedAt, isRefreshing, onRefresh, className }: DashboardHeaderProps) {
   return (
-    <header
-      className={cn(
-        "flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between",
-        className
-      )}
-    >
+    <header className={cn("flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between", className)}>
       <div className="space-y-1">
         <h1 className="text-3xl font-bold tracking-tight">Dashboard – Dzisiaj</h1>
-        <p className="text-muted-foreground">
-          Przegląd dzisiejszych raportów i statusu kierowców
-        </p>
+        <p className="text-muted-foreground">Przegląd dzisiejszych raportów i statusu kierowców</p>
       </div>
 
       <div className="flex items-center gap-4">
@@ -45,4 +38,3 @@ export function DashboardHeader({ lastUpdatedAt, isRefreshing, onRefresh, classN
     </header>
   );
 }
-

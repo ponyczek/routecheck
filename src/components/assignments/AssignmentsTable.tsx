@@ -1,11 +1,4 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import { AssignmentRow } from "./AssignmentRow";
@@ -14,9 +7,9 @@ import type { AssignmentDTO } from "@/types";
 
 interface AssignmentsTableProps {
   assignments: AssignmentViewModel[];
-  sortBy: 'startDate' | 'endDate' | 'createdAt';
-  sortDir: 'asc' | 'desc';
-  onSortChange: (sortBy: string, sortDir: 'asc' | 'desc') => void;
+  sortBy: "startDate" | "endDate" | "createdAt";
+  sortDir: "asc" | "desc";
+  onSortChange: (sortBy: string, sortDir: "asc" | "desc") => void;
   onEdit: (assignment: AssignmentDTO) => void;
   onDelete: (assignment: AssignmentDTO) => void;
   isLoading?: boolean;
@@ -24,7 +17,7 @@ interface AssignmentsTableProps {
 
 /**
  * AssignmentsTable
- * 
+ *
  * Tabela desktop wyświetlająca listę przypisań z sortowaniem i akcjami.
  * Ukryta na mobile (użyj AssignmentCards zamiast tego).
  */
@@ -35,21 +28,20 @@ export function AssignmentsTable({
   onSortChange,
   onEdit,
   onDelete,
-  isLoading = false,
 }: AssignmentsTableProps) {
-  const handleSort = (column: 'startDate' | 'endDate') => {
+  const handleSort = (column: "startDate" | "endDate") => {
     if (sortBy === column) {
       // Toggle direction if same column
-      onSortChange(column, sortDir === 'asc' ? 'desc' : 'asc');
+      onSortChange(column, sortDir === "asc" ? "desc" : "asc");
     } else {
       // Default to ascending for new column
-      onSortChange(column, 'asc');
+      onSortChange(column, "asc");
     }
   };
 
-  const SortIcon = ({ column }: { column: 'startDate' | 'endDate' }) => {
+  const SortIcon = ({ column }: { column: "startDate" | "endDate" }) => {
     if (sortBy !== column) return null;
-    return sortDir === 'asc' ? (
+    return sortDir === "asc" ? (
       <ChevronUp className="ml-1 h-4 w-4 inline" />
     ) : (
       <ChevronDown className="ml-1 h-4 w-4 inline" />
@@ -68,19 +60,14 @@ export function AssignmentsTable({
                 variant="ghost"
                 size="sm"
                 className="h-8 px-2 font-medium"
-                onClick={() => handleSort('startDate')}
+                onClick={() => handleSort("startDate")}
               >
                 Data rozpoczęcia
                 <SortIcon column="startDate" />
               </Button>
             </TableHead>
             <TableHead className="w-[18%]">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 px-2 font-medium"
-                onClick={() => handleSort('endDate')}
-              >
+              <Button variant="ghost" size="sm" className="h-8 px-2 font-medium" onClick={() => handleSort("endDate")}>
                 Data zakończenia
                 <SortIcon column="endDate" />
               </Button>
@@ -91,17 +78,10 @@ export function AssignmentsTable({
         </TableHeader>
         <TableBody>
           {assignments.map((viewModel) => (
-            <AssignmentRow
-              key={viewModel.assignment.uuid}
-              assignment={viewModel}
-              onEdit={onEdit}
-              onDelete={onDelete}
-            />
+            <AssignmentRow key={viewModel.assignment.uuid} assignment={viewModel} onEdit={onEdit} onDelete={onDelete} />
           ))}
         </TableBody>
       </Table>
     </div>
   );
 }
-
-

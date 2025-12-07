@@ -68,11 +68,9 @@ export function useDashboard(options: UseDashboardOptions = {}) {
   });
 
   // Aggregate loading states
-  const isLoading =
-    summaryQuery.isLoading || reportsQuery.isLoading || pendingQuery.isLoading;
+  const isLoading = summaryQuery.isLoading || reportsQuery.isLoading || pendingQuery.isLoading;
 
-  const isRefreshing =
-    summaryQuery.isFetching || reportsQuery.isFetching || pendingQuery.isFetching;
+  const isRefreshing = summaryQuery.isFetching || reportsQuery.isFetching || pendingQuery.isFetching;
 
   // Aggregate errors (exclude UNAUTHORIZED as it's handled by error boundary/redirect)
   const error =
@@ -99,11 +97,7 @@ export function useDashboard(options: UseDashboardOptions = {}) {
    * Manually refetch all dashboard queries
    */
   const refetch = async () => {
-    await Promise.all([
-      summaryQuery.refetch(),
-      reportsQuery.refetch(),
-      pendingQuery.refetch(),
-    ]);
+    await Promise.all([summaryQuery.refetch(), reportsQuery.refetch(), pendingQuery.refetch()]);
   };
 
   return {
@@ -114,4 +108,3 @@ export function useDashboard(options: UseDashboardOptions = {}) {
     refetch,
   };
 }
-

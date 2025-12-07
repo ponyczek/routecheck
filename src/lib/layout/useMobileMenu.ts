@@ -57,4 +57,3 @@ export function useMobileMenu(): MobileMenuState {
     open,
   };
 }
-

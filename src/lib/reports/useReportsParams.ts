@@ -52,7 +52,7 @@ export function useReportsParams(): {
       routeStatus: routeStatuses.length > 0 ? (routeStatuses as ReportsFiltersState["routeStatus"]) : undefined,
       includeAi: params.get("includeAi") !== "false", // default true
     };
-  }, [urlChangeCounter]);
+  }, []);
 
   // Update URL with new filters
   const updateUrl = useCallback((newFilters: ReportsFiltersState) => {
@@ -111,4 +111,3 @@ export function useReportsParams(): {
     resetFilters,
   };
 }
-

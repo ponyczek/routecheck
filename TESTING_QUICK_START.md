@@ -3,6 +3,7 @@
 ## 🚀 Quick 10-Minute Test Flow
 
 ### Setup (One-time, 5 min)
+
 ```bash
 # 1. Install & Start
 npm install
@@ -18,16 +19,19 @@ npm run dev
 ### Testing Flow (5 min)
 
 #### 1️⃣ Login (30 sec)
+
 - Go to http://localhost:4321
 - Login: `test@routecheck.app` / `TestPassword123!`
 - ✅ Verify: Dashboard loads
 
 #### 2️⃣ Add Driver (1 min)
+
 - Click "Kierowcy" → "Dodaj kierowcę"
 - Fill: `Jan Testowy` / `jan@example.com` / `Europe/Warsaw`
 - ✅ Verify: Driver appears in list
 
 #### 3️⃣ Submit Report (2 min)
+
 ```bash
 # Generate token
 npm run generate-test-token -- jan@example.com
@@ -35,24 +39,29 @@ npm run generate-test-token -- jan@example.com
 # Copy link and open in browser
 # Submit "Wszystko OK"
 ```
+
 - ✅ Verify: Success message + 10-min edit countdown
 
 #### 4️⃣ Check Dashboard (1 min)
+
 - Go to `/dashboard`
 - ✅ Verify: Shows 1 active driver, 1 submitted report, 0 pending
 
 #### 5️⃣ Submit Problem Report (1.5 min)
+
 ```bash
 # Add another driver first
 # Then generate token for them
 npm run generate-test-token
 ```
+
 - Toggle "Zgłoś problem"
 - Fill: 45 min delay, reason: "Korek"
 - Submit
 - ✅ Verify: AI summary shows "LOW" risk (yellow badge)
 
 #### 6️⃣ Check Reports (30 sec)
+
 - Go to `/reports`
 - ✅ Verify: 2 reports, different risk levels, AI summaries
 
@@ -96,6 +105,7 @@ Quick verification for mentors:
 ## 🎥 Demo Script (for video/presentation)
 
 **30-second demo**:
+
 1. Show login → dashboard (3s)
 2. Add driver → appears in list (5s)
 3. Generate token → submit report (7s)
@@ -110,9 +120,9 @@ Quick verification for mentors:
 ## 📞 Support
 
 Stuck? Check:
+
 1. `README.md` - Full setup guide
 2. `SUBMISSION_CHECKLIST.md` - Complete feature list
 3. `docs/` - Detailed documentation
 4. Console logs - Error messages
 5. GitHub Actions - CI status
-

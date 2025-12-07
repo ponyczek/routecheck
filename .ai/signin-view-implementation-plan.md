@@ -1,14 +1,17 @@
 # Plan implementacji widoku Panel logowania
 
 ## 1. Przegląd
+
 Widok odpowiada za uwierzytelnienie spedytora. Udostępnia formularz logowania z walidacją, integruje się z Supabase Auth i po udanym logowaniu przekierowuje użytkownika do `Dashboard`. Obsługuje komunikaty o błędach, informuje o wygaśnięciu sesji i zapobiega dostępowi do widoku przy aktywnej sesji.
 
 ## 2. Routing widoku
+
 - Ścieżka: `/signin` jako strona publiczna poza `AuthenticatedLayout`.
 - Middleware nie wymaga autoryzacji, ale przy aktywnej sesji następuje client-side redirect do docelowej trasy (`/dashboard` lub `returnTo`).
 - Query param `returnTo` wspiera redirect po udanym logowaniu.
 
 ## 3. Struktura komponentów
+
 - `SignInPage` (Astro) → root strony, ładuje layout publiczny i montuje wyspę React.
 - `SignInHero` (Astro/React statyczny) → sekcja opisowa/brandingowa.
 - `SignInFormCard` (React) → kontener formularza (`Card` z shadcn/ui).
@@ -20,7 +23,9 @@ Widok odpowiada za uwierzytelnienie spedytora. Udostępnia formularz logowania z
   - `SignInFooterLinks`
 
 ## 4. Szczegóły komponentów
+
 ### SignInPage
+
 - Opis komponentu: Strona Astro renderująca layout publiczny, przekazująca parametry (`returnTo`, `expired`) do wyspy React oraz ustawiająca metadane SEO.
 - Główne elementy: znacznik `<main>` z kontenerem `max-w-lg`, sekcja hero, slot na kartę formularza.
 - Obsługiwane interakcje: brak interakcji (delegowane do dzieci); SSR redirect jeśli żądanie ma aktywną sesję (opcjonalnie, gdy zapewnimy helper).
@@ -29,6 +34,7 @@ Widok odpowiada za uwierzytelnienie spedytora. Udostępnia formularz logowania z
 - Propsy: brak (Astro strona).
 
 ### SignInFormCard
+
 - Opis komponentu: Kompozycja `Card`, która buduje strukturę formularza, zarządza stanem błędów globalnych i dostarcza kontekst dla formularza.
 - Główne elementy: `CardHeader` z tytułem i opisem, `CardContent` z `SignInForm`, `SessionExpiryNotice`, `AuthErrorAlert`, `CardFooter` z `SignInFooterLinks`.
 - Obsługiwane interakcje: przekazuje callback `onSuccess` i `onError` do formularza, renderuje spinnery w oparciu o `status`.
@@ -37,6 +43,7 @@ Widok odpowiada za uwierzytelnienie spedytora. Udostępnia formularz logowania z
 - Propsy: `{ returnTo?: string; sessionExpiryReason?: SessionExpiryReason }`.
 
 ### SessionExpiryNotice
+
 - Opis komponentu: Baner informujący o powodzie powrotu na stronę logowania (np. sesja wygasła).
 - Główne elementy: `Alert` z ikoną, tekstem i opcjonalnym linkiem do pomocy.
 - Obsługiwane interakcje: możliwość zamknięcia banera (ustawienie w stanie lokalnym, jeśli wprowadzimy `dismissible`).
@@ -45,10 +52,11 @@ Widok odpowiada za uwierzytelnienie spedytora. Udostępnia formularz logowania z
 - Propsy: `{ reason: SessionExpiryReason }`.
 
 ### SignInForm
+
 - Opis komponentu: Formularz React Hook Form z walidacją Zod, obsługuje poświadczenia i wywołuje Supabase Auth.
 - Główne elementy: `Form` RHF, `FormField` dla email i hasła, `Button` z loaderem, checkbox „Pokaż hasło” (opcjonalnie), `SR`-teksty dla dostępności.
 - Obsługiwane interakcje: wprowadzanie danych, submit (`onSubmit`), klawisz Enter, toggle widoczności hasła.
-- Obsługiwana walidacja: 
+- Obsługiwana walidacja:
   - `email`: wymagany, wzorzec email, max 150 znaków.
   - `password`: wymagany, min 6 znaków, max 128 znaków.
   - Blokowanie wielokrotnych submitów podczas `status === 'submitting'`.
@@ -56,6 +64,7 @@ Widok odpowiada za uwierzytelnienie spedytora. Udostępnia formularz logowania z
 - Propsy: `{ returnTo?: string; onSuccess(result: SignInSuccessPayload): void; onError(error: AuthErrorState): void }`.
 
 ### AuthErrorAlert
+
 - Opis komponentu: Wyświetla błędy zwrócone z Supabase lub walidacji globalnej.
 - Główne elementy: `Alert` z ikoną ostrzeżenia, listą komunikatów, `aria-live="assertive"`.
 - Obsługiwane interakcje: opcjonalny przycisk ponów (wywołuje przekazaną funkcję `onRetry`).
@@ -64,6 +73,7 @@ Widok odpowiada za uwierzytelnienie spedytora. Udostępnia formularz logowania z
 - Propsy: `{ error: AuthErrorState | null; onRetry?: () => void }`.
 
 ### SignInFooterLinks
+
 - Opis komponentu: Zbiór linków pomocniczych (reset hasła, kontakt).
 - Główne elementy: link do Supabase reset (`/auth/reset`), mailto do wsparcia, informacja o wygaśnięciu sesji po 24h.
 - Obsługiwane interakcje: kliknięcia w linki (nawigacja).
@@ -72,6 +82,7 @@ Widok odpowiada za uwierzytelnienie spedytora. Udostępnia formularz logowania z
 - Propsy: `{ supportEmail: string }`.
 
 ## 5. Typy
+
 - `SignInPageProps`: { returnTo?: string; expired?: boolean } – używane w warstwie Astro do przekazania parametrów do wyspy.
 - `SignInFormValues`: { email: string; password: string } – model formularza RHF, zgodny z walidacją Zod.
 - `SignInStatus`: `'idle' | 'submitting' | 'success' | 'error'` – stan UI dla przycisku i blokad.
@@ -81,6 +92,7 @@ Widok odpowiada za uwierzytelnienie spedytora. Udostępnia formularz logowania z
 - `RedirectMetadata`: { returnTo?: string } – wynik parsowania query paramów.
 
 ## 6. Zarządzanie stanem
+
 - Formularz korzysta z `react-hook-form` z `zodResolver` dla synchronizacji walidacji.
 - Wywołanie logowania opakowane w `useMutation` z `@tanstack/react-query` (klucz `auth/signin`) by mieć kontrolę nad `status`, retry i side-effectami (prefetch danych).
 - Lokalne `useState` dla `authError`, `isPasswordVisible`, `SessionExpiryNotice` (dismiss).
@@ -90,6 +102,7 @@ Widok odpowiada za uwierzytelnienie spedytora. Udostępnia formularz logowania z
 - Hook `useAuthRedirect` (w `SignInPage`) sprawdza `supabase.auth.getSession()` na mount i przekierowuje autoryzowanych użytkowników.
 
 ## 7. Integracja API
+
 - `supabase.auth.signInWithPassword({ email, password })` – główne wywołanie; sukces zwraca `session` i `user`, błędy mapowane na `AuthErrorState`.
 - Po zalogowaniu równolegle wykonujemy:
   - `fetch('/api/users/me')` z `UserDTO`.
@@ -99,6 +112,7 @@ Widok odpowiada za uwierzytelnienie spedytora. Udostępnia formularz logowania z
 - W przypadku błędu `email_not_confirmed` prezentujemy link do ponownego wysłania maila (z Supabase `auth.resend()` jeśli zdecydujemy się dodać).
 
 ## 8. Interakcje użytkownika
+
 - Wprowadzanie danych w polach `Email` i `Hasło` z walidacją inline (po blur i przy submit).
 - Kliknięcie przycisku `Zaloguj` uruchamia proces logowania; w trakcie przycisk jest disabled i pokazuje spinner.
 - Obsługa klawisza Enter w polach formularza.
@@ -107,6 +121,7 @@ Widok odpowiada za uwierzytelnienie spedytora. Udostępnia formularz logowania z
 - Zamknięcie banera `SessionExpiryNotice` (jeśli włączone) usuwa go ze stanu lokalnego.
 
 ## 9. Warunki i walidacja
+
 - `email` musi być poprawnym adresem (regex RFC z Zod) i niepusty; komunikat `Podaj adres e-mail`.
 - `password` musi mieć 6–128 znaków; komunikat `Hasło musi mieć min. 6 znaków`.
 - Submit niedostępny, gdy formularz ma błędy lub trwa logowanie.
@@ -115,6 +130,7 @@ Widok odpowiada za uwierzytelnienie spedytora. Udostępnia formularz logowania z
 - Jeżeli Supabase zwróci brak `session`, traktujemy to jako błąd krytyczny (`unknown`).
 
 ## 10. Obsługa błędów
+
 - `invalid_credentials`: czerwony alert z instrukcją sprawdzenia danych, focus na pole hasła.
 - `email_not_confirmed`: żółty alert z CTA do wysłania ponownego maila (jeżeli wdrożymy `supabase.auth.resend()`), inaczej komunikat kontaktu z administratorem.
 - `rate_limited`: baner informuje o blokadzie i wskazuje czas oczekiwania.
@@ -123,6 +139,7 @@ Widok odpowiada za uwierzytelnienie spedytora. Udostępnia formularz logowania z
 - W przypadku błędów podczas prefetchu `/api/users/me` lub `/api/companies/me` logujemy i pozwalamy na redirect; docelowy layout wykona retry.
 
 ## 11. Kroki implementacji
+
 1. Utwórz stronę `src/pages/signin.astro` z layoutem publicznym, analizą query paramów i osadzeniem wyspy `SignInFormCard`.
 2. Przygotuj moduł `src/components/auth/SignInFormCard.tsx` (React) wraz z `SessionExpiryNotice`, `AuthErrorAlert`, `SignInFooterLinks`.
 3. Zaimplementuj `SignInForm.tsx` z React Hook Form + Zod, spinnerem i mapowaniem błędów Supabase.
@@ -133,4 +150,3 @@ Widok odpowiada za uwierzytelnienie spedytora. Udostępnia formularz logowania z
 8. Zweryfikuj integrację: ręczne testy logowania, błędy 401/429, redirect `returnTo`.
 9. Włącz telemetry (jeśli wymagane) i upewnij się, że middleware poprawnie zezwala na `/signin`.
 10. Zaktualizuj dokumentację routingu (README/AI plan) i zgłoś do review.
-

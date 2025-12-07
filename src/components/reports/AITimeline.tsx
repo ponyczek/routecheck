@@ -16,9 +16,7 @@ export function AITimeline({ aiResult }: AITimelineProps) {
     return (
       <div className="rounded-lg border border-dashed p-6 text-center">
         <Bot className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
-        <div className="text-sm text-muted-foreground">
-          Analiza AI nie jest dostępna dla tego raportu
-        </div>
+        <div className="text-sm text-muted-foreground">Analiza AI nie jest dostępna dla tego raportu</div>
       </div>
     );
   }
@@ -73,13 +71,8 @@ export function AITimeline({ aiResult }: AITimelineProps) {
       {/* Timestamps */}
       <div className="text-xs text-muted-foreground space-y-1">
         <div>Utworzono: {new Date(aiResult.createdAt).toLocaleString("pl-PL")}</div>
-        {aiResult.updatedAt && (
-          <div>Zaktualizowano: {new Date(aiResult.updatedAt).toLocaleString("pl-PL")}</div>
-        )}
+        {aiResult.updatedAt && <div>Zaktualizowano: {new Date(aiResult.updatedAt).toLocaleString("pl-PL")}</div>}
       </div>
     </div>
   );
 }
-
-
-

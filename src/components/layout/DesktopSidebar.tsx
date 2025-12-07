@@ -6,8 +6,6 @@ import type { UserDTO, CompanyDTO } from "@/types";
 import type { NavItem } from "@/lib/layout/types";
 
 interface DesktopSidebarProps {
-  /** Company name for logo area */
-  companyName: string;
   /** Current active route pathname */
   activeRoute: string;
   /** Current user data */
@@ -82,17 +80,17 @@ const NAV_ITEMS: Omit<NavItem, "isActive">[] = [
  * @param props - DesktopSidebar props
  * @returns Desktop sidebar component
  */
-export function DesktopSidebar({ companyName, activeRoute, user, company, onSignOut }: DesktopSidebarProps) {
+export function DesktopSidebar({ activeRoute, user, company, onSignOut }: DesktopSidebarProps) {
   return (
-    <aside 
+    <aside
       className="fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col border-r border-border bg-background md:flex"
       role="complementary"
       aria-label="Nawigacja główna"
     >
       {/* Logo and company name */}
       <div className="flex h-16 items-center border-b border-border px-6">
-        <a 
-          href="/dashboard" 
+        <a
+          href="/dashboard"
           className="flex items-center gap-2 font-semibold transition-opacity hover:opacity-80"
           aria-label="RouteCheck - Przejdź do strony głównej"
         >
@@ -115,4 +113,3 @@ export function DesktopSidebar({ companyName, activeRoute, user, company, onSign
     </aside>
   );
 }
-

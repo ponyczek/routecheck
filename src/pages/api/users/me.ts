@@ -31,4 +31,3 @@ export const GET: APIRoute = async () => {
     return jsonResponse(errorResponse.body, errorResponse.status);
   }
 };
-

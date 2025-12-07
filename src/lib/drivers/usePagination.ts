@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback } from "react";
 
 /**
  * Hook do zarządzania paginacją cursorową
@@ -11,13 +11,16 @@ export function usePagination() {
   /**
    * Przejdź do następnej strony
    */
-  const goToNext = useCallback((nextCursor: string) => {
-    if (currentCursor) {
-      // Dodaj aktualny cursor do stacku poprzednich
-      setPrevCursors((prev) => [...prev, currentCursor]);
-    }
-    setCurrentCursor(nextCursor);
-  }, [currentCursor]);
+  const goToNext = useCallback(
+    (nextCursor: string) => {
+      if (currentCursor) {
+        // Dodaj aktualny cursor do stacku poprzednich
+        setPrevCursors((prev) => [...prev, currentCursor]);
+      }
+      setCurrentCursor(nextCursor);
+    },
+    [currentCursor]
+  );
 
   /**
    * Przejdź do poprzedniej strony
@@ -58,6 +61,3 @@ export function usePagination() {
     reset,
   };
 }
-
-
-

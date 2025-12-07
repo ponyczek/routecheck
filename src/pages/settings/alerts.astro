@@ -7,7 +7,10 @@ import type { TelemetryAggregatesDTO, EmailLogDTO } from "@/types";
 const supabase = Astro.locals.supabase;
 
 // Check authentication
-const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+const {
+  data: { session },
+  error: sessionError,
+} = await supabase.auth.getSession();
 
 if (sessionError || !session) {
   return Astro.redirect("/signin?returnUrl=/settings/alerts");
@@ -22,7 +25,7 @@ try {
   const to = new Date();
   const from = new Date();
   from.setDate(from.getDate() - 7);
-  
+
   const telemetryParams = new URLSearchParams({
     eventType: "FORM_SUBMIT",
     bucket: "day",
@@ -68,26 +71,31 @@ try {
 }
 ---
 
-<AuthenticatedLayout title="Alerty i Telemetria - Ustawienia - RouteCheck" description="Zarządzaj powiadomieniami e-mail i przeglądaj metryki użyteczności formularza kierowcy">
+<AuthenticatedLayout
+  title="Alerty i Telemetria - Ustawienia - RouteCheck"
+  description="Zarządzaj powiadomieniami e-mail i przeglądaj metryki użyteczności formularza kierowcy"
+>
   <div class="container mx-auto space-y-6 p-6">
     <!-- Settings navigation tabs -->
     <div class="flex gap-4 border-b border-border">
-      <a href="/settings/profile" class="border-b-2 border-transparent px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+      <a
+        href="/settings/profile"
+        class="border-b-2 border-transparent px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground"
+      >
         Profil
       </a>
       <a href="/settings/alerts" class="border-b-2 border-primary px-4 py-2 text-sm font-medium text-primary">
         Alerty
       </a>
-      <a href="/settings/account" class="border-b-2 border-transparent px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+      <a
+        href="/settings/account"
+        class="border-b-2 border-transparent px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground"
+      >
         Konto
       </a>
     </div>
 
     <!-- Alerts and Telemetry view -->
-    <AlertsAndTelemetryViewWithProvider
-      client:load
-      initialTelemetryData={telemetryData}
-      initialEmailLogs={emailLogs}
-    />
+    <AlertsAndTelemetryViewWithProvider client:load initialTelemetryData={telemetryData} initialEmailLogs={emailLogs} />
   </div>
 </AuthenticatedLayout>

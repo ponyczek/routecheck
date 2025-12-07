@@ -45,16 +45,8 @@ function ReportsView() {
   const { filters, setFilters, resetFilters } = useReportsParams();
 
   // Fetch reports with infinite scrolling
-  const {
-    data,
-    isLoading,
-    isError,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    refetch,
-  } = useReports(filters);
+  const { data, isLoading, isError, error, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } =
+    useReports(filters);
 
   // State for detail sheet
   const [selectedReportId, setSelectedReportId] = React.useState<string | null>(null);
@@ -154,12 +146,7 @@ function ReportsView() {
       />
 
       {/* Export Modal */}
-      <ExportCsvModal
-        open={isExportDialogOpen}
-        onOpenChange={setIsExportDialogOpen}
-        companyName={company?.name}
-      />
+      <ExportCsvModal open={isExportDialogOpen} onOpenChange={setIsExportDialogOpen} companyName={company?.name} />
     </div>
   );
 }
-

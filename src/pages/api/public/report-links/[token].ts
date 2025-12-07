@@ -1,18 +1,9 @@
 import type { APIRoute } from "astro";
 
 import { supabaseServiceClient } from "../../../../db/supabase.client";
-import {
-  hashToken,
-  getValidLinkOrThrow,
-  ReportLinkError,
-} from "../../../../lib/services/reportLinksService";
+import { hashToken, getValidLinkOrThrow, ReportLinkError } from "../../../../lib/services/reportLinksService";
 import { errorResponse, jsonResponse } from "../../../../lib/utils/errors";
-import {
-  getClientIP,
-  checkIpRateLimit,
-  getRateLimitHeaders,
-  RATE_LIMITS,
-} from "../../../../lib/utils/rate-limiter";
+import { getClientIP, checkIpRateLimit, getRateLimitHeaders, RATE_LIMITS } from "../../../../lib/utils/rate-limiter";
 import type { PublicReportLinkValidationDTO } from "../../../../types";
 
 // Disable prerendering for this API route
@@ -102,9 +93,11 @@ export const GET: APIRoute = async (context) => {
     // Step 6: Fetch vehicle information (if assigned)
     const { data: assignment } = await supabaseServiceClient
       .from("driver_vehicle_assignments")
-      .select(`
+      .select(
+        `
         vehicles!inner(registration_number)
-      `)
+      `
+      )
       .eq("driver_uuid", validLink.driverUuid)
       .eq("is_active", true)
       .lte("start_date", now.toISOString())
@@ -145,4 +138,3 @@ export const GET: APIRoute = async (context) => {
     return errorResponse("internal_error", "An unexpected error occurred", 500);
   }
 };
-

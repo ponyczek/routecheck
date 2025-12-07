@@ -24,13 +24,18 @@ interface NavItemProps {
  * @param props - NavItem props
  * @returns Navigation item component
  */
-export const NavItem = memo(function NavItem({ item, disabled = false, orientation = "vertical", onClick }: NavItemProps) {
+export const NavItem = memo(function NavItem({
+  item,
+  disabled = false,
+  orientation = "vertical",
+  onClick,
+}: NavItemProps) {
   const isActive = item.isActive;
 
   const baseClasses = cn(
     "flex items-center gap-3 rounded-lg px-3 py-2 transition-colors",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-    orientation === "vertical" ? "w-full" : "flex-col text-center",
+    orientation === "vertical" ? "w-full" : "flex-col text-center"
   );
 
   const stateClasses = cn({
@@ -74,4 +79,3 @@ export const NavItem = memo(function NavItem({ item, disabled = false, orientati
     </a>
   );
 });
-

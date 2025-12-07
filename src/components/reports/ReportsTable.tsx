@@ -1,11 +1,5 @@
 import * as React from "react";
-import {
-  Table,
-  TableBody,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ReportRow } from "./ReportRow";
 import type { ReportListItemDTO } from "@/types";
 
@@ -41,6 +35,3 @@ export function ReportsTable({ reports, onViewReport }: ReportsTableProps) {
     </div>
   );
 }
-
-
-

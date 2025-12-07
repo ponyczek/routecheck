@@ -1,4 +1,4 @@
-import type { Uuid } from '@/types';
+import type { Uuid } from "@/types";
 
 /**
  * Storage keys for SessionStorage
@@ -14,8 +14,8 @@ const STORAGE_KEYS = {
  * @returns True if token was already used
  */
 export function isTokenUsed(token: string): boolean {
-  if (typeof window === 'undefined') return false;
-  
+  if (typeof window === "undefined") return false;
+
   const key = STORAGE_KEYS.token(token);
   return sessionStorage.getItem(key) !== null;
 }
@@ -25,8 +25,8 @@ export function isTokenUsed(token: string): boolean {
  * @param token - The report link token
  */
 export function markTokenAsUsed(token: string): void {
-  if (typeof window === 'undefined') return;
-  
+  if (typeof window === "undefined") return;
+
   const key = STORAGE_KEYS.token(token);
   sessionStorage.setItem(key, new Date().toISOString());
 }
@@ -38,8 +38,8 @@ export function markTokenAsUsed(token: string): void {
  * @param token - The original report link token
  */
 export function storeReportToken(reportUuid: Uuid, token: string): void {
-  if (typeof window === 'undefined') return;
-  
+  if (typeof window === "undefined") return;
+
   const key = STORAGE_KEYS.report(reportUuid);
   sessionStorage.setItem(key, token);
 }
@@ -50,8 +50,8 @@ export function storeReportToken(reportUuid: Uuid, token: string): void {
  * @returns Token if found, null otherwise
  */
 export function getReportToken(reportUuid: Uuid): string | null {
-  if (typeof window === 'undefined') return null;
-  
+  if (typeof window === "undefined") return null;
+
   const key = STORAGE_KEYS.report(reportUuid);
   return sessionStorage.getItem(key);
 }
@@ -60,14 +60,12 @@ export function getReportToken(reportUuid: Uuid): string | null {
  * Clears all report-related data from SessionStorage
  */
 export function clearReportStorage(): void {
-  if (typeof window === 'undefined') return;
-  
+  if (typeof window === "undefined") return;
+
   const keys = Object.keys(sessionStorage);
-  keys.forEach(key => {
-    if (key.startsWith('routelog:')) {
+  keys.forEach((key) => {
+    if (key.startsWith("routelog:")) {
       sessionStorage.removeItem(key);
     }
   });
 }
-
-

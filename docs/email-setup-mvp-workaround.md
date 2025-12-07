@@ -7,6 +7,7 @@ For the MVP, automated email sending is **not implemented** due to time constrai
 ## Why No Automated Emails in MVP?
 
 Full email automation requires:
+
 1. Email service provider setup (Resend, SendGrid, AWS SES)
 2. API keys and configuration
 3. Email templates and testing
@@ -31,6 +32,7 @@ npm run generate-test-token
 ```
 
 This outputs a working URL that can be:
+
 - Copied and pasted to browser
 - Sent manually via email/Slack
 - Used in automated tests
@@ -70,6 +72,7 @@ This outputs a working URL that can be:
 ### How It Works
 
 The script:
+
 1. Finds active driver by email (or first active)
 2. Generates secure 64-char token
 3. Hashes token with SHA-256
@@ -106,11 +109,13 @@ See `tests/e2e/public-report-flow.spec.ts` (if implemented) for automated testin
 #### 1. Choose Email Provider
 
 **Recommended: Resend** (modern, developer-friendly)
+
 - Pricing: $20/month for 50k emails
 - Setup time: ~1 hour
 - Great DX and deliverability
 
 Alternatives:
+
 - **SendGrid**: More features, complex
 - **AWS SES**: Cheapest, more config
 - **Postmark**: Great for transactional
@@ -128,22 +133,17 @@ EMAIL_FROM_NAME=RouteCheck
 
 ```typescript
 // src/lib/email/resendService.ts
-import { Resend } from 'resend';
+import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function sendReportLink(
-  driverEmail: string,
-  driverName: string,
-  token: string,
-  expiresAt: string
-) {
+export async function sendReportLink(driverEmail: string, driverName: string, token: string, expiresAt: string) {
   const reportUrl = `${process.env.PUBLIC_URL}/public/report-links/${token}`;
 
   await resend.emails.send({
     from: `${process.env.EMAIL_FROM_NAME} <${process.env.EMAIL_FROM}>`,
     to: driverEmail,
-    subject: 'Raport dzienny - wypełnij przed końcem dnia',
+    subject: "Raport dzienny - wypełnij przed końcem dnia",
     html: `
       <h2>Cześć ${driverName}!</h2>
       <p>Twój dzienny link do raportu jest gotowy.</p>
@@ -152,7 +152,7 @@ export async function sendReportLink(
           Wypełnij raport
         </a>
       </p>
-      <p>Link wygasa: ${new Date(expiresAt).toLocaleString('pl-PL')}</p>
+      <p>Link wygasa: ${new Date(expiresAt).toLocaleString("pl-PL")}</p>
       <p>Jeśli wszystko poszło dobrze, kliknij "Wszystko OK" - zajmie to 5 sekund!</p>
     `,
   });
@@ -165,18 +165,18 @@ export async function sendReportLink(
 // src/pages/api/cron/generate-daily-links.ts
 export const POST: APIRoute = async ({ request }) => {
   // Verify cron secret
-  const authHeader = request.headers.get('Authorization');
+  const authHeader = request.headers.get("Authorization");
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return new Response('Unauthorized', { status: 401 });
+    return new Response("Unauthorized", { status: 401 });
   }
 
   const supabase = createServiceClient();
 
   // 1. Get all active drivers
   const { data: drivers } = await supabase
-    .from('drivers')
-    .select('uuid, name, email, company_uuid')
-    .eq('is_active', true);
+    .from("drivers")
+    .select("uuid, name, email, company_uuid")
+    .eq("is_active", true);
 
   // 2. Generate links and send emails
   let sent = 0;
@@ -187,7 +187,7 @@ export const POST: APIRoute = async ({ request }) => {
       const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
       // Create link
-      await supabase.from('report_links').insert({
+      await supabase.from("report_links").insert({
         driver_uuid: driver.uuid,
         company_uuid: driver.company_uuid,
         hashed_token: hashedToken,
@@ -211,6 +211,7 @@ export const POST: APIRoute = async ({ request }) => {
 #### 5. Setup Cron Job
 
 **Vercel Cron** (if deployed on Vercel):
+
 ```json
 // vercel.json
 {
@@ -224,12 +225,13 @@ export const POST: APIRoute = async ({ request }) => {
 ```
 
 **GitHub Actions** (alternative):
+
 ```yaml
 # .github/workflows/daily-links.yml
 name: Send Daily Links
 on:
   schedule:
-    - cron: '0 18 * * *'  # 6 PM daily
+    - cron: "0 18 * * *" # 6 PM daily
 jobs:
   send-links:
     runs-on: ubuntu-latest
@@ -241,6 +243,7 @@ jobs:
 ```
 
 **Supabase Edge Function** (serverless):
+
 ```bash
 supabase functions deploy send-daily-links
 supabase functions schedule send-daily-links --cron "0 18 * * *"
@@ -251,12 +254,12 @@ supabase functions schedule send-daily-links --cron "0 18 * * *"
 Already have `email_logs` table - just integrate:
 
 ```typescript
-await supabase.from('email_logs').insert({
+await supabase.from("email_logs").insert({
   driver_uuid: driver.uuid,
   company_uuid: driver.company_uuid,
-  email_type: 'DAILY_REPORT_LINK',
+  email_type: "DAILY_REPORT_LINK",
   recipient: driver.email,
-  status: 'SENT',
+  status: "SENT",
   sent_at: new Date().toISOString(),
   metadata: { link_uuid: linkUuid },
 });
@@ -285,11 +288,13 @@ mailhog
 ## Cost Estimates
 
 ### Resend Pricing
+
 - Free: 3,000 emails/month (good for testing)
 - $20/month: 50,000 emails (enough for 500 drivers daily)
 - $80/month: 500,000 emails (5k drivers)
 
 ### Typical Usage
+
 - 100 drivers = 3,000 emails/month = **FREE**
 - 500 drivers = 15,000 emails/month = **$20/month**
 - 1,000 drivers = 30,000 emails/month = **$20/month**
@@ -299,6 +304,7 @@ Very affordable for small/medium fleets!
 ## Alternative: SMS (Future)
 
 For drivers without email:
+
 - **Twilio**: $0.0075/SMS in Poland
 - **Vonage**: Similar pricing
 - 100 drivers/day = ~$23/month
@@ -314,7 +320,6 @@ For drivers without email:
 ✅ **For MVP**: Manual script is sufficient  
 🚀 **For Production**: 1-2 days to add full email automation  
 💰 **Cost**: ~$20/month for typical usage  
-⏱️ **Setup time**: ~4 hours with Resend  
+⏱️ **Setup time**: ~4 hours with Resend
 
 The manual approach meets acceptance criteria and demonstrates the complete report flow!
-

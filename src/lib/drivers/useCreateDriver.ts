@@ -1,8 +1,8 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { driversService } from '@/lib/services/driversService';
-import { driversKeys } from './queryKeys';
-import { toast } from 'sonner';
-import type { CreateDriverCommand } from '@/types';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { driversService } from "@/lib/services/driversService";
+import { driversKeys } from "./queryKeys";
+import { toast } from "sonner";
+import type { CreateDriverCommand } from "@/types";
 
 /**
  * Hook do tworzenia nowego kierowcy
@@ -16,23 +16,20 @@ export function useCreateDriver() {
     onSuccess: () => {
       // Invalidate wszystkie listy kierowców
       queryClient.invalidateQueries({ queryKey: driversKeys.lists() });
-      toast.success('Kierowca został dodany pomyślnie');
+      toast.success("Kierowca został dodany pomyślnie");
     },
     onError: (error: any) => {
       // Obsługa specyficznych błędów
       if (error.response?.status === 409) {
-        toast.error('Kierowca z tym adresem e-mail już istnieje');
+        toast.error("Kierowca z tym adresem e-mail już istnieje");
       } else if (error.response?.status === 400) {
-        const message = error.response?.data?.message || 'Nieprawidłowe dane';
+        const message = error.response?.data?.message || "Nieprawidłowe dane";
         toast.error(message);
       } else if (error.response?.status === 403) {
-        toast.error('Brak uprawnień do dodania kierowcy');
+        toast.error("Brak uprawnień do dodania kierowcy");
       } else {
-        toast.error('Nie udało się dodać kierowcy');
+        toast.error("Nie udało się dodać kierowcy");
       }
     },
   });
 }
-
-
-

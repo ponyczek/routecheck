@@ -95,4 +95,3 @@ export interface RouteInfo {
   breadcrumbs: Crumb[];
   parentRoute?: string;
 }
-

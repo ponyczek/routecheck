@@ -10,16 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DateRangePicker, type DateRange } from "./DateRangePicker";
@@ -108,9 +99,7 @@ export function ExportCsvDialog({ open, onOpenChange }: ExportCsvDialogProps) {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Eksportuj raporty do CSV</DialogTitle>
-          <DialogDescription>
-            Wybierz zakres dat i opcje eksportu. Wszystkie pola są wymagane.
-          </DialogDescription>
+          <DialogDescription>Wybierz zakres dat i opcje eksportu. Wszystkie pola są wymagane.</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -135,9 +124,7 @@ export function ExportCsvDialog({ open, onOpenChange }: ExportCsvDialogProps) {
                       disabled={isExporting}
                     />
                   </FormControl>
-                  <FormDescription>
-                    Wybierz zakres dat dla raportów do eksportu
-                  </FormDescription>
+                  <FormDescription>Wybierz zakres dat dla raportów do eksportu</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -151,17 +138,11 @@ export function ExportCsvDialog({ open, onOpenChange }: ExportCsvDialogProps) {
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                     <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        disabled={isExporting}
-                      />
+                      <Checkbox checked={field.value} onCheckedChange={field.onChange} disabled={isExporting} />
                     </FormControl>
                     <div className="space-y-1 leading-none">
                       <FormLabel>Dołącz analizę AI</FormLabel>
-                      <FormDescription>
-                        Eksportuj kolumny z podsumowaniem i oceną AI
-                      </FormDescription>
+                      <FormDescription>Eksportuj kolumny z podsumowaniem i oceną AI</FormDescription>
                     </div>
                   </FormItem>
                 )}
@@ -173,17 +154,11 @@ export function ExportCsvDialog({ open, onOpenChange }: ExportCsvDialogProps) {
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                     <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        disabled={isExporting}
-                      />
+                      <Checkbox checked={field.value} onCheckedChange={field.onChange} disabled={isExporting} />
                     </FormControl>
                     <div className="space-y-1 leading-none">
                       <FormLabel>Dołącz tagi ryzyka</FormLabel>
-                      <FormDescription>
-                        Eksportuj kolumnę z tagami ryzyka
-                      </FormDescription>
+                      <FormDescription>Eksportuj kolumnę z tagami ryzyka</FormDescription>
                     </div>
                   </FormItem>
                 )}
@@ -191,12 +166,7 @@ export function ExportCsvDialog({ open, onOpenChange }: ExportCsvDialogProps) {
             </div>
 
             <DialogFooter>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-                disabled={isExporting}
-              >
+              <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isExporting}>
                 Anuluj
               </Button>
               <Button type="submit" disabled={isExporting} className="gap-2">
@@ -219,6 +189,3 @@ export function ExportCsvDialog({ open, onOpenChange }: ExportCsvDialogProps) {
     </Dialog>
   );
 }
-
-
-

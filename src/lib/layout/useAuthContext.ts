@@ -110,4 +110,3 @@ export function useAuthContext(options?: UseAuthContextOptions): AuthContextValu
     refresh,
   };
 }
-

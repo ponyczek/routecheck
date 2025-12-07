@@ -1,6 +1,6 @@
-import { Button } from '@/components/ui/button';
-import { AlertCircle, Clock, CheckCircle, ServerCrash } from 'lucide-react';
-import type { ErrorType } from '@/lib/public-report/validation';
+import { Button } from "@/components/ui/button";
+import { AlertCircle, Clock, CheckCircle, ServerCrash } from "lucide-react";
+import type { ErrorType } from "@/lib/public-report/validation";
 
 interface ErrorViewProps {
   errorType: ErrorType;
@@ -18,38 +18,40 @@ interface ErrorConfig {
 /**
  * ErrorView - Displays error states for token validation failures
  * Handles 404 (not found), 409 (already used), 410 (expired), 500 (server error)
- * 
+ *
  * @example
  * <ErrorView errorType="410" message="Link wygasł" />
  */
 export function ErrorView({ errorType, message }: ErrorViewProps) {
   const errorConfigs: Record<ErrorType, ErrorConfig> = {
-    '404': {
+    "404": {
       icon: AlertCircle,
-      iconColor: 'text-red-600',
-      title: 'Link nie został znaleziony',
-      description: 'Ten link nie istnieje lub został usunięty. Sprawdź czy skopiowałeś pełny adres z e-maila.',
+      iconColor: "text-red-600",
+      title: "Link nie został znaleziony",
+      description: "Ten link nie istnieje lub został usunięty. Sprawdź czy skopiowałeś pełny adres z e-maila.",
       showRetryButton: true,
     },
-    '409': {
+    "409": {
       icon: CheckCircle,
-      iconColor: 'text-green-600',
-      title: 'Raport już wysłany',
-      description: 'Ten link został już wykorzystany do wysłania raportu. Jeśli chcesz edytować raport, skorzystaj z linku z potwierdzenia.',
+      iconColor: "text-green-600",
+      title: "Raport już wysłany",
+      description:
+        "Ten link został już wykorzystany do wysłania raportu. Jeśli chcesz edytować raport, skorzystaj z linku z potwierdzenia.",
       showRetryButton: false,
     },
-    '410': {
+    "410": {
       icon: Clock,
-      iconColor: 'text-orange-600',
-      title: 'Link wygasł',
-      description: 'Ten link był ważny przez 24 godziny i już wygasł. Skontaktuj się z dyspozytorem, aby otrzymać nowy link.',
+      iconColor: "text-orange-600",
+      title: "Link wygasł",
+      description:
+        "Ten link był ważny przez 24 godziny i już wygasł. Skontaktuj się z dyspozytorem, aby otrzymać nowy link.",
       showRetryButton: false,
     },
-    '500': {
+    "500": {
       icon: ServerCrash,
-      iconColor: 'text-red-600',
-      title: 'Błąd serwera',
-      description: 'Wystąpił problem z serwerem. Spróbuj ponownie za chwilę lub skontaktuj się z pomocą techniczną.',
+      iconColor: "text-red-600",
+      title: "Błąd serwera",
+      description: "Wystąpił problem z serwerem. Spróbuj ponownie za chwilę lub skontaktuj się z pomocą techniczną.",
       showRetryButton: true,
     },
   };
@@ -70,23 +72,15 @@ export function ErrorView({ errorType, message }: ErrorViewProps) {
         </div>
 
         {/* Title */}
-        <h1 className="text-3xl font-bold text-gray-900">
-          {config.title}
-        </h1>
+        <h1 className="text-3xl font-bold text-gray-900">{config.title}</h1>
 
         {/* Description */}
-        <p className="text-lg text-gray-600 max-w-md">
-          {message || config.description}
-        </p>
+        <p className="text-lg text-gray-600 max-w-md">{message || config.description}</p>
 
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-3 mt-8">
           {config.showRetryButton && (
-            <Button
-              onClick={handleRetry}
-              size="lg"
-              className="font-semibold"
-            >
+            <Button onClick={handleRetry} size="lg" className="font-semibold">
               Spróbuj ponownie
             </Button>
           )}
@@ -94,9 +88,7 @@ export function ErrorView({ errorType, message }: ErrorViewProps) {
 
         {/* Contact Info */}
         <div className="mt-12 p-6 bg-gray-50 rounded-lg border border-gray-200 max-w-md">
-          <p className="text-sm text-gray-700 font-medium mb-2">
-            Potrzebujesz pomocy?
-          </p>
+          <p className="text-sm text-gray-700 font-medium mb-2">Potrzebujesz pomocy?</p>
           <p className="text-sm text-gray-600">
             Jeśli problem się powtarza, skontaktuj się z dyspozytorem lub działem wsparcia Twojej firmy.
           </p>
@@ -105,5 +97,3 @@ export function ErrorView({ errorType, message }: ErrorViewProps) {
     </div>
   );
 }
-
-

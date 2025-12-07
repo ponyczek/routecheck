@@ -7,25 +7,25 @@ import type { UserInfoCardProps } from "@/lib/settings/types";
 
 /**
  * UserInfoCard - Karta wyświetlająca podstawowe informacje o zalogowanym użytkowniku
- * 
+ *
  * Komponent prezentuje szczegółowe informacje o koncie użytkownika:
  * - Adres e-mail z możliwością kopiowania (UserEmailDisplay)
  * - UUID użytkownika
  * - Nazwa firmy i UUID firmy
  * - Data utworzenia konta
- * 
+ *
  * Obsługuje stan ładowania poprzez wyświetlanie szkieletów.
  * Wszystkie UUID są wyświetlane w formacie mono dla łatwiejszego odczytu.
- * 
+ *
  * @param props - Props komponentu
  * @param props.user - Dane użytkownika (UserDTO)
  * @param props.company - Dane firmy użytkownika (CompanyDTO)
  * @param props.email - Adres e-mail z Supabase Auth
  * @param props.isLoading - Opcjonalna flaga stanu ładowania
- * 
+ *
  * @example
  * ```tsx
- * <UserInfoCard 
+ * <UserInfoCard
  *   user={userData}
  *   company={companyData}
  *   email="user@example.com"
@@ -68,20 +68,14 @@ export function UserInfoCard({ user, company, email, isLoading = false }: UserIn
       <CardContent className="space-y-4">
         {/* Adres e-mail z możliwością kopiowania */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-muted-foreground">
-            Adres e-mail
-          </label>
+          <label className="text-sm font-medium text-muted-foreground">Adres e-mail</label>
           <UserEmailDisplay email={email} />
         </div>
 
         {/* UUID użytkownika */}
         <div className="space-y-1">
-          <label className="text-sm font-medium text-muted-foreground">
-            ID użytkownika
-          </label>
-          <p className="text-xs font-mono text-foreground break-all bg-muted px-2 py-1 rounded">
-            {user.uuid}
-          </p>
+          <label className="text-sm font-medium text-muted-foreground">ID użytkownika</label>
+          <p className="text-xs font-mono text-foreground break-all bg-muted px-2 py-1 rounded">{user.uuid}</p>
         </div>
 
         {/* Nazwa firmy */}
@@ -95,12 +89,8 @@ export function UserInfoCard({ user, company, email, isLoading = false }: UserIn
 
         {/* UUID firmy */}
         <div className="space-y-1 pl-6">
-          <label className="text-xs font-medium text-muted-foreground">
-            ID firmy
-          </label>
-          <p className="text-xs font-mono text-foreground break-all bg-muted px-2 py-1 rounded">
-            {company.uuid}
-          </p>
+          <label className="text-xs font-medium text-muted-foreground">ID firmy</label>
+          <p className="text-xs font-mono text-foreground break-all bg-muted px-2 py-1 rounded">{company.uuid}</p>
         </div>
 
         {/* Data utworzenia konta */}
@@ -114,5 +104,3 @@ export function UserInfoCard({ user, company, email, isLoading = false }: UserIn
     </Card>
   );
 }
-
-

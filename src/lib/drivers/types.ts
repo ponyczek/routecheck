@@ -1,4 +1,4 @@
-import type { DriverDTO } from '@/types';
+import type { DriverDTO } from "@/types";
 
 /**
  * Stan filtrów w widoku listy kierowców
@@ -11,9 +11,9 @@ export interface DriversFiltersState {
   /** Czy pokazywać usuniętych kierowców (soft delete) */
   includeDeleted: boolean;
   /** Pole sortowania */
-  sortBy: 'name' | 'createdAt';
+  sortBy: "name" | "createdAt";
   /** Kierunek sortowania */
-  sortDir: 'asc' | 'desc';
+  sortDir: "asc" | "desc";
   /** Cursor paginacji (opaque string z API) */
   cursor?: string;
 }
@@ -22,11 +22,11 @@ export interface DriversFiltersState {
  * Domyślne wartości filtrów
  */
 export const defaultFilters: DriversFiltersState = {
-  q: '',
+  q: "",
   isActive: undefined,
   includeDeleted: false,
-  sortBy: 'name',
-  sortDir: 'asc',
+  sortBy: "name",
+  sortDir: "asc",
 };
 
 /**
@@ -34,9 +34,9 @@ export const defaultFilters: DriversFiltersState = {
  */
 export type ModalState =
   | { type: null }
-  | { type: 'add' }
-  | { type: 'edit'; driver: DriverDTO }
-  | { type: 'delete'; driver: DriverDTO };
+  | { type: "add" }
+  | { type: "edit"; driver: DriverDTO }
+  | { type: "delete"; driver: DriverDTO };
 
 /**
  * Dane formularza dodawania/edycji kierowcy
@@ -91,10 +91,7 @@ export interface DriversQueryParams {
   /** Cursor paginacji */
   cursor?: string;
   /** Pole sortowania */
-  sortBy?: 'name' | 'createdAt';
+  sortBy?: "name" | "createdAt";
   /** Kierunek sortowania */
-  sortDir?: 'asc' | 'desc';
+  sortDir?: "asc" | "desc";
 }
-
-
-

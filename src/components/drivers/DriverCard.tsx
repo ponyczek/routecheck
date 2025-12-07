@@ -1,11 +1,11 @@
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { StatusBadge } from './StatusBadge';
-import { Mail, Clock, Calendar, Edit, Power, Trash2 } from 'lucide-react';
-import { formatDate } from '@/lib/utils/date';
-import type { DriverDTO } from '@/types';
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "./StatusBadge";
+import { Mail, Clock, Calendar, Edit, Power, Trash2 } from "lucide-react";
+import { formatDate } from "@/lib/utils/date";
+import type { DriverDTO } from "@/types";
 
 interface DriverCardProps {
   driver: DriverDTO;
@@ -26,7 +26,7 @@ export function DriverCard({ driver, onEdit, onToggleActive, onDelete }: DriverC
 
   // Generuj inicjały z nazwiska (pierwsze 2 litery)
   const getInitials = (name: string) => {
-    const parts = name.trim().split(' ');
+    const parts = name.trim().split(" ");
     if (parts.length >= 2) {
       return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
     }
@@ -34,14 +34,12 @@ export function DriverCard({ driver, onEdit, onToggleActive, onDelete }: DriverC
   };
 
   return (
-    <Card className={isDeleted ? 'opacity-60' : ''}>
+    <Card className={isDeleted ? "opacity-60" : ""}>
       <CardHeader>
         <div className="flex items-start gap-4">
           {/* Avatar */}
           <Avatar className="h-12 w-12">
-            <AvatarFallback className="bg-primary text-primary-foreground">
-              {getInitials(driver.name)}
-            </AvatarFallback>
+            <AvatarFallback className="bg-primary text-primary-foreground">{getInitials(driver.name)}</AvatarFallback>
           </Avatar>
 
           {/* Nazwa i status */}
@@ -75,7 +73,7 @@ export function DriverCard({ driver, onEdit, onToggleActive, onDelete }: DriverC
         {/* Data dodania */}
         <div className="flex items-center gap-2 text-muted-foreground">
           <Calendar className="h-4 w-4 shrink-0" />
-          <span>Dodano {formatDate(driver.createdAt, 'dd MMM yyyy')}</span>
+          <span>Dodano {formatDate(driver.createdAt, "dd MMM yyyy")}</span>
         </div>
       </CardContent>
 
@@ -87,14 +85,9 @@ export function DriverCard({ driver, onEdit, onToggleActive, onDelete }: DriverC
           </Button>
           <Button variant="outline" size="sm" onClick={onToggleActive} className="flex-1">
             <Power className="mr-1 h-3 w-3" />
-            {driver.isActive ? 'Dezaktywuj' : 'Aktywuj'}
+            {driver.isActive ? "Dezaktywuj" : "Aktywuj"}
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onDelete}
-            className="flex-1 text-red-600 hover:text-red-700"
-          >
+          <Button variant="outline" size="sm" onClick={onDelete} className="flex-1 text-red-600 hover:text-red-700">
             <Trash2 className="mr-1 h-3 w-3" />
             Usuń
           </Button>

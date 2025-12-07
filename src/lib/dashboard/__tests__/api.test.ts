@@ -44,14 +44,11 @@ describe("dashboard API", () => {
       const result = await fetchReportsTodaySummary("2025-01-15", "Europe/Warsaw");
 
       expect(result).toEqual(mockSummary);
-      expect(global.fetch).toHaveBeenCalledWith(
-        "/api/reports/today/summary?timezone=Europe%2FWarsaw",
-        {
-          headers: {
-            Authorization: `Bearer ${mockToken}`,
-          },
-        }
-      );
+      expect(global.fetch).toHaveBeenCalledWith("/api/reports/today/summary?timezone=Europe%2FWarsaw", {
+        headers: {
+          Authorization: `Bearer ${mockToken}`,
+        },
+      });
     });
 
     it("throws UNAUTHORIZED when no session", async () => {
@@ -164,9 +161,7 @@ describe("dashboard API", () => {
     });
 
     it("returns all drivers when no reports submitted", async () => {
-      const mockDrivers = [
-        { uuid: "driver-1", name: "Test 1", email: "test1@test.com", timezone: "Europe/Warsaw" },
-      ];
+      const mockDrivers = [{ uuid: "driver-1", name: "Test 1", email: "test1@test.com", timezone: "Europe/Warsaw" }];
 
       vi.mocked(supabaseBrowserClient.auth.getSession).mockResolvedValue({
         data: { session: { access_token: "token" } as any },
@@ -248,4 +243,3 @@ describe("dashboard API", () => {
     });
   });
 });
-

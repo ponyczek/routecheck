@@ -26,26 +26,27 @@ export function getCurrentDateInTimezone(timezone: string): string {
  * @param locale - Locale for formatting (default: "pl")
  * @returns Formatted date string
  */
-export function formatDate(date: string | Date, format: string = "dd MMM yyyy", locale: string = "pl"): string {
+export function formatDate(date: string | Date, format = "dd MMM yyyy", locale = "pl"): string {
   const target = typeof date === "string" ? new Date(date) : date;
-  
+
   // Simple format implementation
   const day = target.getDate();
   const month = target.getMonth();
   const year = target.getFullYear();
-  
-  const monthNames = locale === "pl" 
-    ? ["sty", "lut", "mar", "kwi", "maj", "cze", "lip", "sie", "wrz", "paź", "lis", "gru"]
-    : ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  
+
+  const monthNames =
+    locale === "pl"
+      ? ["sty", "lut", "mar", "kwi", "maj", "cze", "lip", "sie", "wrz", "paź", "lis", "gru"]
+      : ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
   if (format === "dd MMM yyyy") {
     return `${day} ${monthNames[month]} ${year}`;
   }
-  
+
   if (format === "yyyy-MM-dd") {
-    return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
   }
-  
+
   // Default fallback
   return target.toLocaleDateString(locale === "pl" ? "pl-PL" : "en-US");
 }
@@ -70,7 +71,7 @@ export function formatLongDate(isoString: string): string {
  * @param locale - Locale for formatting (default: "pl")
  * @returns Formatted relative time string
  */
-export function formatRelativeTime(date: string | Date, locale: string = "pl"): string {
+export function formatRelativeTime(date: string | Date, locale = "pl"): string {
   const now = new Date();
   const target = typeof date === "string" ? new Date(date) : date;
   const diffInSeconds = Math.floor((now.getTime() - target.getTime()) / 1000);
@@ -92,4 +93,3 @@ export function formatRelativeTime(date: string | Date, locale: string = "pl"): 
   const diffInDays = Math.floor(diffInHours / 24);
   return locale === "pl" ? `${diffInDays} dni temu` : `${diffInDays} days ago`;
 }
-

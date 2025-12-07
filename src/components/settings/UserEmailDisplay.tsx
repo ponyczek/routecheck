@@ -7,16 +7,16 @@ import type { UserEmailDisplayProps } from "@/lib/settings/types";
 
 /**
  * UserEmailDisplay - Komponent wyświetlający adres e-mail użytkownika z możliwością kopiowania
- * 
+ *
  * Renderuje adres e-mail z przyciskiem kopiowania do schowka. Po kliknięciu:
  * - Kopiuje e-mail do schowka używając Clipboard API
  * - Pokazuje toast notification potwierdzający akcję
  * - Zmienia ikonę Copy na Check na 2 sekundy
  * - Obsługuje błędy (np. brak wsparcia Clipboard API)
- * 
+ *
  * @param props - Props komponentu
  * @param props.email - Adres e-mail do wyświetlenia i skopiowania
- * 
+ *
  * @example
  * ```tsx
  * <UserEmailDisplay email="user@example.com" />
@@ -32,23 +32,23 @@ export function UserEmailDisplay({ email }: UserEmailDisplayProps) {
     try {
       // Sprawdź czy Clipboard API jest dostępne
       if (!navigator.clipboard) {
-        throw new Error('Clipboard API not supported');
+        throw new Error("Clipboard API not supported");
       }
-      
+
       await navigator.clipboard.writeText(email);
-      
+
       // Ustaw stan "skopiowano"
       setIsCopied(true);
-      
+
       // Pokaż toast z potwierdzeniem
       toast.success("E-mail skopiowany do schowka", {
         description: email,
       });
-      
+
       // Zresetuj stan ikony po 2 sekundach
       setTimeout(() => setIsCopied(false), 2000);
     } catch (error) {
-      console.error('Copy error:', error);
+      console.error("Copy error:", error);
       toast.error("Nie udało się skopiować e-mail", {
         description: "Spróbuj ręcznie zaznaczyć i skopiować adres.",
       });
@@ -57,9 +57,7 @@ export function UserEmailDisplay({ email }: UserEmailDisplayProps) {
 
   return (
     <div className="flex items-center justify-between gap-3">
-      <span className="text-sm font-mono text-foreground break-all">
-        {email}
-      </span>
+      <span className="text-sm font-mono text-foreground break-all">{email}</span>
       <Button
         variant="ghost"
         size="icon"
@@ -81,12 +79,8 @@ export function UserEmailDisplay({ email }: UserEmailDisplayProps) {
             )}
           />
         </div>
-        <span className="sr-only">
-          {isCopied ? "Skopiowano" : "Kopiuj adres e-mail"}
-        </span>
+        <span className="sr-only">{isCopied ? "Skopiowano" : "Kopiuj adres e-mail"}</span>
       </Button>
     </div>
   );
 }
-
-

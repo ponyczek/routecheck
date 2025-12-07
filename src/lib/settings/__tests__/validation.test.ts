@@ -239,5 +239,3 @@ describe("editCompanyNameSchema", () => {
     });
   });
 });
-
-

@@ -16,7 +16,11 @@ const baseReportFieldsSchema = z.object({
     .int("delayMinutes must be an integer")
     .default(0),
   delayReason: z.string().max(2000, "delayReason must not exceed 2000 characters").nullable().optional(),
-  cargoDamageDescription: z.string().max(2000, "cargoDamageDescription must not exceed 2000 characters").nullable().optional(),
+  cargoDamageDescription: z
+    .string()
+    .max(2000, "cargoDamageDescription must not exceed 2000 characters")
+    .nullable()
+    .optional(),
   vehicleDamageDescription: z
     .string()
     .max(2000, "vehicleDamageDescription must not exceed 2000 characters")
@@ -24,13 +28,15 @@ const baseReportFieldsSchema = z.object({
     .optional(),
   nextDayBlockers: z.string().max(2000, "nextDayBlockers must not exceed 2000 characters").nullable().optional(),
   isProblem: z.boolean().default(false),
-  riskLevel: z.enum(["NONE", "LOW", "MEDIUM", "HIGH"]).nullable().optional() as z.ZodType<ReportRiskLevel | null | undefined>,
+  riskLevel: z.enum(["NONE", "LOW", "MEDIUM", "HIGH"]).nullable().optional() as z.ZodType<
+    ReportRiskLevel | null | undefined
+  >,
   tags: z.array(z.string()).optional(),
 });
 
 /**
  * Validation schema for CreateReportCommand
- * 
+ *
  * Business rules:
  * - driverUuid must be a valid UUID
  * - reportDate must be a valid date (YYYY-MM-DD format)
@@ -149,4 +155,3 @@ export const reportsFiltersSchema = z.object({
 });
 
 export type ReportsFiltersState = z.infer<typeof reportsFiltersSchema>;
-

@@ -5,7 +5,7 @@ interface SignUpFooterLinksProps {
 
 /**
  * Footer links for sign up page
- * 
+ *
  * Displays:
  * - Link to sign in page ("Masz już konto?")
  * - Support contact link
@@ -17,10 +17,7 @@ export function SignUpFooterLinks({ supportEmail, returnTo }: SignUpFooterLinksP
     <div className="text-center space-y-2">
       <p className="text-sm text-muted-foreground">
         Masz już konto?{" "}
-        <a
-          href={signInUrl}
-          className="underline underline-offset-4 hover:text-primary transition-colors font-medium"
-        >
+        <a href={signInUrl} className="underline underline-offset-4 hover:text-primary transition-colors font-medium">
           Zaloguj się
         </a>
       </p>
@@ -36,5 +33,3 @@ export function SignUpFooterLinks({ supportEmail, returnTo }: SignUpFooterLinksP
     </div>
   );
 }
-
-

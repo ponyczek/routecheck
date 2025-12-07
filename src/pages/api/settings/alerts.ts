@@ -165,9 +165,9 @@ export const PATCH: APIRoute = async ({ request, locals }) => {
 
     // TODO: In production, persist alertsEnabled to database
     // For MVP, we just return the updated config without persisting
-    // await supabase.from("company_settings").upsert({ 
-    //   company_uuid: userData.company_uuid, 
-    //   alerts_enabled: validation.data.alertsEnabled 
+    // await supabase.from("company_settings").upsert({
+    //   company_uuid: userData.company_uuid,
+    //   alerts_enabled: validation.data.alertsEnabled
     // });
 
     const updatedConfig: AlertsConfigDTO = {
@@ -187,5 +187,3 @@ export const PATCH: APIRoute = async ({ request, locals }) => {
     );
   }
 };
-
-

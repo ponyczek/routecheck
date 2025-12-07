@@ -25,7 +25,8 @@ export function OfflineFallback({ onRetry }: OfflineFallbackProps) {
       <AlertTitle>Brak połączenia z internetem</AlertTitle>
       <AlertDescription className="mt-2 flex flex-col gap-3">
         <p className="text-sm">
-          Nie można połączyć się z serwerem. Niektóre funkcje mogą być niedostępne. Sprawdź połączenie i spróbuj ponownie.
+          Nie można połączyć się z serwerem. Niektóre funkcje mogą być niedostępne. Sprawdź połączenie i spróbuj
+          ponownie.
         </p>
         {onRetry && (
           <div>
@@ -39,4 +40,3 @@ export function OfflineFallback({ onRetry }: OfflineFallbackProps) {
     </Alert>
   );
 }
-

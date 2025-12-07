@@ -31,9 +31,7 @@ export function ReportMetadata({ report }: ReportMetadataProps) {
             <Package className="h-4 w-4 text-muted-foreground" />
             Uszkodzenie ładunku
           </div>
-          <div className="rounded-lg bg-muted/50 p-3 text-sm">
-            {report.cargoDamageDescription}
-          </div>
+          <div className="rounded-lg bg-muted/50 p-3 text-sm">{report.cargoDamageDescription}</div>
         </div>
       )}
 
@@ -44,9 +42,7 @@ export function ReportMetadata({ report }: ReportMetadataProps) {
             <Truck className="h-4 w-4 text-muted-foreground" />
             Uszkodzenie pojazdu
           </div>
-          <div className="rounded-lg bg-muted/50 p-3 text-sm">
-            {report.vehicleDamageDescription}
-          </div>
+          <div className="rounded-lg bg-muted/50 p-3 text-sm">{report.vehicleDamageDescription}</div>
         </div>
       )}
 
@@ -57,9 +53,7 @@ export function ReportMetadata({ report }: ReportMetadataProps) {
             <ArrowRight className="h-4 w-4 text-muted-foreground" />
             Blokery na kolejny dzień
           </div>
-          <div className="rounded-lg bg-muted/50 p-3 text-sm">
-            {report.nextDayBlockers}
-          </div>
+          <div className="rounded-lg bg-muted/50 p-3 text-sm">{report.nextDayBlockers}</div>
         </div>
       )}
 
@@ -100,6 +94,3 @@ export function ReportMetadata({ report }: ReportMetadataProps) {
     </div>
   );
 }
-
-
-

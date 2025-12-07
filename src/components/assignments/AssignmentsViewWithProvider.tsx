@@ -17,7 +17,7 @@ import type { AssignmentFormSchema } from "@/lib/assignments/assignmentFormSchem
 
 /**
  * AssignmentsViewWithProvider
- * 
+ *
  * Główny kontener widoku przypisań kierowca-pojazd.
  * Opakowuje całą funkcjonalność w QueryProvider i zarządza stanem globalnym widoku.
  */
@@ -31,43 +31,37 @@ export default function AssignmentsViewWithProvider() {
 
 /**
  * AssignmentsView (wewnętrzny komponent)
- * 
+ *
  * Główna logika widoku - korzysta z hooków TanStack Query.
  */
 function AssignmentsView() {
   // Stan UI dla modali i dialogów
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
+  const [formMode, setFormMode] = useState<"create" | "edit">("create");
   const [selectedAssignment, setSelectedAssignment] = useState<AssignmentDTO | null>(null);
   const [selectedAssignmentViewModel, setSelectedAssignmentViewModel] = useState<AssignmentViewModel | null>(null);
-  const [viewMode, setViewMode] = useState<'table' | 'timeline'>('table');
-  
+  const [viewMode, setViewMode] = useState<"table" | "timeline">("table");
+
   // Stan filtrów
   const [filters, setFilters] = useState<AssignmentFilters>({
-    sortBy: 'startDate',
-    sortDir: 'asc',
+    sortBy: "startDate",
+    sortDir: "asc",
     limit: 50,
   });
 
   // Fetch danych
-  const { 
-    data: assignments = [], 
-    isLoading: assignmentsLoading, 
+  const {
+    data: assignments = [],
+    isLoading: assignmentsLoading,
     isError: assignmentsError,
     error: assignmentsErrorData,
-    refetch: refetchAssignments 
+    refetch: refetchAssignments,
   } = useAssignments(filters);
 
-  const { 
-    data: drivers = [], 
-    isLoading: driversLoading 
-  } = useDrivers();
+  const { data: drivers = [], isLoading: driversLoading } = useDrivers();
 
-  const { 
-    data: vehicles = [], 
-    isLoading: vehiclesLoading 
-  } = useVehicles();
+  const { data: vehicles = [], isLoading: vehiclesLoading } = useVehicles();
 
   // Mutation hooks
   const createMutation = useCreateAssignment();
@@ -76,13 +70,13 @@ function AssignmentsView() {
 
   // Handlery dla akcji
   const handleAddClick = () => {
-    setFormMode('create');
+    setFormMode("create");
     setSelectedAssignment(null);
     setIsFormOpen(true);
   };
 
   const handleEditClick = (assignment: AssignmentDTO) => {
-    setFormMode('edit');
+    setFormMode("edit");
     setSelectedAssignment(assignment);
     setIsFormOpen(true);
   };
@@ -90,7 +84,7 @@ function AssignmentsView() {
   const handleDeleteClick = (assignment: AssignmentDTO) => {
     setSelectedAssignment(assignment);
     // Znajdź pełny ViewModel dla wyświetlenia szczegółów
-    const viewModel = assignments.find(a => a.assignment.uuid === assignment.uuid);
+    const viewModel = assignments.find((a) => a.assignment.uuid === assignment.uuid);
     setSelectedAssignmentViewModel(viewModel || null);
     setIsDeleteDialogOpen(true);
   };
@@ -106,38 +100,38 @@ function AssignmentsView() {
     setSelectedAssignmentViewModel(null);
   };
 
-  const handleViewModeChange = (mode: 'table' | 'timeline') => {
+  const handleViewModeChange = (mode: "table" | "timeline") => {
     setViewMode(mode);
   };
 
-  const handleSortChange = (sortBy: string, sortDir: 'asc' | 'desc') => {
-    setFilters(prev => ({
+  const handleSortChange = (sortBy: string, sortDir: "asc" | "desc") => {
+    setFilters((prev) => ({
       ...prev,
-      sortBy: sortBy as 'startDate' | 'endDate' | 'createdAt',
+      sortBy: sortBy as "startDate" | "endDate" | "createdAt",
       sortDir,
     }));
   };
 
   // Submit handler dla formularza (create/edit)
   const handleFormSubmit = async (data: AssignmentFormSchema) => {
-    if (formMode === 'create') {
+    if (formMode === "create") {
       const command: CreateAssignmentCommand = {
         driverUuid: data.driverUuid,
         vehicleUuid: data.vehicleUuid,
         startDate: data.startDate,
         endDate: data.endDate || null,
       };
-      
+
       await createMutation.mutateAsync(command);
       handleCloseForm();
-    } else if (formMode === 'edit' && selectedAssignment) {
+    } else if (formMode === "edit" && selectedAssignment) {
       const command: UpdateAssignmentCommand = {
         driverUuid: data.driverUuid,
         vehicleUuid: data.vehicleUuid,
         startDate: data.startDate,
         endDate: data.endDate || null,
       };
-      
+
       await updateMutation.mutateAsync({
         uuid: selectedAssignment.uuid,
         data: command,
@@ -155,20 +149,12 @@ function AssignmentsView() {
   };
 
   // Sprawdź czy są aktywne filtry (dla empty state)
-  const hasActiveFilters = Boolean(
-    filters.driverUuid || 
-    filters.vehicleUuid || 
-    filters.activeOn
-  );
+  const hasActiveFilters = Boolean(filters.driverUuid || filters.vehicleUuid || filters.activeOn);
 
   return (
     <div className="flex flex-col gap-6 p-6">
       {/* Header z tytułem i przyciskiem dodawania */}
-      <AssignmentsHeader
-        onAddClick={handleAddClick}
-        viewMode={viewMode}
-        onViewModeChange={handleViewModeChange}
-      />
+      <AssignmentsHeader onAddClick={handleAddClick} viewMode={viewMode} onViewModeChange={handleViewModeChange} />
 
       {/* Pasek filtrów */}
       <AssignmentsFiltersBar
@@ -190,8 +176,8 @@ function AssignmentsView() {
         onRetry={refetchAssignments}
         onAddClick={handleAddClick}
         hasActiveFilters={hasActiveFilters}
-        sortBy={filters.sortBy || 'startDate'}
-        sortDir={filters.sortDir || 'asc'}
+        sortBy={filters.sortBy || "startDate"}
+        sortDir={filters.sortDir || "asc"}
         onSortChange={handleSortChange}
       />
 
@@ -222,4 +208,3 @@ function AssignmentsView() {
     </div>
   );
 }
-

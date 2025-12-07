@@ -1,6 +1,6 @@
-import { QueryProvider } from '@/lib/query-client';
-import { DriversView } from './DriversView';
-import { Toaster } from 'sonner';
+import { QueryProvider } from "@/lib/query-client";
+import { DriversView } from "./DriversView";
+import { Toaster } from "sonner";
 
 /**
  * Wrapper dla DriversView z QueryClientProvider i Toaster
@@ -14,6 +14,3 @@ export function DriversViewWithProvider() {
     </QueryProvider>
   );
 }
-
-
-

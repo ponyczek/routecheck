@@ -13,8 +13,6 @@ import type { UserDTO, CompanyDTO } from "@/types";
 import { cn } from "@/lib/utils";
 
 interface UserMenuProps {
-  /** Current user data */
-  user: UserDTO;
   /** Current company data */
   company: CompanyDTO;
   /** Sign out callback */
@@ -36,7 +34,7 @@ interface UserMenuProps {
  * @param props - UserMenu props
  * @returns User menu dropdown component
  */
-export function UserMenu({ user, company, onSignOut, variant = "sidebar" }: UserMenuProps) {
+export function UserMenu({ company, onSignOut, variant = "sidebar" }: UserMenuProps) {
   const [isSigningOut, setIsSigningOut] = useState(false);
 
   /**
@@ -67,7 +65,7 @@ export function UserMenu({ user, company, onSignOut, variant = "sidebar" }: User
           "flex items-center gap-3 rounded-lg px-3 py-2 transition-colors",
           "hover:bg-accent hover:text-accent-foreground",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-          variant === "sidebar" ? "w-full" : "",
+          variant === "sidebar" ? "w-full" : ""
         )}
       >
         <Avatar className="h-8 w-8">
@@ -115,4 +113,3 @@ export function UserMenu({ user, company, onSignOut, variant = "sidebar" }: User
     </DropdownMenu>
   );
 }
-

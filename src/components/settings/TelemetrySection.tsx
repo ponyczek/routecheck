@@ -22,9 +22,7 @@ export function TelemetrySection({ initialData }: TelemetrySectionProps) {
     <Card>
       <CardHeader>
         <CardTitle>Telemetria UX</CardTitle>
-        <CardDescription>
-          Metryki jakości doświadczenia użytkownika formularza kierowcy
-        </CardDescription>
+        <CardDescription>Metryki jakości doświadczenia użytkownika formularza kierowcy</CardDescription>
       </CardHeader>
       <CardContent>
         {isLoading && (
@@ -61,25 +59,20 @@ export function TelemetrySection({ initialData }: TelemetrySectionProps) {
                   trend={
                     telemetry.trend
                       ? {
-                          direction:
-                            telemetry.trend.medianDurationChange < 0 ? "down" : "up",
+                          direction: telemetry.trend.medianDurationChange < 0 ? "down" : "up",
                           value: `${Math.abs(telemetry.trend.medianDurationChange)}s`,
                         }
                       : undefined
                   }
                 />
-                <TelemetryMetricCard
-                  label="Łączna liczba wypełnień"
-                  value={telemetry.totalFormSubmissions}
-                />
+                <TelemetryMetricCard label="Łączna liczba wypełnień" value={telemetry.totalFormSubmissions} />
                 <TelemetryMetricCard
                   label="Konwersja linków"
                   value={`${Math.round(telemetry.conversionRate * 100)}%`}
                   trend={
                     telemetry.trend
                       ? {
-                          direction:
-                            telemetry.trend.conversionRateChange > 0 ? "up" : "down",
+                          direction: telemetry.trend.conversionRateChange > 0 ? "up" : "down",
                           value: `${Math.abs(Math.round(telemetry.trend.conversionRateChange * 100))}%`,
                         }
                       : undefined
@@ -93,4 +86,3 @@ export function TelemetrySection({ initialData }: TelemetrySectionProps) {
     </Card>
   );
 }
-

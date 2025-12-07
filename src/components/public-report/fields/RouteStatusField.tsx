@@ -1,7 +1,7 @@
-import { Label } from '@/components/ui/label';
-import type { UseFormRegister, FieldError } from 'react-hook-form';
-import type { ReportFormViewModel } from '@/lib/public-report/validation';
-import type { ReportRouteStatus } from '@/types';
+import { Label } from "@/components/ui/label";
+import type { UseFormRegister, FieldError } from "react-hook-form";
+import type { ReportFormViewModel } from "@/lib/public-report/validation";
+import type { ReportRouteStatus } from "@/types";
 
 interface RouteStatusFieldProps {
   register: UseFormRegister<ReportFormViewModel>;
@@ -12,10 +12,10 @@ interface RouteStatusFieldProps {
 /**
  * RouteStatusField - Radio group for selecting route status
  * Three options: COMPLETED, PARTIALLY_COMPLETED, CANCELLED
- * 
+ *
  * @example
- * <RouteStatusField 
- *   register={register} 
+ * <RouteStatusField
+ *   register={register}
  *   error={errors.routeStatus}
  *   value={watchRouteStatus}
  * />
@@ -26,7 +26,7 @@ export function RouteStatusField({ register, error }: RouteStatusFieldProps) {
       <Label htmlFor="routeStatus" className="text-base font-semibold">
         Status trasy *
       </Label>
-      
+
       <div className="space-y-2" role="radiogroup" aria-label="Status trasy">
         <label
           htmlFor="route-completed"
@@ -36,7 +36,7 @@ export function RouteStatusField({ register, error }: RouteStatusFieldProps) {
             type="radio"
             id="route-completed"
             value="COMPLETED"
-            {...register('routeStatus')}
+            {...register("routeStatus")}
             className="w-5 h-5 text-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           />
           <div className="flex-1">
@@ -53,7 +53,7 @@ export function RouteStatusField({ register, error }: RouteStatusFieldProps) {
             type="radio"
             id="route-partial"
             value="PARTIALLY_COMPLETED"
-            {...register('routeStatus')}
+            {...register("routeStatus")}
             className="w-5 h-5 text-yellow-600 focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
           />
           <div className="flex-1">
@@ -70,7 +70,7 @@ export function RouteStatusField({ register, error }: RouteStatusFieldProps) {
             type="radio"
             id="route-cancelled"
             value="CANCELLED"
-            {...register('routeStatus')}
+            {...register("routeStatus")}
             className="w-5 h-5 text-red-600 focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
           />
           <div className="flex-1">
@@ -88,5 +88,3 @@ export function RouteStatusField({ register, error }: RouteStatusFieldProps) {
     </div>
   );
 }
-
-

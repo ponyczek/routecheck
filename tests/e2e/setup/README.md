@@ -25,6 +25,7 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 ## Creating Test User
 
 ### Option 1: Supabase Dashboard
+
 1. Go to Authentication → Users
 2. Click "Add User"
 3. Email: `test@routecheck.app`
@@ -32,6 +33,7 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 5. Confirm email automatically
 
 ### Option 2: SQL Script
+
 ```sql
 -- Run in Supabase SQL Editor
 INSERT INTO auth.users (
@@ -57,21 +59,22 @@ INSERT INTO auth.users (
 );
 
 -- Also create company and user record
-INSERT INTO companies (uuid, name) 
-VALUES (gen_random_uuid(), 'Test Company') 
+INSERT INTO companies (uuid, name)
+VALUES (gen_random_uuid(), 'Test Company')
 RETURNING uuid;
 
 -- Use the returned UUID in the next insert
-INSERT INTO users (uuid, company_uuid) 
-SELECT u.id, c.uuid 
-FROM auth.users u, companies c 
-WHERE u.email = 'test@routecheck.app' 
+INSERT INTO users (uuid, company_uuid)
+SELECT u.id, c.uuid
+FROM auth.users u, companies c
+WHERE u.email = 'test@routecheck.app'
 AND c.name = 'Test Company';
 ```
 
 ## Running Tests
 
 ### Local Development
+
 ```bash
 # Install Playwright browsers (first time only)
 npx playwright install chromium
@@ -90,6 +93,7 @@ npx playwright test tests/e2e/user-flow.spec.ts
 ```
 
 ### CI/CD
+
 Tests run automatically on push/PR via GitHub Actions.
 
 View test results and artifacts in the Actions tab.
@@ -97,6 +101,7 @@ View test results and artifacts in the Actions tab.
 ## Test Reports
 
 After running tests, view the HTML report:
+
 ```bash
 npx playwright show-report
 ```
@@ -104,16 +109,19 @@ npx playwright show-report
 ## Troubleshooting
 
 ### Test fails on login
+
 - Check test user exists in database
 - Verify credentials in environment variables
 - Check Supabase Auth settings (email confirmation required?)
 
 ### Timeouts
+
 - Increase timeout in `playwright.config.ts`
 - Check if dev server started properly
 - Verify database connection
 
 ### Element not found
+
 - Use Playwright Inspector: `npm run test:e2e:debug`
 - Check if selectors match your actual HTML
 - Verify page navigation completed
@@ -123,6 +131,7 @@ npx playwright show-report
 See `user-flow.spec.ts` as example. Best practices:
 
 ### 1. Use Page Object Model
+
 ```typescript
 // Good ✅
 const loginPage = new LoginPage(page);
@@ -134,60 +143,66 @@ await page.click('button[type="submit"]');
 ```
 
 ### 2. Use Resilient Locators
+
 ```typescript
 // Good ✅ - Role-based locators
-page.locator('button:has-text("Submit")')
-page.locator('[data-testid="submit-button"]')
+page.locator('button:has-text("Submit")');
+page.locator('[data-testid="submit-button"]');
 
 // Bad ❌ - Fragile CSS selectors
-page.locator('.btn.btn-primary.submit')
+page.locator(".btn.btn-primary.submit");
 ```
 
 ### 3. Wait for State Changes
+
 ```typescript
 // Good ✅
 await page.waitForURL(/\/dashboard/);
-await expect(page.locator('h1')).toBeVisible();
+await expect(page.locator("h1")).toBeVisible();
 
 // Bad ❌
 await page.waitForTimeout(3000);
 ```
 
 ### 4. Test Isolation
+
 - Each test should be independent
 - Use beforeEach for setup
 - Clear state between tests
 - Don't rely on test execution order
 
 ### 5. Use Specific Assertions
+
 ```typescript
 // Good ✅
 await expect(element).toBeVisible();
-await expect(element).toHaveText('Expected text');
+await expect(element).toHaveText("Expected text");
 
 // Bad ❌
 expect(await element.isVisible()).toBe(true);
 ```
 
 ### 6. Leverage API Testing
+
 ```typescript
-test('API returns correct data', async ({ request }) => {
-  const response = await request.get('/api/drivers');
+test("API returns correct data", async ({ request }) => {
+  const response = await request.get("/api/drivers");
   expect(response.status()).toBe(200);
   const data = await response.json();
-  expect(data).toHaveProperty('items');
+  expect(data).toHaveProperty("items");
 });
 ```
 
 ### 7. Use Codegen for Discovery
+
 ```bash
 # Record new tests interactively
 npx playwright codegen http://localhost:4321
 ```
 
 ### 8. Debug with Trace Viewer
+
 ```bash
 # After failed test with trace enabled
 npx playwright show-trace trace.zip
 ```
-

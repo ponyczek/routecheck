@@ -5,9 +5,7 @@ import type { EmailLogDTO } from "@/types";
 
 // Mock EmailLogItem to simplify testing
 vi.mock("../EmailLogItem", () => ({
-  EmailLogItem: ({ log }: { log: EmailLogDTO }) => (
-    <li data-testid={`log-${log.uuid}`}>{log.subject}</li>
-  ),
+  EmailLogItem: ({ log }: { log: EmailLogDTO }) => <li data-testid={`log-${log.uuid}`}>{log.subject}</li>,
 }));
 
 describe("EmailLogsList", () => {
@@ -70,9 +68,7 @@ describe("EmailLogsList", () => {
     it("displays empty state message when no logs", () => {
       render(<EmailLogsList logs={[]} />);
 
-      expect(
-        screen.getByText("Brak logów e-mail do wyświetlenia")
-      ).toBeInTheDocument();
+      expect(screen.getByText("Brak logów e-mail do wyświetlenia")).toBeInTheDocument();
     });
 
     it("does not render list when no logs", () => {
@@ -85,9 +81,7 @@ describe("EmailLogsList", () => {
     it("renders centered empty state", () => {
       render(<EmailLogsList logs={[]} />);
 
-      const emptyState = screen.getByText(
-        "Brak logów e-mail do wyświetlenia"
-      ).parentElement;
+      const emptyState = screen.getByText("Brak logów e-mail do wyświetlenia").parentElement;
       expect(emptyState).toHaveClass("text-center");
       expect(emptyState).toHaveClass("text-muted-foreground");
     });
@@ -147,21 +141,17 @@ describe("EmailLogsList", () => {
     });
 
     it("handles logs with empty subject", () => {
-      const logsWithEmpty: EmailLogDTO[] = [
-        { ...mockLogs[0], subject: "" },
-      ];
+      const logsWithEmpty: EmailLogDTO[] = [{ ...mockLogs[0], subject: "" }];
       render(<EmailLogsList logs={logsWithEmpty} />);
 
       expect(screen.getByTestId("log-log-1")).toBeInTheDocument();
     });
 
     it("handles logs with special characters", () => {
-      const specialLogs: EmailLogDTO[] = [
-        { ...mockLogs[0], subject: "Alert & <Special> \"Chars\"" },
-      ];
+      const specialLogs: EmailLogDTO[] = [{ ...mockLogs[0], subject: 'Alert & <Special> "Chars"' }];
       render(<EmailLogsList logs={specialLogs} />);
 
-      expect(screen.getByText("Alert & <Special> \"Chars\"")).toBeInTheDocument();
+      expect(screen.getByText('Alert & <Special> "Chars"')).toBeInTheDocument();
     });
   });
 
@@ -183,5 +173,3 @@ describe("EmailLogsList", () => {
     });
   });
 });
-
-

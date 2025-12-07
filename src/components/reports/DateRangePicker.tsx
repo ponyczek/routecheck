@@ -81,6 +81,3 @@ export function DateRangePicker({
     </Popover>
   );
 }
-
-
-

@@ -46,6 +46,3 @@ export function ReportRiskBadge({ level, className }: ReportRiskBadgeProps) {
     </Badge>
   );
 }
-
-
-

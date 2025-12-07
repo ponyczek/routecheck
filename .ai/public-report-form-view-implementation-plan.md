@@ -9,6 +9,7 @@ Publiczny formularz raportu to kluczowy element systemu RouteLog, umożliwiając
 3. **Błąd tokenu** - obsługa wygasłych, zużytych lub nieprawidłowych linków
 
 Główne cele widoku:
+
 - Maksymalizacja konwersji link → raport (cel: ≥70% w 24h)
 - Minimalizacja czasu wypełnienia (cel: <90s mediana)
 - Mobile-first UX z obsługą offline
@@ -68,25 +69,27 @@ src/pages/public/report-links/
 **Opis**: Główny komponent zarządzający całym przepływem formularza raportu. Obsługuje walidację tokenu, stan formularza, przełączanie między happy path a problem path oraz wysyłkę danych.
 
 **Główne elementy**:
+
 ```tsx
 <form onSubmit={handleSubmit}>
   <TokenGuard token={token} />
   <FormHeader driverName={...} vehicleRegistration={...} />
   <OfflineBanner isOnline={isOnline} />
   <StatusSwitch value={isProblem} onChange={setIsProblem} />
-  
+
   {!isProblem ? (
     <HappyPathSection />
   ) : (
     <ProblemPathSection register={register} errors={errors} />
   )}
-  
+
   <SubmitButton isSubmitting={isSubmitting} isProblem={isProblem} />
   <FormFooter expiresAt={...} editableUntil={...} />
 </form>
 ```
 
 **Obsługiwane interakcje**:
+
 - Walidacja tokenu przy montowaniu komponentu (GET `/api/public/report-links/{token}`)
 - Przełączanie między "Wszystko OK" a "Problem"
 - Walidacja formularza inline
@@ -95,6 +98,7 @@ src/pages/public/report-links/
 - Obsługa offline (kolejkowanie w IndexedDB)
 
 **Obsługiwana walidacja**:
+
 - Token musi być valid (200) - w przeciwnym razie redirect do error
 - Jeśli `isProblem = false`: wszystkie pola problemów są `null` lub puste
 - Jeśli `isProblem = true`:
@@ -105,12 +109,14 @@ src/pages/public/report-links/
   - `timezone` wymagany (domyślnie z walidacji tokenu lub browser)
 
 **Typy**:
+
 - `PublicReportLinkValidationDTO` (z API)
 - `PublicReportSubmitCommand` (wysyłka)
 - `PublicReportSubmitResponseDTO` (odpowiedź)
 - `ReportFormViewModel` (lokalny stan, szczegóły w sekcji 5)
 
-**Propsy**: 
+**Propsy**:
+
 ```tsx
 interface PublicReportFormProps {
   token: string;
@@ -124,26 +130,37 @@ interface PublicReportFormProps {
 **Opis**: Komponent sprawdzający poprawność tokenu przy pierwszym renderze. Wyświetla loading state podczas walidacji, przekierowuje do error state przy błędzie.
 
 **Główne elementy**:
+
 ```tsx
-{isValidating && <FormLoadingState />}
-{error && <Navigate to="error" />}
-{validationData && children}
+{
+  isValidating && <FormLoadingState />;
+}
+{
+  error && <Navigate to="error" />;
+}
+{
+  validationData && children;
+}
 ```
 
 **Obsługiwane interakcje**:
+
 - Mount: GET `/api/public/report-links/{token}`
 - Zapisanie tokenu w SessionStorage (klucz: `routelog:token:${token}`)
 - Redirect do error przy 404/409/410
 
 **Obsługiwana walidacja**:
+
 - Sprawdzenie czy token nie został już użyty w tej sesji
 - Walidacja `valid: true` w odpowiedzi
 - Sprawdzenie czy `expiresAt` nie minęło
 
 **Typy**:
+
 - `PublicReportLinkValidationDTO`
 
 **Propsy**:
+
 ```tsx
 interface TokenGuardProps {
   token: string;
@@ -157,33 +174,28 @@ interface TokenGuardProps {
 **Opis**: Duży, wizualny przełącznik między happy path ("Wszystko OK") a problem path ("Mam problem do zgłoszenia").
 
 **Główne elementy**:
+
 ```tsx
 <div className="status-switch-container">
-  <button 
-    type="button"
-    className={isHappyPath ? 'active' : ''}
-    onClick={() => onChange(false)}
-  >
+  <button type="button" className={isHappyPath ? "active" : ""} onClick={() => onChange(false)}>
     <CircleCheckBig /> Wszystko OK
   </button>
-  
-  <button 
-    type="button"
-    className={!isHappyPath ? 'active' : ''}
-    onClick={() => onChange(true)}
-  >
+
+  <button type="button" className={!isHappyPath ? "active" : ""} onClick={() => onChange(true)}>
     <TriangleAlert /> Mam problem
   </button>
 </div>
 ```
 
 **Obsługiwane interakcje**:
+
 - Kliknięcie przycisku "Wszystko OK" → resetuje wszystkie pola problemów
 - Kliknięcie przycisku "Mam problem" → pokazuje dynamiczne sekcje
 
 **Obsługiwana walidacja**: Brak walidacji, tylko przełącznik stanu.
 
-**Typy**: 
+**Typy**:
+
 ```tsx
 interface StatusSwitchProps {
   value: boolean; // true = problem, false = ok
@@ -196,17 +208,14 @@ interface StatusSwitchProps {
 **Opis**: Minimalistyczna sekcja wyświetlana gdy kierowca wybierze "Wszystko OK". Pokazuje potwierdzenie i informację o jednym kliknięciu do wysłania.
 
 **Główne elementy**:
+
 ```tsx
 <div className="happy-path-section">
   <div className="success-icon">
     <CircleCheckBig size={48} />
   </div>
-  <p className="text-lg">
-    Trasa przebiegła bez problemów? Wyślij raport jednym kliknięciem.
-  </p>
-  <p className="text-sm text-muted-foreground">
-    Przez 10 minut będziesz mógł edytować ten raport.
-  </p>
+  <p className="text-lg">Trasa przebiegła bez problemów? Wyślij raport jednym kliknięciem.</p>
+  <p className="text-sm text-muted-foreground">Przez 10 minut będziesz mógł edytować ten raport.</p>
 </div>
 ```
 
@@ -221,32 +230,21 @@ interface StatusSwitchProps {
 **Opis**: Dynamiczna sekcja z polami formularza dla zgłoszenia problemów. Zawiera wszystkie pola wymagane przez `PublicReportSubmitCommand`.
 
 **Główne elementy**:
+
 ```tsx
 <div className="problem-path-section space-y-6">
-  <RouteStatusField 
-    register={register}
-    error={errors.routeStatus}
-  />
-  
-  <DelayFields
-    register={register}
-    errors={errors}
-    watchDelayMinutes={watchDelayMinutes}
-  />
-  
-  <DamageFields
-    register={register}
-    errors={errors}
-  />
-  
-  <BlockersField
-    register={register}
-    error={errors.nextDayBlockers}
-  />
+  <RouteStatusField register={register} error={errors.routeStatus} />
+
+  <DelayFields register={register} errors={errors} watchDelayMinutes={watchDelayMinutes} />
+
+  <DamageFields register={register} errors={errors} />
+
+  <BlockersField register={register} error={errors.nextDayBlockers} />
 </div>
 ```
 
 **Obsługiwane interakcje**:
+
 - Wybór statusu trasy (radio buttons lub select)
 - Wprowadzenie opóźnienia (number input)
 - Wprowadzenie powodu opóźnienia (textarea, warunkowe)
@@ -255,6 +253,7 @@ interface StatusSwitchProps {
 - Wprowadzenie blockerów na jutro (textarea, opcjonalne)
 
 **Obsługiwana walidacja**:
+
 - `routeStatus`: wymagany, jeden z enum
 - `delayMinutes`: wymagany, >= 0
 - `delayReason`: wymagany gdy `delayMinutes > 0`, min 3 znaki
@@ -262,6 +261,7 @@ interface StatusSwitchProps {
 - Wszystkie textarea: max 1000 znaków
 
 **Typy**:
+
 ```tsx
 interface ProblemPathSectionProps {
   register: UseFormRegister<ReportFormViewModel>;
@@ -275,10 +275,11 @@ interface ProblemPathSectionProps {
 **Opis**: Pole wyboru statusu trasy z trzema opcjami.
 
 **Główne elementy**:
+
 ```tsx
 <div className="route-status-field">
   <Label htmlFor="routeStatus">Status trasy *</Label>
-  <RadioGroup {...register('routeStatus')}>
+  <RadioGroup {...register("routeStatus")}>
     <RadioGroupItem value="COMPLETED" id="completed">
       Ukończono
     </RadioGroupItem>
@@ -295,11 +296,13 @@ interface ProblemPathSectionProps {
 
 **Obsługiwane interakcje**: Wybór jednej z opcji.
 
-**Obsługiwana walidacja**: 
+**Obsługiwana walidacja**:
+
 - Wymagany wybór jednej opcji
 - Wartość musi być z enum `ReportRouteStatus`
 
 **Typy**:
+
 ```tsx
 interface RouteStatusFieldProps {
   register: UseFormRegister<ReportFormViewModel>;
@@ -313,25 +316,19 @@ interface RouteStatusFieldProps {
 **Opis**: Grupa pól dla opóźnienia: liczba minut + powód (textarea warunkowy).
 
 **Główne elementy**:
+
 ```tsx
 <div className="delay-fields space-y-4">
   <div>
     <Label htmlFor="delayMinutes">Opóźnienie (minuty) *</Label>
-    <Input
-      type="number"
-      min={0}
-      {...register('delayMinutes', { valueAsNumber: true })}
-    />
+    <Input type="number" min={0} {...register("delayMinutes", { valueAsNumber: true })} />
     {errors.delayMinutes && <FormMessage>{errors.delayMinutes.message}</FormMessage>}
   </div>
-  
+
   {watchDelayMinutes > 0 && (
     <div>
       <Label htmlFor="delayReason">Powód opóźnienia *</Label>
-      <Textarea
-        {...register('delayReason')}
-        placeholder="Opisz przyczynę opóźnienia..."
-      />
+      <Textarea {...register("delayReason")} placeholder="Opisz przyczynę opóźnienia..." />
       {errors.delayReason && <FormMessage>{errors.delayReason.message}</FormMessage>}
     </div>
   )}
@@ -339,14 +336,17 @@ interface RouteStatusFieldProps {
 ```
 
 **Obsługiwane interakcje**:
+
 - Wpisanie liczby minut
 - Automatyczne pokazanie/ukrycie pola powodu w zależności od wartości
 
 **Obsługiwana walidacja**:
+
 - `delayMinutes`: wymagany, >= 0, liczba całkowita
 - `delayReason`: wymagany gdy `delayMinutes > 0`, min 3 znaki, max 1000 znaków
 
 **Typy**:
+
 ```tsx
 interface DelayFieldsProps {
   register: UseFormRegister<ReportFormViewModel>;
@@ -360,26 +360,17 @@ interface DelayFieldsProps {
 **Opis**: Dwa opcjonalne pola textarea dla szkód ładunku i usterek pojazdu.
 
 **Główne elementy**:
+
 ```tsx
 <div className="damage-fields space-y-4">
   <div>
-    <Label htmlFor="cargoDamageDescription">
-      Uszkodzenia ładunku (opcjonalnie)
-    </Label>
-    <Textarea
-      {...register('cargoDamageDescription')}
-      placeholder="Opisz ewentualne uszkodzenia ładunku..."
-    />
+    <Label htmlFor="cargoDamageDescription">Uszkodzenia ładunku (opcjonalnie)</Label>
+    <Textarea {...register("cargoDamageDescription")} placeholder="Opisz ewentualne uszkodzenia ładunku..." />
   </div>
-  
+
   <div>
-    <Label htmlFor="vehicleDamageDescription">
-      Usterki pojazdu (opcjonalnie)
-    </Label>
-    <Textarea
-      {...register('vehicleDamageDescription')}
-      placeholder="Opisz ewentualne usterki pojazdu..."
-    />
+    <Label htmlFor="vehicleDamageDescription">Usterki pojazdu (opcjonalnie)</Label>
+    <Textarea {...register("vehicleDamageDescription")} placeholder="Opisz ewentualne usterki pojazdu..." />
   </div>
 </div>
 ```
@@ -387,10 +378,12 @@ interface DelayFieldsProps {
 **Obsługiwane interakcje**: Wpisanie tekstu (opcjonalne).
 
 **Obsługiwana walidacja**:
+
 - Oba pola opcjonalne
 - Max 1000 znaków każde
 
 **Typy**:
+
 ```tsx
 interface DamageFieldsProps {
   register: UseFormRegister<ReportFormViewModel>;
@@ -403,15 +396,11 @@ interface DamageFieldsProps {
 **Opis**: Pole textarea dla blockerów na następny dzień.
 
 **Główne elementy**:
+
 ```tsx
 <div>
-  <Label htmlFor="nextDayBlockers">
-    Problemy na jutro (opcjonalnie)
-  </Label>
-  <Textarea
-    {...register('nextDayBlockers')}
-    placeholder="Czy coś może zablokować jutrzejszą trasę?"
-  />
+  <Label htmlFor="nextDayBlockers">Problemy na jutro (opcjonalnie)</Label>
+  <Textarea {...register("nextDayBlockers")} placeholder="Czy coś może zablokować jutrzejszą trasę?" />
   {error && <FormMessage>{error.message}</FormMessage>}
 </div>
 ```
@@ -419,11 +408,13 @@ interface DamageFieldsProps {
 **Obsługiwane interakcje**: Wpisanie tekstu (opcjonalne).
 
 **Obsługiwana walidacja**:
+
 - Opcjonalne
 - Max 1000 znaków
 - Wymagane gdy `routeStatus = PARTIALLY_COMPLETED` i brak `delayReason`
 
 **Typy**:
+
 ```tsx
 interface BlockersFieldProps {
   register: UseFormRegister<ReportFormViewModel>;
@@ -436,33 +427,31 @@ interface BlockersFieldProps {
 **Opis**: Główny przycisk wysyłki z obsługą stanu loading i tekstu dostosowanego do trybu.
 
 **Główne elementy**:
+
 ```tsx
-<Button
-  type="submit"
-  size="lg"
-  className="w-full"
-  disabled={isSubmitting || !isOnline}
->
+<Button type="submit" size="lg" className="w-full" disabled={isSubmitting || !isOnline}>
   {isSubmitting ? (
     <>
       <LoaderCircle className="animate-spin" />
       Wysyłam...
     </>
   ) : isProblem ? (
-    'Wyślij zgłoszenie problemu'
+    "Wyślij zgłoszenie problemu"
   ) : (
-    'Wyślij raport - Wszystko OK'
+    "Wyślij raport - Wszystko OK"
   )}
 </Button>
 ```
 
 **Obsługiwane interakcje**:
+
 - Kliknięcie wywołuje `onSubmit` formularza
 - Disabled gdy trwa wysyłka lub brak sieci
 
 **Obsługiwana walidacja**: Walidacja całego formularza (React Hook Form).
 
 **Typy**:
+
 ```tsx
 interface SubmitButtonProps {
   isSubmitting: boolean;
@@ -476,25 +465,28 @@ interface SubmitButtonProps {
 **Opis**: Banner informujący o braku połączenia i kolejkowaniu offline.
 
 **Główne elementy**:
+
 ```tsx
-{!isOnline && (
-  <Alert variant="warning">
-    <Info />
-    <AlertTitle>Brak połączenia</AlertTitle>
-    <AlertDescription>
-      Raport zostanie wysłany automatycznie po przywróceniu połączenia.
-    </AlertDescription>
-  </Alert>
-)}
+{
+  !isOnline && (
+    <Alert variant="warning">
+      <Info />
+      <AlertTitle>Brak połączenia</AlertTitle>
+      <AlertDescription>Raport zostanie wysłany automatycznie po przywróceniu połączenia.</AlertDescription>
+    </Alert>
+  );
+}
 ```
 
-**Obsługiwane interakcje**: 
+**Obsługiwane interakcje**:
+
 - Automatyczne pokazanie/ukrycie w zależności od `navigator.onLine`
 - Hook `useNetworkStatus()` do monitorowania
 
 **Obsługiwana walidacja**: Brak.
 
 **Typy**:
+
 ```tsx
 interface OfflineBannerProps {
   isOnline: boolean;
@@ -506,17 +498,12 @@ interface OfflineBannerProps {
 **Opis**: Nagłówek formularza z powitaniem kierowcy i danymi o pojeździe.
 
 **Główne elementy**:
+
 ```tsx
 <div className="form-header">
-  <h1 className="text-2xl font-bold">
-    Cześć, {driverName}!
-  </h1>
-  <p className="text-muted-foreground">
-    Pojazd: {vehicleRegistration || 'Brak przypisania'}
-  </p>
-  <p className="text-sm text-muted-foreground">
-    Link wygasa: {formatDateTime(expiresAt)}
-  </p>
+  <h1 className="text-2xl font-bold">Cześć, {driverName}!</h1>
+  <p className="text-muted-foreground">Pojazd: {vehicleRegistration || "Brak przypisania"}</p>
+  <p className="text-sm text-muted-foreground">Link wygasa: {formatDateTime(expiresAt)}</p>
 </div>
 ```
 
@@ -525,6 +512,7 @@ interface OfflineBannerProps {
 **Obsługiwana walidacja**: Brak.
 
 **Typy**:
+
 ```tsx
 interface FormHeaderProps {
   driverName: string;
@@ -538,17 +526,12 @@ interface FormHeaderProps {
 **Opis**: Stopka z informacjami o możliwości edycji i polityce prywatności.
 
 **Główne elementy**:
+
 ```tsx
 <div className="form-footer text-sm text-muted-foreground">
-  <p>
-    Będziesz mógł edytować ten raport przez 10 minut od wysłania.
-  </p>
-  <p>
-    Edycja dostępna do: {formatDateTime(editableUntil)}
-  </p>
-  <p className="text-xs mt-4">
-    Przesłane dane są chronione i dostępne tylko dla Twojej firmy.
-  </p>
+  <p>Będziesz mógł edytować ten raport przez 10 minut od wysłania.</p>
+  <p>Edycja dostępna do: {formatDateTime(editableUntil)}</p>
+  <p className="text-xs mt-4">Przesłane dane są chronione i dostępne tylko dla Twojej firmy.</p>
 </div>
 ```
 
@@ -557,6 +540,7 @@ interface FormHeaderProps {
 **Obsługiwana walidacja**: Brak.
 
 **Typy**:
+
 ```tsx
 interface FormFooterProps {
   editableUntil: IsoDateString;
@@ -568,32 +552,27 @@ interface FormFooterProps {
 **Opis**: Komponent wyświetlany po udanej wysyłce raportu. Pokazuje potwierdzenie i umożliwia edycję.
 
 **Główne elementy**:
+
 ```tsx
 <div className="success-view">
   <SuccessCard reportUuid={reportUuid} />
-  <CountdownTimer 
-    targetTime={editableUntil} 
-    onExpire={() => setCanEdit(false)}
-  />
-  {canEdit && (
-    <EditButton 
-      onClick={() => navigate(`/public/report-links/${token}`)}
-    />
-  )}
-  <StatusBanner>
-    AI przetwarza Twój raport. Wyniki będą dostępne dla spedytora w ciągu 30 sekund.
-  </StatusBanner>
+  <CountdownTimer targetTime={editableUntil} onExpire={() => setCanEdit(false)} />
+  {canEdit && <EditButton onClick={() => navigate(`/public/report-links/${token}`)} />}
+  <StatusBanner>AI przetwarza Twój raport. Wyniki będą dostępne dla spedytora w ciągu 30 sekund.</StatusBanner>
 </div>
 ```
 
 **Obsługiwane interakcje**:
+
 - Przycisk "Edytuj raport" (dostępny przez 10 min)
 - Automatyczne ukrycie przycisku po upływie czasu
 
 **Obsługiwana walidacja**:
+
 - Sprawdzenie `now() <= editableUntil`
 
 **Typy**:
+
 ```tsx
 interface SuccessViewProps {
   reportUuid: Uuid;
@@ -607,22 +586,23 @@ interface SuccessViewProps {
 **Opis**: Licznik odmierzający czas do końca możliwości edycji.
 
 **Główne elementy**:
+
 ```tsx
 <div className="countdown-timer" aria-live="polite">
   <Clock />
-  <span>
-    Możesz edytować raport przez: {formatDuration(timeLeft)}
-  </span>
+  <span>Możesz edytować raport przez: {formatDuration(timeLeft)}</span>
 </div>
 ```
 
 **Obsługiwane interakcje**:
+
 - Odliczanie co sekundę
 - Wywołanie callback `onExpire` gdy czas minie
 
 **Obsługiwana walidacja**: Brak.
 
 **Typy**:
+
 ```tsx
 interface CountdownTimerProps {
   targetTime: IsoDateString;
@@ -635,33 +615,29 @@ interface CountdownTimerProps {
 **Opis**: Komponent wyświetlany przy błędach tokenu (404/409/410).
 
 **Główne elementy**:
+
 ```tsx
 <div className="error-view">
   <ErrorIllustration type={errorType} />
-  <ErrorMessage 
-    title={getErrorTitle(errorType)}
-    description={getErrorDescription(errorType)}
-  />
+  <ErrorMessage title={getErrorTitle(errorType)} description={getErrorDescription(errorType)} />
   <ActionButtons>
-    <Button onClick={() => window.location.reload()}>
-      Spróbuj ponownie
-    </Button>
+    <Button onClick={() => window.location.reload()}>Spróbuj ponownie</Button>
   </ActionButtons>
-  <ContactCard>
-    Jeśli problem się powtarza, skontaktuj się z dyspozytorem.
-  </ContactCard>
+  <ContactCard>Jeśli problem się powtarza, skontaktuj się z dyspozytorem.</ContactCard>
 </div>
 ```
 
 **Obsługiwane interakcje**:
+
 - Przycisk "Spróbuj ponownie" (odświeżenie)
 - Link/tekst z kontaktem
 
 **Obsługiwana walidacja**: Brak.
 
 **Typy**:
+
 ```tsx
-type ErrorType = '404' | '409' | '410' | '500';
+type ErrorType = "404" | "409" | "410" | "500";
 
 interface ErrorViewProps {
   errorType: ErrorType;
@@ -674,6 +650,7 @@ interface ErrorViewProps {
 ### 5.1 Typy z API (już zdefiniowane w types.ts)
 
 **PublicReportLinkValidationDTO**:
+
 ```typescript
 type PublicReportLinkValidationDTO = {
   valid: true;
@@ -685,6 +662,7 @@ type PublicReportLinkValidationDTO = {
 ```
 
 **PublicReportSubmitCommand**:
+
 ```typescript
 type PublicReportSubmitCommand = {
   routeStatus: ReportRouteStatus; // 'COMPLETED' | 'PARTIALLY_COMPLETED' | 'CANCELLED'
@@ -698,6 +676,7 @@ type PublicReportSubmitCommand = {
 ```
 
 **PublicReportSubmitResponseDTO**:
+
 ```typescript
 interface PublicReportSubmitResponseDTO {
   reportUuid: Uuid;
@@ -706,6 +685,7 @@ interface PublicReportSubmitResponseDTO {
 ```
 
 **PublicReportUpdateCommand**:
+
 ```typescript
 type PublicReportUpdateCommand = Partial<PublicReportSubmitCommand>;
 ```
@@ -713,11 +693,12 @@ type PublicReportUpdateCommand = Partial<PublicReportSubmitCommand>;
 ### 5.2 ViewModels (nowe typy dla formularza)
 
 **ReportFormViewModel**:
+
 ```typescript
 interface ReportFormViewModel {
   // Stan przełącznika
   isProblem: boolean;
-  
+
   // Pola problemu
   routeStatus: ReportRouteStatus;
   delayMinutes: number;
@@ -725,13 +706,14 @@ interface ReportFormViewModel {
   cargoDamageDescription: string;
   vehicleDamageDescription: string;
   nextDayBlockers: string;
-  
+
   // Metadane
   timezone: string;
 }
 ```
 
 **TokenValidationState**:
+
 ```typescript
 interface TokenValidationState {
   isValidating: boolean;
@@ -742,6 +724,7 @@ interface TokenValidationState {
 ```
 
 **FormSubmissionState**:
+
 ```typescript
 interface FormSubmissionState {
   isSubmitting: boolean;
@@ -752,6 +735,7 @@ interface FormSubmissionState {
 ```
 
 **TelemetryFormState** (dla telemetrii):
+
 ```typescript
 interface TelemetryFormState {
   startTime: number; // timestamp
@@ -762,12 +746,13 @@ interface TelemetryFormState {
 ```
 
 **FormViewState** (union type dla stanów widoku):
+
 ```typescript
-type FormViewState = 
-  | { type: 'loading' }
-  | { type: 'form'; data: PublicReportLinkValidationDTO }
-  | { type: 'success'; data: PublicReportSubmitResponseDTO }
-  | { type: 'error'; errorType: '404' | '409' | '410' | '500'; message?: string };
+type FormViewState =
+  | { type: "loading" }
+  | { type: "form"; data: PublicReportLinkValidationDTO }
+  | { type: "success"; data: PublicReportSubmitResponseDTO }
+  | { type: "error"; errorType: "404" | "409" | "410" | "500"; message?: string };
 ```
 
 ## 6. Zarządzanie stanem
@@ -781,15 +766,15 @@ const form = useForm<ReportFormViewModel>({
   resolver: zodResolver(reportFormSchema),
   defaultValues: {
     isProblem: false,
-    routeStatus: 'COMPLETED',
+    routeStatus: "COMPLETED",
     delayMinutes: 0,
-    delayReason: '',
-    cargoDamageDescription: '',
-    vehicleDamageDescription: '',
-    nextDayBlockers: '',
+    delayReason: "",
+    cargoDamageDescription: "",
+    vehicleDamageDescription: "",
+    nextDayBlockers: "",
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
   },
-  mode: 'onBlur', // walidacja po opuszczeniu pola
+  mode: "onBlur", // walidacja po opuszczeniu pola
 });
 ```
 
@@ -808,18 +793,22 @@ function useTokenValidation(token: string) {
 
   useEffect(() => {
     validateToken(token)
-      .then(data => setState({ 
-        isValidating: false, 
-        isValid: true, 
-        validationData: data, 
-        error: null 
-      }))
-      .catch(error => setState({ 
-        isValidating: false, 
-        isValid: false, 
-        validationData: null, 
-        error 
-      }));
+      .then((data) =>
+        setState({
+          isValidating: false,
+          isValid: true,
+          validationData: data,
+          error: null,
+        })
+      )
+      .catch((error) =>
+        setState({
+          isValidating: false,
+          isValid: false,
+          validationData: null,
+          error,
+        })
+      );
   }, [token]);
 
   return state;
@@ -832,7 +821,7 @@ Zarządzany przez TanStack Query (React Query):
 
 ```typescript
 const submitMutation = useMutation({
-  mutationFn: (data: PublicReportSubmitCommand) => 
+  mutationFn: (data: PublicReportSubmitCommand) =>
     submitReport(token, data),
   onSuccess: (data) => {
     // Zapisz token i reportUuid w SessionStorage
@@ -863,12 +852,12 @@ function useNetworkStatus() {
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
   }, []);
 
@@ -890,16 +879,16 @@ function useTelemetry(token: string, reportUuid?: Uuid) {
   });
 
   const recordInteraction = useCallback(() => {
-    setTelemetryState(prev => ({ 
-      ...prev, 
-      interactions: prev.interactions + 1 
+    setTelemetryState((prev) => ({
+      ...prev,
+      interactions: prev.interactions + 1,
     }));
   }, []);
 
   const recordProblemSwitch = useCallback(() => {
-    setTelemetryState(prev => ({ 
-      ...prev, 
-      switchedToProblems: true 
+    setTelemetryState((prev) => ({
+      ...prev,
+      switchedToProblems: true,
     }));
   }, []);
 
@@ -907,11 +896,11 @@ function useTelemetry(token: string, reportUuid?: Uuid) {
     const endTime = Date.now();
     const duration = (endTime - telemetryState.startTime) / 1000; // sekundy
 
-    await fetch('/api/telemetry', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    await fetch("/api/telemetry", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        eventType: 'FORM_SUBMIT',
+        eventType: "FORM_SUBMIT",
         occurredAt: new Date().toISOString(),
         metadata: {
           duration,
@@ -933,8 +922,8 @@ function useTelemetry(token: string, reportUuid?: Uuid) {
 Zarządzany przez `useState` w głównym komponencie:
 
 ```typescript
-const [viewState, setViewState] = useState<FormViewState>({ 
-  type: 'loading' 
+const [viewState, setViewState] = useState<FormViewState>({
+  type: "loading",
 });
 
 // Przejścia stanu:
@@ -963,8 +952,8 @@ function useOfflineQueue() {
   const { isOnline } = useNetworkStatus();
 
   const addToQueue = async (token: string, data: PublicReportSubmitCommand) => {
-    const db = await openDB('routelog-offline', 1);
-    await db.add('queue', {
+    const db = await openDB("routelog-offline", 1);
+    await db.add("queue", {
       id: crypto.randomUUID(),
       token,
       data,
@@ -975,21 +964,21 @@ function useOfflineQueue() {
 
   const processQueue = async () => {
     if (!isOnline) return;
-    
-    const db = await openDB('routelog-offline', 1);
-    const items = await db.getAll('queue');
-    
+
+    const db = await openDB("routelog-offline", 1);
+    const items = await db.getAll("queue");
+
     for (const item of items) {
       try {
         await submitReport(item.token, item.data);
-        await db.delete('queue', item.id);
-        toast.success('Raport wysłany po przywróceniu połączenia');
+        await db.delete("queue", item.id);
+        toast.success("Raport wysłany po przywróceniu połączenia");
       } catch (error) {
         if (item.retries < 3) {
-          await db.put('queue', { ...item, retries: item.retries + 1 });
+          await db.put("queue", { ...item, retries: item.retries + 1 });
         } else {
-          await db.delete('queue', item.id);
-          toast.error('Nie udało się wysłać raportu. Skontaktuj się z dyspozytorem.');
+          await db.delete("queue", item.id);
+          toast.error("Nie udało się wysłać raportu. Skontaktuj się z dyspozytorem.");
         }
       }
     }
@@ -1016,6 +1005,7 @@ function useOfflineQueue() {
 **Request**: Brak body, token w URL.
 
 **Response** (200 OK):
+
 ```typescript
 {
   valid: true,
@@ -1027,20 +1017,22 @@ function useOfflineQueue() {
 ```
 
 **Error responses**:
+
 - **404**: Token nie istnieje
 - **409**: Token już użyty
 - **410**: Token wygasł
 
 **Implementacja**:
+
 ```typescript
 async function validateToken(token: string): Promise<PublicReportLinkValidationDTO> {
   const response = await fetch(`/api/public/report-links/${token}`);
-  
+
   if (!response.ok) {
-    const error = await response.json() as ProblemDetail;
+    const error = (await response.json()) as ProblemDetail;
     throw error;
   }
-  
+
   return response.json();
 }
 ```
@@ -1052,6 +1044,7 @@ async function validateToken(token: string): Promise<PublicReportLinkValidationD
 **Kiedy**: Po kliknięciu przycisku "Wyślij raport".
 
 **Request** (typ: `PublicReportSubmitCommand`):
+
 ```typescript
 {
   routeStatus: "COMPLETED",
@@ -1065,6 +1058,7 @@ async function validateToken(token: string): Promise<PublicReportLinkValidationD
 ```
 
 **Response** (201 Created, typ: `PublicReportSubmitResponseDTO`):
+
 ```typescript
 {
   reportUuid: "uuid-here",
@@ -1073,26 +1067,25 @@ async function validateToken(token: string): Promise<PublicReportLinkValidationD
 ```
 
 **Error responses**:
+
 - **400**: Błąd walidacji (np. brak `delayReason` gdy `delayMinutes > 0`)
 - **404/409/410**: Problemy z tokenem (jak w GET)
 
 **Implementacja**:
+
 ```typescript
-async function submitReport(
-  token: string, 
-  data: PublicReportSubmitCommand
-): Promise<PublicReportSubmitResponseDTO> {
+async function submitReport(token: string, data: PublicReportSubmitCommand): Promise<PublicReportSubmitResponseDTO> {
   const response = await fetch(`/api/public/report-links/${token}/reports`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
-  
+
   if (!response.ok) {
-    const error = await response.json() as ProblemDetail;
+    const error = (await response.json()) as ProblemDetail;
     throw error;
   }
-  
+
   return response.json();
 }
 ```
@@ -1104,6 +1097,7 @@ async function submitReport(
 **Kiedy**: W widoku sukcesu, gdy kierowca kliknie "Edytuj raport" (przed upływem 10 min).
 
 **Request** (typ: `PublicReportUpdateCommand`):
+
 ```typescript
 {
   delayMinutes: 30,
@@ -1111,7 +1105,8 @@ async function submitReport(
 }
 ```
 
-**Headers**: 
+**Headers**:
+
 ```
 Authorization: Bearer {token}
 ```
@@ -1121,27 +1116,25 @@ Token musi być taki sam jak użyty przy POST (przechowywany w SessionStorage).
 **Response** (200 OK): Brak body lub status potwierdzenia.
 
 **Error responses**:
+
 - **403**: Token nieprawidłowy lub brak uprawnień
 - **409**: Okno edycji minęło (`now() > editableUntil`)
 
 **Implementacja**:
+
 ```typescript
-async function updateReport(
-  reportUuid: Uuid,
-  token: string,
-  data: PublicReportUpdateCommand
-): Promise<void> {
+async function updateReport(reportUuid: Uuid, token: string, data: PublicReportUpdateCommand): Promise<void> {
   const response = await fetch(`/api/public/reports/${reportUuid}`, {
-    method: 'PATCH',
-    headers: { 
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(data),
   });
-  
+
   if (!response.ok) {
-    const error = await response.json() as ProblemDetail;
+    const error = (await response.json()) as ProblemDetail;
     throw error;
   }
 }
@@ -1154,6 +1147,7 @@ async function updateReport(
 **Kiedy**: Po udanym wysłaniu formularza lub przy błędach tokenu.
 
 **Request** (typ: `TelemetryEventCommand`):
+
 ```typescript
 {
   eventType: "FORM_SUBMIT",
@@ -1171,11 +1165,12 @@ async function updateReport(
 **Response** (202 Accepted): Brak body.
 
 **Implementacja**:
+
 ```typescript
 async function sendTelemetry(data: TelemetryEventCommand): Promise<void> {
-  await fetch('/api/telemetry', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+  await fetch("/api/telemetry", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
   // Fire-and-forget, nie blokujemy UI na odpowiedź
@@ -1378,11 +1373,13 @@ async function sendTelemetry(data: TelemetryEventCommand): Promise<void> {
 **Komponent**: `TokenGuard`
 
 **Warunki**:
+
 - Token musi istnieć w URL
 - Token nie może być używany w aktualnej sesji (check SessionStorage)
 - GET `/api/public/report-links/{token}` musi zwrócić 200
 
 **Walidacja**:
+
 ```typescript
 if (!token) {
   return <ErrorView errorType="404" message="Brak tokenu w linku" />;
@@ -1401,6 +1398,7 @@ if (!validation.valid) {
 ```
 
 **Wpływ na UI**:
+
 - **Loading**: Pokazuje `FormLoadingState` (skeleton)
 - **Error**: Przekierowanie do `ErrorView` z odpowiednim kodem
 - **Success**: Pokazuje formularz z danymi z `validationData`
@@ -1410,48 +1408,52 @@ if (!validation.valid) {
 **Komponent**: `PublicReportForm` (React Hook Form)
 
 **Schema**:
+
 ```typescript
-const reportFormSchema = z.object({
-  isProblem: z.boolean(),
-  routeStatus: z.enum(['COMPLETED', 'PARTIALLY_COMPLETED', 'CANCELLED']),
-  delayMinutes: z.number().int().min(0, 'Opóźnienie nie może być ujemne'),
-  delayReason: z.string().max(1000, 'Maksymalnie 1000 znaków'),
-  cargoDamageDescription: z.string().max(1000).nullable(),
-  vehicleDamageDescription: z.string().max(1000).nullable(),
-  nextDayBlockers: z.string().max(1000).nullable(),
-  timezone: z.string(),
-}).refine(
-  (data) => {
-    // Jeśli happy path, ignoruj walidacje problemów
-    if (!data.isProblem) return true;
-    
-    // Jeśli opóźnienie > 0, powód wymagany
-    if (data.delayMinutes > 0 && !data.delayReason) {
-      return false;
-    }
-    
-    // Jeśli powód podany, min 3 znaki
-    if (data.delayReason && data.delayReason.length < 3) {
-      return false;
-    }
-    
-    // Jeśli częściowe wykonanie, komentarz wymagany
-    if (data.routeStatus === 'PARTIALLY_COMPLETED') {
-      if (!data.delayReason && !data.nextDayBlockers) {
+const reportFormSchema = z
+  .object({
+    isProblem: z.boolean(),
+    routeStatus: z.enum(["COMPLETED", "PARTIALLY_COMPLETED", "CANCELLED"]),
+    delayMinutes: z.number().int().min(0, "Opóźnienie nie może być ujemne"),
+    delayReason: z.string().max(1000, "Maksymalnie 1000 znaków"),
+    cargoDamageDescription: z.string().max(1000).nullable(),
+    vehicleDamageDescription: z.string().max(1000).nullable(),
+    nextDayBlockers: z.string().max(1000).nullable(),
+    timezone: z.string(),
+  })
+  .refine(
+    (data) => {
+      // Jeśli happy path, ignoruj walidacje problemów
+      if (!data.isProblem) return true;
+
+      // Jeśli opóźnienie > 0, powód wymagany
+      if (data.delayMinutes > 0 && !data.delayReason) {
         return false;
       }
+
+      // Jeśli powód podany, min 3 znaki
+      if (data.delayReason && data.delayReason.length < 3) {
+        return false;
+      }
+
+      // Jeśli częściowe wykonanie, komentarz wymagany
+      if (data.routeStatus === "PARTIALLY_COMPLETED") {
+        if (!data.delayReason && !data.nextDayBlockers) {
+          return false;
+        }
+      }
+
+      return true;
+    },
+    {
+      message: "Nieprawidłowe dane formularza",
+      path: ["delayReason"], // pokazujemy błąd przy tym polu
     }
-    
-    return true;
-  },
-  {
-    message: 'Nieprawidłowe dane formularza',
-    path: ['delayReason'], // pokazujemy błąd przy tym polu
-  }
-);
+  );
 ```
 
 **Wpływ na UI**:
+
 - Błędy wyświetlane inline pod polami
 - `aria-invalid` na błędnych polach
 - Focus na pierwszym błędnym polu po submit
@@ -1464,6 +1466,7 @@ const reportFormSchema = z.object({
 **Warunek**: `isProblem: boolean`
 
 **Happy Path (isProblem = false)**:
+
 - Wszystkie pola problemów ustawiane na `null` lub default
 - Wysyłane dane:
   ```json
@@ -1479,10 +1482,12 @@ const reportFormSchema = z.object({
   ```
 
 **Problem Path (isProblem = true)**:
+
 - Walidacja pól zgodnie z schema
 - Wszystkie pola opcjonalne poza `routeStatus`, `delayMinutes`, `timezone`
 
 **Wpływ na UI**:
+
 - **Happy**: Tylko przycisk "Wyślij raport - Wszystko OK", brak pól
 - **Problem**: Wszystkie sekcje problemów widoczne, przycisk "Wyślij zgłoszenie problemu"
 
@@ -1491,11 +1496,13 @@ const reportFormSchema = z.object({
 **Komponent**: `DelayFields`
 
 **Warunki**:
+
 - `delayMinutes` >= 0
 - Jeśli `delayMinutes > 0`, pole `delayReason` staje się widoczne i required
 - `delayReason`: min 3 znaki, max 1000 znaków
 
 **Implementacja**:
+
 ```typescript
 const watchDelayMinutes = watch('delayMinutes');
 
@@ -1520,6 +1527,7 @@ const watchDelayMinutes = watch('delayMinutes');
 ```
 
 **Wpływ na UI**:
+
 - Pole powodu pojawia się/znika dynamicznie
 - Walidacja działa `onBlur` i przed submit
 - Błędy inline pod polem
@@ -1530,10 +1538,12 @@ const watchDelayMinutes = watch('delayMinutes');
 
 **Warunek**: `routeStatus === 'PARTIALLY_COMPLETED'`
 
-**Walidacja**: 
+**Walidacja**:
+
 - Wymagany komentarz w `delayReason` LUB `nextDayBlockers`
 
 **Implementacja**:
+
 ```typescript
 .refine((data) => {
   if (data.routeStatus === 'PARTIALLY_COMPLETED') {
@@ -1549,6 +1559,7 @@ const watchDelayMinutes = watch('delayMinutes');
 ```
 
 **Wpływ na UI**:
+
 - Jeśli użytkownik wybierze "Częściowo wykonano" i nie wypełni ani powodu, ani blockerów, błąd pojawi się pod polem `nextDayBlockers`
 - Toast z ogólnym komunikatem po submit
 
@@ -1559,26 +1570,28 @@ const watchDelayMinutes = watch('delayMinutes');
 **Warunek**: `now() <= editableUntil`
 
 **Implementacja**:
+
 ```typescript
 const [canEdit, setCanEdit] = useState(true);
 
 useEffect(() => {
   const editableUntil = new Date(props.editableUntil);
   const now = new Date();
-  
+
   if (now > editableUntil) {
     setCanEdit(false);
     return;
   }
-  
+
   const timeLeft = editableUntil.getTime() - now.getTime();
   const timer = setTimeout(() => setCanEdit(false), timeLeft);
-  
+
   return () => clearTimeout(timer);
 }, [props.editableUntil]);
 ```
 
 **Wpływ na UI**:
+
 - Przycisk "Edytuj raport" disabled po upływie czasu
 - Tekst zmienia się na "Okno edycji minęło"
 - Licznik pokazuje "0:00" i przestaje odliczać
@@ -1590,12 +1603,14 @@ useEffect(() => {
 **Warunek**: `navigator.onLine`
 
 **Hook**:
+
 ```typescript
 const { isOnline } = useNetworkStatus();
 ```
 
 **Wpływ na UI**:
-- **Offline**: 
+
+- **Offline**:
   - Banner widoczny: "Brak połączenia..."
   - Przycisk submit zmienia tekst: "Wyślę gdy będzie sieć"
   - Przy submit: dane idą do offline queue
@@ -1609,33 +1624,35 @@ const { isOnline } = useNetworkStatus();
 ### 10.1 Błędy walidacji tokenu (GET /api/public/report-links/{token})
 
 **Kody błędów**:
+
 - **404 Not Found**: Token nie istnieje
 - **409 Conflict**: Token już wykorzystany
 - **410 Gone**: Token wygasł
 
 **Obsługa**:
+
 ```typescript
 try {
   const validation = await validateToken(token);
   setValidationData(validation);
 } catch (error) {
   const problemDetail = error as ProblemDetail;
-  
+
   let errorType: ErrorType;
-  if (response.status === 404) errorType = '404';
-  else if (response.status === 409) errorType = '409';
-  else if (response.status === 410) errorType = '410';
-  else errorType = '500';
-  
-  setViewState({ 
-    type: 'error', 
-    errorType, 
-    message: problemDetail.message 
+  if (response.status === 404) errorType = "404";
+  else if (response.status === 409) errorType = "409";
+  else if (response.status === 410) errorType = "410";
+  else errorType = "500";
+
+  setViewState({
+    type: "error",
+    errorType,
+    message: problemDetail.message,
   });
-  
+
   // Telemetria
   sendTelemetry({
-    eventType: 'TOKEN_INVALID',
+    eventType: "TOKEN_INVALID",
     occurredAt: new Date().toISOString(),
     metadata: { errorCode: response.status.toString() },
     linkUuid: token,
@@ -1644,18 +1661,21 @@ try {
 ```
 
 **UI**:
+
 - Przekierowanie do `ErrorView` z odpowiednim komunikatem i ilustracją
 - Przyciski: "Spróbuj ponownie", "Kontakt"
 
 ### 10.2 Błędy walidacji formularza (client-side)
 
 **Typy błędów**:
+
 - Pole wymagane puste
 - Wartość poza zakresem (np. `delayMinutes < 0`)
 - Tekst za krótki/długi
 - Niespełnione warunki biznesowe (np. brak powodu przy opóźnieniu)
 
 **Obsługa**:
+
 ```typescript
 // React Hook Form automatycznie obsługuje błędy z Zod schema
 const { formState: { errors } } = form;
@@ -1667,6 +1687,7 @@ const { formState: { errors } } = form;
 ```
 
 **UI**:
+
 - Błędy inline pod polami
 - Czerwona obwódka na błędnym polu
 - `aria-invalid="true"` na polu
@@ -1676,42 +1697,45 @@ const { formState: { errors } } = form;
 ### 10.3 Błędy wysyłki raportu (POST /api/public/report-links/{token}/reports)
 
 **Kody błędów**:
+
 - **400 Bad Request**: Błąd walidacji server-side
 - **404/409/410**: Problemy z tokenem (jak w GET)
 - **500**: Błąd serwera
 
 **Obsługa**:
+
 ```typescript
 const submitMutation = useMutation({
   mutationFn: (data: PublicReportSubmitCommand) => submitReport(token, data),
   onError: (error: ProblemDetail) => {
-    if (error.code === 'VALIDATION_ERROR') {
+    if (error.code === "VALIDATION_ERROR") {
       // Błąd walidacji - pokazujemy szczegóły pod polami
       if (error.details) {
         Object.entries(error.details).forEach(([field, message]) => {
           form.setError(field as keyof ReportFormViewModel, {
-            type: 'server',
+            type: "server",
             message: message as string,
           });
         });
       }
-      toast.error('Sprawdź poprawność wypełnionych pól');
-    } else if (['404', '409', '410'].includes(error.code)) {
+      toast.error("Sprawdź poprawność wypełnionych pól");
+    } else if (["404", "409", "410"].includes(error.code)) {
       // Problemy z tokenem - przekieruj na error
-      setViewState({ 
-        type: 'error', 
+      setViewState({
+        type: "error",
         errorType: error.code as ErrorType,
         message: error.message,
       });
     } else {
       // Błąd serwera - toast i możliwość retry
-      toast.error('Nie udało się wysłać raportu. Spróbuj ponownie.');
+      toast.error("Nie udało się wysłać raportu. Spróbuj ponownie.");
     }
   },
 });
 ```
 
 **UI**:
+
 - **400**: Błędy pod konkretnymi polami + toast ogólny
 - **404/409/410**: Przekierowanie na `ErrorView`
 - **500**: Toast z opcją retry, przycisk submit aktywny ponownie
@@ -1719,29 +1743,31 @@ const submitMutation = useMutation({
 ### 10.4 Błędy edycji raportu (PATCH /api/public/reports/{uuid})
 
 **Kody błędów**:
+
 - **403 Forbidden**: Token nieprawidłowy lub brak w SessionStorage
 - **409 Conflict**: Okno edycji minęło
 
 **Obsługa**:
+
 ```typescript
 const updateMutation = useMutation({
-  mutationFn: (data: PublicReportUpdateCommand) => 
-    updateReport(reportUuid, token, data),
+  mutationFn: (data: PublicReportUpdateCommand) => updateReport(reportUuid, token, data),
   onError: (error: ProblemDetail) => {
-    if (error.code === '403') {
-      toast.error('Nie masz uprawnień do edycji tego raportu');
+    if (error.code === "403") {
+      toast.error("Nie masz uprawnień do edycji tego raportu");
       setCanEdit(false);
-    } else if (error.code === '409') {
-      toast.error('Okno edycji minęło (10 minut od wysłania)');
+    } else if (error.code === "409") {
+      toast.error("Okno edycji minęło (10 minut od wysłania)");
       setCanEdit(false);
     } else {
-      toast.error('Nie udało się zaktualizować raportu');
+      toast.error("Nie udało się zaktualizować raportu");
     }
   },
 });
 ```
 
 **UI**:
+
 - Toast z błędem
 - Dezaktywacja przycisku "Edytuj"
 - Banner: "Okno edycji minęło"
@@ -1751,22 +1777,20 @@ const updateMutation = useMutation({
 **Scenariusz**: Raport zapisany offline, ale nie może być wysłany po 3 próbach.
 
 **Obsługa**:
+
 ```typescript
 async function processQueue() {
   const items = await getQueueItems();
-  
+
   for (const item of items) {
     try {
       await submitReport(item.token, item.data);
       await removeFromQueue(item.id);
-      toast.success('Raport wysłany po przywróceniu połączenia');
+      toast.success("Raport wysłany po przywróceniu połączenia");
     } catch (error) {
       if (item.retries >= 3) {
         await removeFromQueue(item.id);
-        toast.error(
-          'Nie udało się wysłać raportu po 3 próbach. Skontaktuj się z dyspozytorem.',
-          { duration: 10000 }
-        );
+        toast.error("Nie udało się wysłać raportu po 3 próbach. Skontaktuj się z dyspozytorem.", { duration: 10000 });
       } else {
         await updateQueueItem(item.id, { retries: item.retries + 1 });
       }
@@ -1776,6 +1800,7 @@ async function processQueue() {
 ```
 
 **UI**:
+
 - Toast z długim timeout (10s)
 - Link/przycisk: "Kontakt z pomocą"
 
@@ -1786,14 +1811,14 @@ async function processQueue() {
 ```typescript
 async function sendTelemetry(data: TelemetryEventCommand) {
   try {
-    await fetch('/api/telemetry', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    await fetch("/api/telemetry", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
   } catch (error) {
     // Logujemy, ale nie pokazujemy użytkownikowi
-    console.warn('Telemetry failed:', error);
+    console.warn("Telemetry failed:", error);
   }
 }
 ```
@@ -1806,27 +1831,27 @@ async function sendTelemetry(data: TelemetryEventCommand) {
 class PublicFormErrorBoundary extends React.Component {
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error('Form render error:', error, errorInfo);
-    
+
     sendTelemetry({
       eventType: 'APP_ERROR',
       occurredAt: new Date().toISOString(),
-      metadata: { 
+      metadata: {
         error: error.message,
         stack: error.stack,
       },
     });
   }
-  
+
   render() {
     if (this.state.hasError) {
       return (
-        <ErrorView 
-          errorType="500" 
+        <ErrorView
+          errorType="500"
           message="Coś poszło nie tak. Odśwież stronę lub skontaktuj się z pomocą."
         />
       );
     }
-    
+
     return this.props.children;
   }
 }
@@ -1837,6 +1862,7 @@ class PublicFormErrorBoundary extends React.Component {
 ### Krok 1: Przygotowanie struktury plików
 
 1. Utwórz strukturę katalogów:
+
    ```
    src/pages/public/report-links/
    ├── [token].astro
@@ -1847,6 +1873,7 @@ class PublicFormErrorBoundary extends React.Component {
    ```
 
 2. Utwórz katalog komponentów:
+
    ```
    src/components/public-report/
    ├── PublicReportForm.tsx
@@ -1887,34 +1914,41 @@ class PublicFormErrorBoundary extends React.Component {
 
 1. Sprawdź że wszystkie typy z sekcji 5 są już w `src/types.ts`
 2. Utwórz plik `src/lib/public-report/validation.ts`:
+
    ```typescript
-   import { z } from 'zod';
-   
-   export const reportFormSchema = z.object({
-     isProblem: z.boolean(),
-     routeStatus: z.enum(['COMPLETED', 'PARTIALLY_COMPLETED', 'CANCELLED']),
-     // ... reszta zgodnie z sekcją 9.2
-   }).refine(/* walidacje biznesowe */);
-   
+   import { z } from "zod";
+
+   export const reportFormSchema = z
+     .object({
+       isProblem: z.boolean(),
+       routeStatus: z.enum(["COMPLETED", "PARTIALLY_COMPLETED", "CANCELLED"]),
+       // ... reszta zgodnie z sekcją 9.2
+     })
+     .refine(/* walidacje biznesowe */);
+
    export type ReportFormViewModel = z.infer<typeof reportFormSchema>;
    ```
 
 ### Krok 3: Implementacja funkcji API
 
 1. Utwórz `src/lib/public-report/api.ts`:
+
    ```typescript
    export async function validateToken(token: string): Promise<PublicReportLinkValidationDTO> {
      // implementacja z sekcji 7.1
    }
-   
-   export async function submitReport(token: string, data: PublicReportSubmitCommand): Promise<PublicReportSubmitResponseDTO> {
+
+   export async function submitReport(
+     token: string,
+     data: PublicReportSubmitCommand
+   ): Promise<PublicReportSubmitResponseDTO> {
      // implementacja z sekcji 7.2
    }
-   
+
    export async function updateReport(reportUuid: Uuid, token: string, data: PublicReportUpdateCommand): Promise<void> {
      // implementacja z sekcji 7.3
    }
-   
+
    export async function sendTelemetry(data: TelemetryEventCommand): Promise<void> {
      // implementacja z sekcji 7.4
    }
@@ -1968,6 +2002,7 @@ Zaimplementuj w kolejności (najprostsze pierwsze):
 5. Dodaj ErrorBoundary wrapper
 
 **Testowanie**:
+
 - Test happy path submit
 - Test problem path submit z walidacją
 - Test przełączania między trybami
@@ -1990,14 +2025,15 @@ Zaimplementuj w kolejności (najprostsze pierwsze):
 ### Krok 11: Integracja ze stronami Astro
 
 1. Utwórz `src/pages/public/report-links/[token].astro`:
+
    ```astro
    ---
-   import Layout from '../../../layouts/Layout.astro';
-   import PublicReportForm from '../../../components/public-report/PublicReportForm';
-   
+   import Layout from "../../../layouts/Layout.astro";
+   import PublicReportForm from "../../../components/public-report/PublicReportForm";
+
    const { token } = Astro.params;
    ---
-   
+
    <Layout title="Raport dzienny">
      <PublicReportForm client:only="react" token={token} />
    </Layout>
@@ -2130,5 +2166,3 @@ Ten plan implementacji obejmuje wszystkie aspekty widoku publicznego formularza 
 - **Obsługa błędów** dla wszystkich scenariuszy
 
 Implementacja powinna zająć około **3-5 dni** dla doświadczonego frontend developera, włączając testy i optymalizację.
-
-

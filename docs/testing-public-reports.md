@@ -51,6 +51,7 @@ npx tsx scripts/generate-test-token.ts jan.kowalski@example.com
 ```
 
 Skrypt wyświetli:
+
 - URL do testowania w przeglądarce
 - Przykładowe żądania curl
 - Szczegóły kierowcy i tokenu
@@ -59,9 +60,9 @@ Skrypt wyświetli:
 
 ```sql
 -- 1. Znajdź UUID kierowcy
-SELECT uuid, first_name, last_name, email, company_uuid 
-FROM drivers 
-WHERE is_active = true 
+SELECT uuid, first_name, last_name, email, company_uuid
+FROM drivers
+WHERE is_active = true
 LIMIT 1;
 
 -- 2. Wygeneruj token (przykładowy)
@@ -90,10 +91,12 @@ INSERT INTO report_links (
 **Cel:** Sprawdzić czy formularz ładuje się poprawnie z ważnym tokenem
 
 **Kroki:**
+
 1. Otwórz URL wygenerowany przez skrypt: `http://localhost:4321/public/report-links/[TOKEN]`
 2. Poczekaj na załadowanie
 
 **Oczekiwany rezultat:**
+
 - ✅ Wyświetla się formularz
 - ✅ Widoczne imię i nazwisko kierowcy
 - ✅ Widoczny numer rejestracyjny pojazdu (jeśli przypisany)
@@ -106,12 +109,14 @@ INSERT INTO report_links (
 **Cel:** Wysłać raport bez problemów
 
 **Kroki:**
+
 1. Otwórz formularz (Test 1)
 2. Zostaw zaznaczone "Wszystko OK"
 3. Kliknij "Wyślij raport - Wszystko OK"
 4. Poczekaj
 
 **Oczekiwany rezultat:**
+
 - ✅ Przycisk zmienia się na "Wysyłam..." ze spinnerem
 - ✅ Po chwili pojawia się widok sukcesu
 - ✅ Zielona ikonka check
@@ -125,6 +130,7 @@ INSERT INTO report_links (
 **Cel:** Wysłać raport z problemami
 
 **Kroki:**
+
 1. Otwórz nowy token (wygeneruj nowy!)
 2. Kliknij przełącznik "Mam problem"
 3. Wybierz status trasy: "Częściowo wykonano"
@@ -136,6 +142,7 @@ INSERT INTO report_links (
 9. Kliknij "Wyślij raport - Mam problem"
 
 **Oczekiwany rezultat:**
+
 - ✅ Wszystkie pola problemu pojawiają się z animacją
 - ✅ Pole "Powód opóźnienia" pojawia się gdy opóźnienie > 0
 - ✅ Walidacja działa (nie można wysłać bez powodu przy opóźnieniu)
@@ -147,6 +154,7 @@ INSERT INTO report_links (
 **Cel:** Sprawdzić czy walidacja działa poprawnie
 
 **Kroki:**
+
 1. Otwórz nowy token
 2. Kliknij "Mam problem"
 3. Wpisz opóźnienie: `30` minut
@@ -154,6 +162,7 @@ INSERT INTO report_links (
 5. Spróbuj wysłać
 
 **Oczekiwany rezultat:**
+
 - ✅ Formularz nie wysyła się
 - ✅ Pod polem "Powód opóźnienia" pojawia się czerwony komunikat
 - ✅ Tekst błędu: "Powód opóźnienia jest wymagany gdy wystąpiło opóźnienie"
@@ -165,6 +174,7 @@ INSERT INTO report_links (
 **Cel:** Sprawdzić czy offline queue działa
 
 **Kroki:**
+
 1. Otwórz nowy token
 2. Otwórz DevTools (F12) → Network tab
 3. Zmień throttling na "Offline"
@@ -172,16 +182,16 @@ INSERT INTO report_links (
 5. Wyślij
 
 **Oczekiwany rezultat:**
+
 - ✅ Pomarańczowy banner "Brak połączenia z internetem"
 - ✅ Przycisk zmienia tekst: "Wyślę gdy będzie sieć"
 - ✅ Po kliknięciu: Toast "Raport zapisany offline"
 - ✅ Widok sukcesu z informacją o offline
 
-**Kroki cd:**
-6. Zmień throttling z powrotem na "Online"
-7. Poczekaj
+**Kroki cd:** 6. Zmień throttling z powrotem na "Online" 7. Poczekaj
 
 **Oczekiwany rezultat:**
+
 - ✅ Toast: "Raport wysłany po przywróceniu połączenia"
 - ✅ Widok sukcesu aktualizuje się z UUID raportu
 - ✅ Sprawdź Application → IndexedDB → routelog-offline-queue (powinno być puste)
@@ -191,6 +201,7 @@ INSERT INTO report_links (
 **Cel:** Sprawdzić czy edycja raportu działa
 
 **Kroki:**
+
 1. Wyślij raport (Test 2)
 2. Na widoku sukcesu kliknij "Edytuj raport"
 3. Zmień "Wszystko OK" na "Mam problem"
@@ -199,6 +210,7 @@ INSERT INTO report_links (
 6. Wyślij ponownie
 
 **Oczekiwany rezultat:**
+
 - ✅ Formularz ponownie się otwiera
 - ✅ Toast: "Możesz teraz edytować raport"
 - ✅ Zmiany zapisują się
@@ -211,21 +223,27 @@ INSERT INTO report_links (
 **Cel:** Sprawdzić czy przycisk edycji wyłącza się po 10 minutach
 
 **Opcja A: Czekaj 10 minut (wolne)**
+
 1. Wyślij raport
 2. Poczekaj aż licznik dojdzie do 0:00
 
 **Opcja B: Zmień czas w konsoli (szybkie)**
+
 ```javascript
 // W konsoli przeglądarki:
-sessionStorage.setItem('routelog:report:REPORT_UUID', JSON.stringify({
-  token: 'your-token',
-  editableUntil: new Date(Date.now() - 1000).toISOString() // 1 sekunda temu
-}));
+sessionStorage.setItem(
+  "routelog:report:REPORT_UUID",
+  JSON.stringify({
+    token: "your-token",
+    editableUntil: new Date(Date.now() - 1000).toISOString(), // 1 sekunda temu
+  })
+);
 // Odśwież stronę
 location.reload();
 ```
 
 **Oczekiwany rezultat:**
+
 - ✅ Przycisk "Edytuj raport" jest wyłączony (disabled)
 - ✅ Tekst zmienia się na "Okno edycji minęło"
 - ✅ Licznik pokazuje "0:00"
@@ -241,6 +259,7 @@ http://localhost:4321/public/report-links/invalid-token-12345
 ```
 
 **Oczekiwany rezultat:**
+
 - ✅ Widok błędu z ikoną
 - ✅ Tytuł: "Link nie został znaleziony"
 - ✅ Przycisk "Spróbuj ponownie"
@@ -249,10 +268,12 @@ http://localhost:4321/public/report-links/invalid-token-12345
 #### 8.2 Already Used Token (409)
 
 **Kroki:**
+
 1. Użyj tokenu który już wykorzystałeś w Test 2
 2. Otwórz ten sam URL ponownie
 
 **Oczekiwany rezultat:**
+
 - ✅ Widok błędu z checkmark
 - ✅ Tytuł: "Raport już wysłany"
 - ✅ Informacja o możliwości edycji
@@ -261,15 +282,19 @@ http://localhost:4321/public/report-links/invalid-token-12345
 #### 8.3 Expired Token (410)
 
 **Kroki:**
+
 1. Wygeneruj token z wygasłym czasem (modyfikacja w bazie)
+
 ```sql
-UPDATE report_links 
-SET expires_at = now() - interval '1 hour' 
+UPDATE report_links
+SET expires_at = now() - interval '1 hour'
 WHERE uuid = 'UUID_LINKU';
 ```
+
 2. Otwórz URL
 
 **Oczekiwany rezultat:**
+
 - ✅ Widok błędu z ikoną zegara
 - ✅ Tytuł: "Link wygasł"
 - ✅ Informacja o 24-godzinnej ważności
@@ -278,6 +303,7 @@ WHERE uuid = 'UUID_LINKU';
 ### Test 9: Mobile Responsiveness 📱
 
 **Kroki:**
+
 1. Otwórz formularz
 2. Włącz DevTools → Toggle device toolbar (Ctrl+Shift+M)
 3. Przetestuj różne rozdzielczości:
@@ -287,6 +313,7 @@ WHERE uuid = 'UUID_LINKU';
    - iPad (768x1024)
 
 **Oczekiwany rezultat:**
+
 - ✅ Formularz nie wychodzi poza ekran
 - ✅ Przyciski są wystarczająco duże (min 44x44px)
 - ✅ Tekst jest czytelny bez zoom
@@ -296,17 +323,20 @@ WHERE uuid = 'UUID_LINKU';
 ### Test 10: Accessibility ♿
 
 **Keyboard Navigation:**
+
 1. Użyj tylko klawiatury (Tab, Shift+Tab, Enter, Space)
 2. Przejdź przez cały formularz
 3. Wyślij używając Enter
 
 **Oczekiwany rezultat:**
+
 - ✅ Wszystkie elementy są fokusowalne
 - ✅ Widoczny wskaźnik focusa
 - ✅ Logiczna kolejność tabulacji
 - ✅ Można wysłać formularz z klawiatury
 
 **Screen Reader (opcjonalnie):**
+
 - Włącz VoiceOver (Mac) lub NVDA (Windows)
 - Sprawdź czy etykiety są odczytywane
 - Sprawdź czy błędy są ogłaszane
@@ -428,6 +458,7 @@ curl -X PATCH http://localhost:4321/api/public/reports/REPORT_UUID \
 ## 5. Scenariusze testowe - Checklist
 
 ### Podstawowe flow
+
 - [ ] **Test 1:** Walidacja tokenu - happy path
 - [ ] **Test 2:** Wysłanie raportu - happy path
 - [ ] **Test 3:** Wysłanie raportu - problem path
@@ -437,15 +468,18 @@ curl -X PATCH http://localhost:4321/api/public/reports/REPORT_UUID \
 - [ ] **Test 7:** Wygaśnięcie okna edycji
 
 ### Obsługa błędów
+
 - [ ] **Test 8.1:** Nieprawidłowy token (404)
 - [ ] **Test 8.2:** Użyty token (409)
 - [ ] **Test 8.3:** Wygasły token (410)
 
 ### UI/UX
+
 - [ ] **Test 9:** Responsywność mobile
 - [ ] **Test 10:** Dostępność (a11y)
 
 ### API
+
 - [ ] Test GET endpoint
 - [ ] Test POST endpoint (happy)
 - [ ] Test POST endpoint (problem)
@@ -460,6 +494,7 @@ curl -X PATCH http://localhost:4321/api/public/reports/REPORT_UUID \
 ### Problem: "Nie można znaleźć kierowcy"
 
 **Rozwiązanie:**
+
 ```sql
 -- Sprawdź czy są aktywni kierowcy
 SELECT * FROM drivers WHERE is_active = true;
@@ -472,11 +507,13 @@ VALUES ('YOUR_COMPANY_UUID', 'Jan', 'Testowy', 'jan.test@example.com', '+4812345
 ### Problem: "Token validation failed"
 
 **Możliwe przyczyny:**
+
 1. **Nieprawidłowy pepper:** Sprawdź `REPORT_LINK_TOKEN_PEPPER` w `.env`
 2. **Token już użyty:** Sprawdź `used_at` w bazie danych
 3. **Token wygasł:** Sprawdź `expires_at` vs. aktualny czas
 
 **Debug:**
+
 ```sql
 SELECT * FROM report_links WHERE hashed_token = 'HASH';
 ```
@@ -484,6 +521,7 @@ SELECT * FROM report_links WHERE hashed_token = 'HASH';
 ### Problem: "Formularz nie ładuje się"
 
 **Kroki debug:**
+
 1. Otwórz DevTools → Console
 2. Sprawdź czy są błędy
 3. Sprawdź Network tab - czy request się wykonuje
@@ -497,11 +535,13 @@ curl http://localhost:4321/api/public/report-links/YOUR_TOKEN
 ### Problem: "Offline queue nie działa"
 
 **Przyczyny:**
+
 1. **IndexedDB wyłączone:** Tryb incognito blokuje IndexedDB
 2. **Brak pakietu idb:** `npm install idb`
 3. **Błąd w ServiceWorker:** Sprawdź Application tab w DevTools
 
 **Debug:**
+
 ```javascript
 // W konsoli przeglądarki
 indexedDB.databases().then(console.log);
@@ -510,16 +550,18 @@ indexedDB.databases().then(console.log);
 ### Problem: "Edit nie działa"
 
 **Przyczyny:**
+
 1. **Brak tokenu w SessionStorage**
 2. **Upłynęło 10 minut**
 3. **Token nie pasuje**
 
 **Debug:**
+
 ```javascript
 // W konsoli przeglądarki
 Object.keys(sessionStorage)
-  .filter(k => k.startsWith('routelog:report:'))
-  .forEach(k => {
+  .filter((k) => k.startsWith("routelog:report:"))
+  .forEach((k) => {
     console.log(k, JSON.parse(sessionStorage.getItem(k)));
   });
 ```
@@ -555,19 +597,19 @@ POST /api/telemetry
 
 ```sql
 -- Telemetria
-SELECT * FROM telemetry_events 
+SELECT * FROM telemetry_events
 WHERE event_type IN ('FORM_OPEN', 'FORM_SUBMIT', 'TOKEN_INVALID')
-ORDER BY occurred_at DESC 
+ORDER BY occurred_at DESC
 LIMIT 10;
 
 -- Raporty
-SELECT * FROM reports 
-ORDER BY created_at DESC 
+SELECT * FROM reports
+ORDER BY created_at DESC
 LIMIT 5;
 
 -- Linki
-SELECT * FROM report_links 
-ORDER BY created_at DESC 
+SELECT * FROM report_links
+ORDER BY created_at DESC
 LIMIT 5;
 ```
 
@@ -607,6 +649,7 @@ npm run test:e2e -- --debug
 4. Kliknij "Analyze page load"
 
 **Cel:**
+
 - Performance: > 90
 - Accessibility: > 95
 - Best Practices: > 90
@@ -616,7 +659,7 @@ npm run test:e2e -- --debug
 
 ```javascript
 // W konsoli przeglądarki
-performance.getEntriesByType('navigation')[0].domInteractive
+performance.getEntriesByType("navigation")[0].domInteractive;
 // Cel: < 2000ms (2 sekundy)
 ```
 
@@ -625,6 +668,7 @@ performance.getEntriesByType('navigation')[0].domInteractive
 ## 10. Checklist przed wdrożeniem na produkcję
 
 ### Security
+
 - [ ] Token pepper ustawiony w production env
 - [ ] HTTPS włączony
 - [ ] Rate limiting działa
@@ -632,6 +676,7 @@ performance.getEntriesByType('navigation')[0].domInteractive
 - [ ] Brak wrażliwych danych w logach
 
 ### Funkcjonalność
+
 - [ ] Wszystkie testy manualne przeszły
 - [ ] API endpointy działają
 - [ ] Offline mode działa
@@ -639,12 +684,14 @@ performance.getEntriesByType('navigation')[0].domInteractive
 - [ ] Email notifications działają (jeśli zaimplementowane)
 
 ### Performance
+
 - [ ] Lighthouse score > 90
 - [ ] Time to Interactive < 2s
 - [ ] Bundle size < 200KB (gzipped)
 - [ ] Brak memory leaks
 
 ### Monitoring
+
 - [ ] Telemetria wysyła eventy
 - [ ] Logi są zapisywane
 - [ ] Error tracking skonfigurowany (Sentry?)
@@ -661,5 +708,3 @@ performance.getEntriesByType('navigation')[0].domInteractive
 ---
 
 **Powodzenia w testowaniu! 🚀**
-
-

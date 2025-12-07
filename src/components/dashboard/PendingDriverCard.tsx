@@ -105,4 +105,3 @@ export function PendingDriverCard({ driver, onDriverClick, className }: PendingD
     </Card>
   );
 }
-

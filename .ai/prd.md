@@ -11,6 +11,7 @@ RouteLog to lekka aplikacja webowa (SaaS) wspierająca małe i średnie firmy tr
 ### MVP Simplifications (Course Deadline)
 
 Dla przyspieszenia realizacji MVP na zaliczenie kursu, wprowadzono następujące uproszczenia:
+
 - **AI**: Mock/rule-based (zamiast OpenRouter API) - wystarczające do demonstracji
 - **Email**: Manualne generowanie tokenów przez skrypt (zamiast automatycznego crona)
 - **Alerty**: Brak automatycznych alertów email po 24h (można dodać post-MVP)
@@ -26,20 +27,20 @@ Te uproszczenia **NIE wpływają** na demonstrację kluczowych funkcji i flow u�
 
 ## 3. Wymagania funkcjonalne
 
-| ID    | Opis funkcji                                                                                       | Status MVP |
-| ----- | -------------------------------------------------------------------------------------------------- | ---------- |
-| FR-01 | Uwierzytelnianie: rejestracja i logowanie jednego konta firmowego (współdzielonego).               | ✅ Implemented |
-| FR-02 | CRUD kierowców: dodawanie, edycja, usuwanie, lista (imię, email, strefa czasowa).                  | ✅ Implemented |
+| ID    | Opis funkcji                                                                                       | Status MVP       |
+| ----- | -------------------------------------------------------------------------------------------------- | ---------------- |
+| FR-01 | Uwierzytelnianie: rejestracja i logowanie jednego konta firmowego (współdzielonego).               | ✅ Implemented   |
+| FR-02 | CRUD kierowców: dodawanie, edycja, usuwanie, lista (imię, email, strefa czasowa).                  | ✅ Implemented   |
 | FR-03 | ~~Codzienne automatyczne~~ Manualne generowanie jednorazowego linku (token, ważność 24 h).         | ⚠️ Manual Script |
-| FR-04 | Publiczny formularz raportu z logiką: „Wszystko OK" → 1 klik kontra „Problem" → pola szczegółowe.  | ✅ Implemented |
-| FR-05 | Edycja raportu przez kierowcę do 10 min po wysłaniu.                                               | ✅ Implemented |
-| FR-06 | AI-podsumowanie (2-3 zdania PL), klasyfikacja ryzyka (Brak/Niskie/Średnie/Wysokie), tagi przyczyn. | ✅ Mock AI |
-| FR-07 | Dashboard „Dzisiaj": status raportów, badge ryzyka, sekcja „Oczekujące".                           | ✅ Implemented |
-| FR-08 | ~~Alert e-mail do spedytora~~, jeśli raport nie nadejdzie w 24 h od planowanego terminu.           | ❌ Not in MVP |
-| FR-09 | Historia ostatnich 7 dni z sortowaniem i filtrowaniem po ryzyku.                                   | ✅ Implemented |
-| FR-10 | Eksport CSV (zakres dat, kluczowe pola + wyniki AI).                                               | ✅ Implemented |
-| FR-11 | Telemetria: pomiar czasu wypełnienia formularza, konwersja linków.                                 | ✅ Implemented |
-| FR-12 | CI/CD: min. jeden test (unit lub e2e) uruchamiany w GitHub Actions.                                | ✅ Implemented |
+| FR-04 | Publiczny formularz raportu z logiką: „Wszystko OK" → 1 klik kontra „Problem" → pola szczegółowe.  | ✅ Implemented   |
+| FR-05 | Edycja raportu przez kierowcę do 10 min po wysłaniu.                                               | ✅ Implemented   |
+| FR-06 | AI-podsumowanie (2-3 zdania PL), klasyfikacja ryzyka (Brak/Niskie/Średnie/Wysokie), tagi przyczyn. | ✅ Mock AI       |
+| FR-07 | Dashboard „Dzisiaj": status raportów, badge ryzyka, sekcja „Oczekujące".                           | ✅ Implemented   |
+| FR-08 | ~~Alert e-mail do spedytora~~, jeśli raport nie nadejdzie w 24 h od planowanego terminu.           | ❌ Not in MVP    |
+| FR-09 | Historia ostatnich 7 dni z sortowaniem i filtrowaniem po ryzyku.                                   | ✅ Implemented   |
+| FR-10 | Eksport CSV (zakres dat, kluczowe pola + wyniki AI).                                               | ✅ Implemented   |
+| FR-11 | Telemetria: pomiar czasu wypełnienia formularza, konwersja linków.                                 | ✅ Implemented   |
+| FR-12 | CI/CD: min. jeden test (unit lub e2e) uruchamiany w GitHub Actions.                                | ✅ Implemented   |
 
 ### MVP Implementation Notes
 
@@ -244,15 +245,15 @@ Kryteria akceptacji:
 
 ## 6. Metryki sukcesu
 
-| ID    | Wskaźnik                                   | Cel MVP                      | Status |
-| ----- | ------------------------------------------ | ---------------------------- | ------ |
-| MS-01 | Konwersja link → raport ≤24 h              | ≥ 70 %                       | 🟡 Ready to measure |
-| MS-02 | Liczba wieczornych telefonów „co z trasą?" | − 30 % po 2 tyg. pilota      | 🔵 Post-pilot |
+| ID    | Wskaźnik                                   | Cel MVP                      | Status                |
+| ----- | ------------------------------------------ | ---------------------------- | --------------------- |
+| MS-01 | Konwersja link → raport ≤24 h              | ≥ 70 %                       | 🟡 Ready to measure   |
+| MS-02 | Liczba wieczornych telefonów „co z trasą?" | − 30 % po 2 tyg. pilota      | 🔵 Post-pilot         |
 | MS-03 | Raporty z ryzykiem ≥ Średnie               | ≥ 1 dziennie / 10 kierowców  | ✅ Mock AI classifies |
-| MS-04 | Eksport CSV                                | ≥ 1 tygodniowo               | ✅ Implemented |
+| MS-04 | Eksport CSV                                | ≥ 1 tygodniowo               | ✅ Implemented        |
 | MS-05 | Mediana czasu wypełnienia formularza       | < 90 s                       | ✅ Telemetry tracking |
-| MS-06 | Stabilność HTTP                            | 99 % żądań 2xx               | 🟡 Ready to monitor |
-| MS-07 | Pokrycie testami krytycznej ścieżki        | 100 % workflow green na main | ✅ CI/CD passing |
+| MS-06 | Stabilność HTTP                            | 99 % żądań 2xx               | 🟡 Ready to monitor   |
+| MS-07 | Pokrycie testami krytycznej ścieżki        | 100 % workflow green na main | ✅ CI/CD passing      |
 
 ## 7. MVP Completion Status
 
@@ -331,6 +332,7 @@ Kryteria akceptacji:
 ### 🚀 Ready for Production?
 
 **No** - requires:
+
 1. Real AI integration (OpenRouter)
 2. Email automation (Resend + cron)
 3. Production deployment (Vercel/DO)
@@ -348,6 +350,4 @@ Kryteria akceptacji:
 - **Database Tables**: 12
 - **Tests**: 52 unit + 5 E2E
 - **Test Coverage**: ~85%
-
 ```
-

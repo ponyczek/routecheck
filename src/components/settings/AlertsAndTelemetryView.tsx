@@ -11,22 +11,22 @@ interface AlertsAndTelemetryViewProps {
 
 /**
  * Główny widok "Alerty i Telemetria"
- * 
+ *
  * @description
  * Ten widok pozwala spedytorom:
  * - Zarządzać konfiguracją alertów e-mail o brakujących raportach (US-014)
  * - Przeglądać historię wysłanych alertów e-mail
  * - Monitorować metryki telemetryczne UX formularza kierowcy (US-017)
- * 
+ *
  * Widok składa się z trzech głównych sekcji:
  * 1. Konfiguracja alertów - toggle włączania/wyłączania powiadomień
  * 2. Historia e-mail - ostatnie 10 wysłanych alertów
  * 3. Telemetria UX - agregowane metryki (mediana czasu, konwersja, etc.)
- * 
+ *
  * @param props - Props komponentu
  * @param props.initialTelemetryData - Initial data dla metryk telemetrycznych (z SSR)
  * @param props.initialEmailLogs - Initial data dla logów e-mail (z SSR)
- * 
+ *
  * @example
  * ```tsx
  * <AlertsAndTelemetryView
@@ -35,10 +35,7 @@ interface AlertsAndTelemetryViewProps {
  * />
  * ```
  */
-export function AlertsAndTelemetryView({
-  initialTelemetryData,
-  initialEmailLogs,
-}: AlertsAndTelemetryViewProps) {
+export function AlertsAndTelemetryView({ initialTelemetryData, initialEmailLogs }: AlertsAndTelemetryViewProps) {
   return (
     <div className="space-y-6">
       <PageHeader
@@ -54,4 +51,3 @@ export function AlertsAndTelemetryView({
     </div>
   );
 }
-

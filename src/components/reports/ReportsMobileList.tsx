@@ -19,6 +19,3 @@ export function ReportsMobileList({ reports, onViewReport }: ReportsMobileListPr
     </div>
   );
 }
-
-
-

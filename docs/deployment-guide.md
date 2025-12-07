@@ -108,6 +108,7 @@ Good for apps needing background jobs or cron.
 5. Deploy
 
 **Benefits:**
+
 - Can run cron jobs (email sending)
 - Postgres database included
 - $5/month starter plan
@@ -134,6 +135,7 @@ More control, great for production.
 7. Deploy
 
 **Benefits:**
+
 - More server control
 - Can add managed Postgres
 - Built-in monitoring
@@ -170,7 +172,7 @@ CMD ["npm", "run", "preview"]
 ### docker-compose.yml
 
 ```yaml
-version: '3.8'
+version: "3.8"
 services:
   app:
     build: .
@@ -242,6 +244,7 @@ For CI/CD to work with deployed app:
 ### ✅ Configure CORS (if needed)
 
 Update Supabase project settings:
+
 - Allowed domains: Add your production URL
 - CORS origins: Add your domain
 
@@ -256,13 +259,13 @@ Update Supabase project settings:
 
 ## Deployment Comparison
 
-| Platform | Setup Time | Cost | CI/CD | Pros | Cons |
-|----------|------------|------|-------|------|------|
-| **Vercel** | 10 min | Free/$20 | ✅ Auto | Fastest, best DX | Limited backend |
-| **Netlify** | 10 min | Free/$19 | ✅ Auto | Great for static | No cron jobs |
-| **Railway** | 15 min | $5+ | ✅ Auto | Cron support | Newer platform |
-| **DigitalOcean** | 20 min | $5+ | ✅ Auto | More control | More config |
-| **Docker VPS** | 60 min | $5+ | ❌ Manual | Full control | Most complex |
+| Platform         | Setup Time | Cost     | CI/CD     | Pros             | Cons            |
+| ---------------- | ---------- | -------- | --------- | ---------------- | --------------- |
+| **Vercel**       | 10 min     | Free/$20 | ✅ Auto   | Fastest, best DX | Limited backend |
+| **Netlify**      | 10 min     | Free/$19 | ✅ Auto   | Great for static | No cron jobs    |
+| **Railway**      | 15 min     | $5+      | ✅ Auto   | Cron support     | Newer platform  |
+| **DigitalOcean** | 20 min     | $5+      | ✅ Auto   | More control     | More config     |
+| **Docker VPS**   | 60 min     | $5+      | ❌ Manual | Full control     | Most complex    |
 
 **Recommendation for MVP**: **Vercel** (fastest, free tier, auto-deploy)
 
@@ -273,11 +276,13 @@ Update Supabase project settings:
 ### Build Fails
 
 **Error: "Module not found"**
+
 - Check `package.json` dependencies
 - Verify `npm ci` runs locally
 - Clear cache and retry
 
 **Error: "Supabase connection failed"**
+
 - Verify environment variables are set
 - Check Supabase project is active
 - Ensure anon key is correct
@@ -285,17 +290,20 @@ Update Supabase project settings:
 ### Runtime Errors
 
 **500 errors on API routes**
+
 - Check server logs (Vercel/Netlify dashboard)
 - Verify SERVICE_ROLE_KEY is set
 - Check RLS policies in Supabase
 
 **CORS errors**
+
 - Add production URL to Supabase CORS settings
 - Verify middleware CORS headers
 
 ### Performance Issues
 
 **Slow page loads**
+
 - Enable Vercel Edge caching
 - Optimize images
 - Check Supabase query performance
@@ -322,11 +330,13 @@ Before going live:
 ## Cost Breakdown (Monthly)
 
 ### Minimal Setup (Free Tier)
+
 - Vercel: Free (Hobby plan)
 - Supabase: Free (500MB DB)
 - **Total: $0/month**
 
 ### Production Setup
+
 - Vercel Pro: $20
 - Supabase Pro: $25
 - Resend emails: $20 (50k emails)
@@ -334,6 +344,7 @@ Before going live:
 - **Total: $66/month**
 
 ### Scale (500 drivers)
+
 - Vercel Pro: $20
 - Supabase Pro: $25
 - Resend: $20
@@ -353,7 +364,7 @@ Very affordable for SMB transport companies!
 5. Share with mentors! 🎉
 
 **Deployment badge:**
+
 ```markdown
 [![Deploy](https://img.shields.io/badge/deployed-vercel-black)](https://routecheck.vercel.app)
 ```
-

@@ -69,6 +69,3 @@ export function ReportsLoadingSkeletons({ className, view }: ReportsLoadingSkele
     </div>
   );
 }
-
-
-

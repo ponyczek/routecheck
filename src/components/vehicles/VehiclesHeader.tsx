@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
 interface VehiclesHeaderProps {
   onAddClick: () => void;
@@ -13,9 +13,7 @@ export function VehiclesHeader({ onAddClick }: VehiclesHeaderProps) {
     <div className="flex items-center justify-between">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Pojazdy</h1>
-        <p className="text-muted-foreground">
-          Zarządzaj flotą pojazdów i ich aktywnością
-        </p>
+        <p className="text-muted-foreground">Zarządzaj flotą pojazdów i ich aktywnością</p>
       </div>
       <Button onClick={onAddClick} size="default">
         <Plus className="mr-2 h-4 w-4" />
@@ -24,5 +22,3 @@ export function VehiclesHeader({ onAddClick }: VehiclesHeaderProps) {
     </div>
   );
 }
-
-

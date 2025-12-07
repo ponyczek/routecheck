@@ -3,17 +3,17 @@ import type { SecurityTipsListProps } from "@/lib/settings/types";
 
 /**
  * SecurityTipsList - Lista najlepszych praktyk bezpieczeństwa
- * 
+ *
  * Komponent wyświetlający statyczną listę wskazówek dotyczących bezpieczeństwa
  * sesji i zarządzania kontem. Każda wskazówka ma ikonę CheckCircle.
- * 
+ *
  * Zawiera porady dotyczące:
  * - Automatycznego wylogowania po braku aktywności
  * - Regularnej zmiany hasła
  * - Używania silnych haseł
  * - Nie udostępniania danych logowania
  * - Monitorowania aktywności konta
- * 
+ *
  * @example
  * ```tsx
  * <SecurityTipsList />
@@ -34,13 +34,9 @@ export function SecurityTipsList(_props: SecurityTipsListProps) {
       {tips.map((tip, index) => (
         <li key={index} className="flex items-start gap-3">
           <CheckCircle className="h-5 w-5 shrink-0 text-green-600 dark:text-green-500 mt-0.5" />
-          <span className="text-sm text-muted-foreground leading-relaxed">
-            {tip}
-          </span>
+          <span className="text-sm text-muted-foreground leading-relaxed">{tip}</span>
         </li>
       ))}
     </ul>
   );
 }
-
-

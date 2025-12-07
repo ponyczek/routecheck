@@ -1,27 +1,32 @@
-import { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
-import { toast } from 'sonner';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
-import { reportFormSchema, type ReportFormViewModel, type FormViewState } from '@/lib/public-report/validation';
-import { submitReport } from '@/lib/public-report/api';
-import { useNetworkStatus } from '@/lib/public-report/hooks/useNetworkStatus';
-import { useTelemetry } from '@/lib/public-report/hooks/useTelemetry';
-import { useOfflineQueue } from '@/lib/public-report/hooks/useOfflineQueue';
-import { storeReportToken } from '@/lib/public-report/utils/storage';
+import { reportFormSchema, type ReportFormViewModel, type FormViewState } from "@/lib/public-report/validation";
+import { submitReport } from "@/lib/public-report/api";
+import { useNetworkStatus } from "@/lib/public-report/hooks/useNetworkStatus";
+import { useTelemetry } from "@/lib/public-report/hooks/useTelemetry";
+import { useOfflineQueue } from "@/lib/public-report/hooks/useOfflineQueue";
+import { storeReportToken } from "@/lib/public-report/utils/storage";
 
-import { TokenGuard } from './TokenGuard';
-import { FormHeader } from './FormHeader';
-import { FormFooter } from './FormFooter';
-import { OfflineBanner } from './OfflineBanner';
-import { StatusSwitch } from './StatusSwitch';
-import { HappyPathSection } from './HappyPathSection';
-import { ProblemPathSection } from './ProblemPathSection';
-import { SubmitButton } from './SubmitButton';
-import { SuccessView } from './SuccessView';
+import { TokenGuard } from "./TokenGuard";
+import { FormHeader } from "./FormHeader";
+import { FormFooter } from "./FormFooter";
+import { OfflineBanner } from "./OfflineBanner";
+import { StatusSwitch } from "./StatusSwitch";
+import { HappyPathSection } from "./HappyPathSection";
+import { ProblemPathSection } from "./ProblemPathSection";
+import { SubmitButton } from "./SubmitButton";
+import { SuccessView } from "./SuccessView";
 
-import type { PublicReportLinkValidationDTO, PublicReportSubmitCommand, PublicReportSubmitResponseDTO, ProblemDetail } from '@/types';
+import type {
+  PublicReportLinkValidationDTO,
+  PublicReportSubmitCommand,
+  PublicReportSubmitResponseDTO,
+  ProblemDetail,
+} from "@/types";
 
 interface PublicReportFormProps {
   token: string;
@@ -33,18 +38,18 @@ interface PublicReportFormProps {
  * PublicReportForm - Main component for public report submission
  * Handles token validation, form state, happy/problem path, and submission
  * Integrates with React Hook Form, Zod validation, and TanStack Query
- * 
+ *
  * @example
- * <PublicReportForm 
- *   token={token} 
+ * <PublicReportForm
+ *   token={token}
  *   onSuccess={(data) => navigate('/success')}
  *   onError={(error) => console.error(error)}
  * />
  */
 export function PublicReportForm({ token, onSuccess, onError }: PublicReportFormProps) {
-  const [viewState, setViewState] = useState<FormViewState>({ type: 'loading' });
+  const [viewState, setViewState] = useState<FormViewState>({ type: "loading" });
   const [validationData, setValidationData] = useState<PublicReportLinkValidationDTO | null>(null);
-  
+
   const isOnline = useNetworkStatus();
   const { recordInteraction, recordProblemSwitch, sendFormTelemetry } = useTelemetry(token);
   const offlineQueue = useOfflineQueue(isOnline, submitReport);
@@ -54,36 +59,41 @@ export function PublicReportForm({ token, onSuccess, onError }: PublicReportForm
     resolver: zodResolver(reportFormSchema),
     defaultValues: {
       isProblem: false,
-      routeStatus: 'COMPLETED',
+      routeStatus: "COMPLETED",
       delayMinutes: 0,
-      delayReason: '',
+      delayReason: "",
       cargoDamageDescription: null,
       vehicleDamageDescription: null,
       nextDayBlockers: null,
-      timezone: typeof Intl !== 'undefined' 
-        ? Intl.DateTimeFormat().resolvedOptions().timeZone 
-        : 'Europe/Warsaw',
+      timezone: typeof Intl !== "undefined" ? Intl.DateTimeFormat().resolvedOptions().timeZone : "Europe/Warsaw",
     },
-    mode: 'onBlur',
+    mode: "onBlur",
   });
 
-  const { register, handleSubmit, formState: { errors }, watch, setValue, reset } = form;
-  const watchIsProblem = watch('isProblem');
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+    setValue,
+    reset,
+  } = form;
+  const watchIsProblem = watch("isProblem");
 
   // Handle problem switch
   const handleProblemSwitch = (isProblem: boolean) => {
-    setValue('isProblem', isProblem);
-    
+    setValue("isProblem", isProblem);
+
     if (isProblem) {
       recordProblemSwitch();
     } else {
       // Reset problem fields when switching to happy path
-      setValue('routeStatus', 'COMPLETED');
-      setValue('delayMinutes', 0);
-      setValue('delayReason', '');
-      setValue('cargoDamageDescription', null);
-      setValue('vehicleDamageDescription', null);
-      setValue('nextDayBlockers', null);
+      setValue("routeStatus", "COMPLETED");
+      setValue("delayMinutes", 0);
+      setValue("delayReason", "");
+      setValue("cargoDamageDescription", null);
+      setValue("vehicleDamageDescription", null);
+      setValue("nextDayBlockers", null);
     }
   };
 
@@ -92,7 +102,7 @@ export function PublicReportForm({ token, onSuccess, onError }: PublicReportForm
     mutationFn: async (data: ReportFormViewModel) => {
       // Transform form data to API command
       const command: PublicReportSubmitCommand = {
-        routeStatus: data.isProblem ? data.routeStatus : 'COMPLETED',
+        routeStatus: data.isProblem ? data.routeStatus : "COMPLETED",
         delayMinutes: data.isProblem ? data.delayMinutes : 0,
         delayReason: data.isProblem && data.delayReason ? data.delayReason : null,
         cargoDamageDescription: data.isProblem ? data.cargoDamageDescription : null,
@@ -106,7 +116,7 @@ export function PublicReportForm({ token, onSuccess, onError }: PublicReportForm
         await offlineQueue.addToQueue(token, command);
         // Return a placeholder response for offline submission
         return {
-          reportUuid: 'offline-pending',
+          reportUuid: "offline-pending",
           editableUntil: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
         };
       }
@@ -115,57 +125,57 @@ export function PublicReportForm({ token, onSuccess, onError }: PublicReportForm
     },
     onSuccess: async (data) => {
       // Handle offline submission differently
-      if (!isOnline && data.reportUuid === 'offline-pending') {
-        toast.info('Raport zapisany offline', {
-          description: 'Zostanie wysłany automatycznie po przywróceniu połączenia.',
+      if (!isOnline && data.reportUuid === "offline-pending") {
+        toast.info("Raport zapisany offline", {
+          description: "Zostanie wysłany automatycznie po przywróceniu połączenia.",
         });
         return;
       }
 
       // Store token for edit functionality
       storeReportToken(data.reportUuid, token);
-      
+
       // Send telemetry
       await sendFormTelemetry(data.reportUuid);
-      
+
       // Update view state
-      setViewState({ type: 'success', data });
-      
+      setViewState({ type: "success", data });
+
       // Show success toast
-      toast.success('Raport wysłany pomyślnie', {
-        description: 'Możesz go edytować przez 10 minut.',
+      toast.success("Raport wysłany pomyślnie", {
+        description: "Możesz go edytować przez 10 minut.",
       });
-      
+
       // Call onSuccess callback
       onSuccess?.(data);
     },
     onError: (error: ProblemDetail) => {
       // Handle validation errors
-      if (error.code === 'VALIDATION_ERROR' && error.details) {
+      if (error.code === "VALIDATION_ERROR" && error.details) {
         Object.entries(error.details).forEach(([field, message]) => {
           form.setError(field as keyof ReportFormViewModel, {
-            type: 'server',
+            type: "server",
             message: message as string,
           });
         });
-        toast.error('Sprawdź poprawność wypełnionych pól');
-      } 
+        toast.error("Sprawdź poprawność wypełnionych pól");
+      }
       // Handle token errors
-      else if (['404', '409', '410'].includes(error.code)) {
-        const errorType = error.code as '404' | '409' | '410';
-        setViewState({ 
-          type: 'error', 
+      else if (["404", "409", "410"].includes(error.code)) {
+        const errorType = error.code as "404" | "409" | "410";
+        setViewState({
+          type: "error",
           errorType,
           message: error.message,
         });
-      } 
+      }
       // Handle server errors
       else {
-        toast.error('Nie udało się wysłać raportu', {
-          description: 'Spróbuj ponownie za chwilę.',
+        toast.error("Nie udało się wysłać raportu", {
+          description: "Spróbuj ponownie za chwilę.",
         });
       }
-      
+
       // Call onError callback
       onError?.(error);
     },
@@ -178,22 +188,22 @@ export function PublicReportForm({ token, onSuccess, onError }: PublicReportForm
 
   // Handle token validation success
   const handleTokenValidated = (data: PublicReportLinkValidationDTO) => {
-    if ('valid' in data && data.valid) {
+    if ("valid" in data && data.valid) {
       setValidationData(data);
-      setViewState({ type: 'form', data });
+      setViewState({ type: "form", data });
     }
   };
 
   // Render based on view state
   const renderContent = () => {
     switch (viewState.type) {
-      case 'loading':
+      case "loading":
         return null; // TokenGuard handles loading state
-      
-      case 'error':
+
+      case "error":
         return null; // TokenGuard handles error state
-      
-      case 'success':
+
+      case "success":
         return (
           <SuccessView
             reportUuid={viewState.data.reportUuid}
@@ -202,17 +212,17 @@ export function PublicReportForm({ token, onSuccess, onError }: PublicReportForm
             isProcessingQueue={offlineQueue.isProcessing}
             onEdit={() => {
               // Reset to form view for editing
-              if (validationData && 'valid' in validationData && validationData.valid) {
-                setViewState({ type: 'form', data: validationData });
-                toast.info('Możesz teraz edytować raport');
+              if (validationData && "valid" in validationData && validationData.valid) {
+                setViewState({ type: "form", data: validationData });
+                toast.info("Możesz teraz edytować raport");
               }
             }}
           />
         );
-      
-      case 'form':
+
+      case "form":
       default:
-        if (!validationData || !('valid' in validationData) || !validationData.valid) {
+        if (!validationData || !("valid" in validationData) || !validationData.valid) {
           return null;
         }
 
@@ -227,10 +237,7 @@ export function PublicReportForm({ token, onSuccess, onError }: PublicReportForm
 
               <OfflineBanner isOnline={isOnline} />
 
-              <StatusSwitch
-                value={watchIsProblem}
-                onChange={handleProblemSwitch}
-              />
+              <StatusSwitch value={watchIsProblem} onChange={handleProblemSwitch} />
 
               {!watchIsProblem ? (
                 <HappyPathSection />
@@ -243,11 +250,7 @@ export function PublicReportForm({ token, onSuccess, onError }: PublicReportForm
                 />
               )}
 
-              <SubmitButton
-                isSubmitting={submitMutation.isPending}
-                isProblem={watchIsProblem}
-                isOnline={isOnline}
-              />
+              <SubmitButton isSubmitting={submitMutation.isPending} isProblem={watchIsProblem} isOnline={isOnline} />
 
               <FormFooter editableUntil={validationData.editableUntil} />
             </form>
@@ -262,4 +265,3 @@ export function PublicReportForm({ token, onSuccess, onError }: PublicReportForm
     </TokenGuard>
   );
 }
-

@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button';
-import { LoaderCircle } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { LoaderCircle } from "lucide-react";
 
 interface SubmitButtonProps {
   isSubmitting: boolean;
@@ -10,9 +10,9 @@ interface SubmitButtonProps {
 /**
  * SubmitButton - Main form submit button with loading state and dynamic text
  * Text adapts based on problem/happy path and online/offline status
- * 
+ *
  * @example
- * <SubmitButton 
+ * <SubmitButton
  *   isSubmitting={isSubmitting}
  *   isProblem={isProblem}
  *   isOnline={isOnline}
@@ -28,16 +28,16 @@ export function SubmitButton({ isSubmitting, isProblem, isOnline }: SubmitButton
         </>
       );
     }
-    
+
     if (!isOnline) {
-      return 'Wyślę gdy będzie sieć';
+      return "Wyślę gdy będzie sieć";
     }
-    
+
     if (isProblem) {
-      return 'Wyślij zgłoszenie problemu';
+      return "Wyślij zgłoszenie problemu";
     }
-    
-    return 'Wyślij raport - Wszystko OK';
+
+    return "Wyślij raport - Wszystko OK";
   };
 
   return (
@@ -52,5 +52,3 @@ export function SubmitButton({ isSubmitting, isProblem, isOnline }: SubmitButton
     </Button>
   );
 }
-
-

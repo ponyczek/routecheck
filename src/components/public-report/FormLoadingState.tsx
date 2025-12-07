@@ -1,7 +1,7 @@
 /**
  * FormLoadingState - Skeleton loader shown during token validation
  * Displays placeholder content while validating the report link
- * 
+ *
  * @example
  * {isValidating && <FormLoadingState />}
  */
@@ -36,5 +36,3 @@ export function FormLoadingState() {
     </div>
   );
 }
-
-

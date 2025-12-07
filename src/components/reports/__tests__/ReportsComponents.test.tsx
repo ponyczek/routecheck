@@ -73,7 +73,7 @@ describe("ReportStatusBadge", () => {
 describe("DriverSelect", () => {
   it("renders with placeholder", () => {
     const wrapper = createWrapper();
-    render(<DriverSelect value="" onChange={() => {}} placeholder="Select driver" />, {
+    render(<DriverSelect value="" onChange={vi.fn()} placeholder="Select driver" />, {
       wrapper,
     });
     expect(screen.getByRole("combobox")).toHaveTextContent("Select driver");
@@ -82,15 +82,8 @@ describe("DriverSelect", () => {
   it("displays selected driver name when value is provided", async () => {
     const wrapper = createWrapper();
     const mockDriverUuid = "test-uuid-123";
-    
-    render(
-      <DriverSelect
-        value={mockDriverUuid}
-        onChange={() => {}}
-        placeholder="Select driver"
-      />,
-      { wrapper }
-    );
+
+    render(<DriverSelect value={mockDriverUuid} onChange={vi.fn()} placeholder="Select driver" />, { wrapper });
 
     // Initially shows UUID until drivers are loaded
     expect(screen.getByRole("combobox")).toBeInTheDocument();
@@ -108,16 +101,19 @@ describe("DriverSelect", () => {
 
     // Wait for loading state or empty state
     // Note: In real scenario, you would mock the API response
-    await waitFor(() => {
-      const loadingText = screen.queryByText("Ładowanie kierowców...");
-      const emptyText = screen.queryByText("Brak aktywnych kierowców.");
-      expect(loadingText || emptyText).toBeInTheDocument();
-    }, { timeout: 2000 });
+    await waitFor(
+      () => {
+        const loadingText = screen.queryByText("Ładowanie kierowców...");
+        const emptyText = screen.queryByText("Brak aktywnych kierowców.");
+        expect(loadingText || emptyText).toBeInTheDocument();
+      },
+      { timeout: 2000 }
+    );
   });
 
   it("disables when disabled prop is true", () => {
     const wrapper = createWrapper();
-    render(<DriverSelect value="" onChange={() => {}} disabled />, { wrapper });
+    render(<DriverSelect value="" onChange={vi.fn()} disabled />, { wrapper });
     expect(screen.getByRole("combobox")).toBeDisabled();
   });
 });
@@ -125,11 +121,7 @@ describe("DriverSelect", () => {
 describe("DateRangePicker", () => {
   it("renders with placeholder when no value", () => {
     render(
-      <DateRangePicker
-        value={{ from: undefined, to: undefined }}
-        onChange={() => {}}
-        placeholder="Select dates"
-      />
+      <DateRangePicker value={{ from: undefined, to: undefined }} onChange={vi.fn()} placeholder="Select dates" />
     );
     expect(screen.getByRole("button")).toHaveTextContent("Select dates");
   });
@@ -138,21 +130,14 @@ describe("DateRangePicker", () => {
     const from = new Date("2025-01-01");
     const to = new Date("2025-01-31");
 
-    render(
-      <DateRangePicker value={{ from, to }} onChange={() => {}} />
-    );
+    render(<DateRangePicker value={{ from, to }} onChange={vi.fn()} />);
 
     expect(screen.getByRole("button")).toHaveTextContent("01.01.2025 - 31.01.2025");
   });
 
   it("opens calendar on button click", async () => {
     const user = userEvent.setup();
-    render(
-      <DateRangePicker
-        value={{ from: undefined, to: undefined }}
-        onChange={() => {}}
-      />
-    );
+    render(<DateRangePicker value={{ from: undefined, to: undefined }} onChange={vi.fn()} />);
 
     await user.click(screen.getByRole("button"));
 
@@ -164,13 +149,7 @@ describe("DateRangePicker", () => {
   });
 
   it("disables when disabled prop is true", () => {
-    render(
-      <DateRangePicker
-        value={{ from: undefined, to: undefined }}
-        onChange={() => {}}
-        disabled
-      />
-    );
+    render(<DateRangePicker value={{ from: undefined, to: undefined }} onChange={vi.fn()} disabled />);
     expect(screen.getByRole("button")).toBeDisabled();
   });
 });
@@ -205,4 +184,3 @@ describe("Integration: Badge combinations", () => {
     expect(screen.getByText("Wysokie")).toBeInTheDocument();
   });
 });
-

@@ -1,25 +1,18 @@
-import { Skeleton } from '@/components/ui/skeleton';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 interface LoadingSkeletonsProps {
   count?: number;
-  variant?: 'table' | 'cards';
+  variant?: "table" | "cards";
 }
 
 /**
  * Komponenty skeleton wyświetlane podczas ładowania danych
  * Imitują strukturę tabeli (desktop) lub kart (mobile)
  */
-export function LoadingSkeletons({ count = 5, variant = 'table' }: LoadingSkeletonsProps) {
-  if (variant === 'cards') {
+export function LoadingSkeletons({ count = 5, variant = "table" }: LoadingSkeletonsProps) {
+  if (variant === "cards") {
     return <LoadingSkeletonsCards count={count} />;
   }
 
@@ -97,5 +90,3 @@ function LoadingSkeletonsCards({ count }: { count: number }) {
     </div>
   );
 }
-
-

@@ -29,8 +29,7 @@ export const telemetryKeys = {
 
 export const emailLogsKeys = {
   all: ["email-logs"] as const,
-  list: (params: { limit: number; sortBy: string; sortDir: string }) =>
-    [...emailLogsKeys.all, "list", params] as const,
+  list: (params: { limit: number; sortBy: string; sortDir: string }) => [...emailLogsKeys.all, "list", params] as const,
 };
 
 /**

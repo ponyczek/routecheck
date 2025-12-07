@@ -88,4 +88,3 @@ export function useNetworkStatus(): { isOnline: boolean; status: NetworkStatus }
 
   return { isOnline, status };
 }
-

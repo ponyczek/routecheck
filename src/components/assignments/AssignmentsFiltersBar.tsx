@@ -1,18 +1,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { CalendarIcon, X } from "lucide-react";
@@ -31,7 +21,7 @@ interface AssignmentsFiltersBarProps {
 
 /**
  * AssignmentsFiltersBar
- * 
+ *
  * Pasek filtrów umożliwiający zawężenie listy przypisań według kierowcy,
  * pojazdu lub daty aktywności. Wspiera wyszukiwanie w selectach i wybór daty z kalendarza.
  */
@@ -42,9 +32,7 @@ export function AssignmentsFiltersBar({
   vehicles,
   isLoading = false,
 }: AssignmentsFiltersBarProps) {
-  const [date, setDate] = useState<Date | undefined>(
-    filters.activeOn ? new Date(filters.activeOn) : undefined
-  );
+  const [date, setDate] = useState<Date | undefined>(filters.activeOn ? new Date(filters.activeOn) : undefined);
 
   const handleDriverChange = (value: string) => {
     onFiltersChange({
@@ -64,23 +52,20 @@ export function AssignmentsFiltersBar({
     setDate(selectedDate);
     onFiltersChange({
       ...filters,
-      activeOn: selectedDate ? format(selectedDate, 'yyyy-MM-dd') : undefined,
+      activeOn: selectedDate ? format(selectedDate, "yyyy-MM-dd") : undefined,
     });
   };
 
   const handleClearFilters = () => {
     setDate(undefined);
     onFiltersChange({
-      sortBy: 'startDate',
-      sortDir: 'asc',
+      sortBy: "startDate",
+      sortDir: "asc",
       limit: 50,
     });
   };
 
-  const hasActiveFilters = 
-    filters.driverUuid || 
-    filters.vehicleUuid || 
-    filters.activeOn;
+  const hasActiveFilters = filters.driverUuid || filters.vehicleUuid || filters.activeOn;
 
   return (
     <div className="flex flex-col gap-4 p-4 border rounded-lg bg-card">
@@ -88,11 +73,7 @@ export function AssignmentsFiltersBar({
         {/* Driver Select */}
         <div className="space-y-2">
           <Label htmlFor="driver-filter">Kierowca</Label>
-          <Select
-            value={filters.driverUuid || "all"}
-            onValueChange={handleDriverChange}
-            disabled={isLoading}
-          >
+          <Select value={filters.driverUuid || "all"} onValueChange={handleDriverChange} disabled={isLoading}>
             <SelectTrigger id="driver-filter">
               <SelectValue placeholder="Wszyscy kierowcy" />
             </SelectTrigger>
@@ -110,11 +91,7 @@ export function AssignmentsFiltersBar({
         {/* Vehicle Select */}
         <div className="space-y-2">
           <Label htmlFor="vehicle-filter">Pojazd</Label>
-          <Select
-            value={filters.vehicleUuid || "all"}
-            onValueChange={handleVehicleChange}
-            disabled={isLoading}
-          >
+          <Select value={filters.vehicleUuid || "all"} onValueChange={handleVehicleChange} disabled={isLoading}>
             <SelectTrigger id="vehicle-filter">
               <SelectValue placeholder="Wszystkie pojazdy" />
             </SelectTrigger>
@@ -136,28 +113,15 @@ export function AssignmentsFiltersBar({
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
-                className={cn(
-                  "w-full justify-start text-left font-normal",
-                  !date && "text-muted-foreground"
-                )}
+                className={cn("w-full justify-start text-left font-normal", !date && "text-muted-foreground")}
                 disabled={isLoading}
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
-                {date ? (
-                  format(date, "PPP", { locale: pl })
-                ) : (
-                  <span>Wybierz datę</span>
-                )}
+                {date ? format(date, "PPP", { locale: pl }) : <span>Wybierz datę</span>}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={handleDateSelect}
-                initialFocus
-                locale={pl}
-              />
+              <Calendar mode="single" selected={date} onSelect={handleDateSelect} initialFocus locale={pl} />
             </PopoverContent>
           </Popover>
         </div>
@@ -166,12 +130,7 @@ export function AssignmentsFiltersBar({
       {/* Clear Filters Button */}
       {hasActiveFilters && (
         <div className="flex justify-end">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleClearFilters}
-            disabled={isLoading}
-          >
+          <Button variant="ghost" size="sm" onClick={handleClearFilters} disabled={isLoading}>
             <X className="mr-2 h-4 w-4" />
             Wyczyść filtry
           </Button>
@@ -180,5 +139,3 @@ export function AssignmentsFiltersBar({
     </div>
   );
 }
-
-

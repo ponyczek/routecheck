@@ -8,7 +8,7 @@ interface EmptyStateProps {
 
 /**
  * EmptyState
- * 
+ *
  * Komponent wyświetlany gdy lista przypisań jest pusta.
  * Różnicuje komunikaty w zależności od tego, czy są aktywne filtry.
  */
@@ -18,15 +18,13 @@ export function EmptyState({ onAddClick, hasFilters = false }: EmptyStateProps) 
       <div className="flex items-center justify-center w-16 h-16 rounded-full bg-muted mb-4">
         <Calendar className="h-8 w-8 text-muted-foreground" />
       </div>
-      
-      <h3 className="text-lg font-semibold mb-2">
-        {hasFilters ? 'Brak wyników' : 'Brak przypisań'}
-      </h3>
-      
+
+      <h3 className="text-lg font-semibold mb-2">{hasFilters ? "Brak wyników" : "Brak przypisań"}</h3>
+
       <p className="text-muted-foreground text-center mb-6 max-w-md">
         {hasFilters
-          ? 'Nie znaleziono przypisań pasujących do wybranych filtrów. Spróbuj zmienić kryteria wyszukiwania.'
-          : 'Nie masz jeszcze żadnych przypisań kierowca-pojazd. Dodaj pierwsze przypisanie, aby rozpocząć zarządzanie harmonogramem.'}
+          ? "Nie znaleziono przypisań pasujących do wybranych filtrów. Spróbuj zmienić kryteria wyszukiwania."
+          : "Nie masz jeszcze żadnych przypisań kierowca-pojazd. Dodaj pierwsze przypisanie, aby rozpocząć zarządzanie harmonogramem."}
       </p>
 
       {!hasFilters && (
@@ -38,5 +36,3 @@ export function EmptyState({ onAddClick, hasFilters = false }: EmptyStateProps) 
     </div>
   );
 }
-
-

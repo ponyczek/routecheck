@@ -160,10 +160,9 @@ describe("usePasswordStrength", () => {
 
   describe("memoization", () => {
     it("returns same result for same password", () => {
-      const { result, rerender } = renderHook(
-        ({ password }) => usePasswordStrength(password),
-        { initialProps: { password: "Password123" } }
-      );
+      const { result, rerender } = renderHook(({ password }) => usePasswordStrength(password), {
+        initialProps: { password: "Password123" },
+      });
 
       const firstResult = result.current;
       rerender({ password: "Password123" });
@@ -173,10 +172,9 @@ describe("usePasswordStrength", () => {
     });
 
     it("recalculates when password changes", () => {
-      const { result, rerender } = renderHook(
-        ({ password }) => usePasswordStrength(password),
-        { initialProps: { password: "weak" } }
-      );
+      const { result, rerender } = renderHook(({ password }) => usePasswordStrength(password), {
+        initialProps: { password: "weak" },
+      });
 
       const weakResult = result.current;
       expect(weakResult.strength).toBe("weak");
@@ -189,4 +187,3 @@ describe("usePasswordStrength", () => {
     });
   });
 });
-

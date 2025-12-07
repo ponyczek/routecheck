@@ -36,10 +36,7 @@ export function useExportCsv() {
    * @param companyName - Optional company name for filename
    * @returns true if export succeeded, false otherwise
    */
-  const exportCsv = async (
-    params: ExportCsvQueryParams,
-    companyName?: string
-  ): Promise<boolean> => {
+  const exportCsv = async (params: ExportCsvQueryParams, companyName?: string): Promise<boolean> => {
     setIsExporting(true);
     setError(null);
 
@@ -55,16 +52,13 @@ export function useExportCsv() {
       if (params.includeTags) queryParams.set("includeTags", "true");
 
       // Call API endpoint
-      const response = await fetch(
-        `/api/reports/export?${queryParams.toString()}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: "text/csv",
-          },
-        }
-      );
+      const response = await fetch(`/api/reports/export?${queryParams.toString()}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "text/csv",
+        },
+      });
 
       // Handle error responses
       if (!response.ok) {
@@ -73,13 +67,9 @@ export function useExportCsv() {
         } else if (response.status === 401) {
           throw new Error("UNAUTHORIZED");
         } else if (response.status === 413) {
-          throw new Error(
-            "Zakres dat jest zbyt duży. Maksymalny zakres to 31 dni."
-          );
+          throw new Error("Zakres dat jest zbyt duży. Maksymalny zakres to 31 dni.");
         } else if (response.status === 429) {
-          throw new Error(
-            "Przekroczono limit żądań. Spróbuj ponownie za chwilę."
-          );
+          throw new Error("Przekroczono limit żądań. Spróbuj ponownie za chwilę.");
         } else if (response.status === 500) {
           throw new Error("Wystąpił błąd serwera. Spróbuj ponownie.");
         } else {
@@ -92,9 +82,7 @@ export function useExportCsv() {
 
       // Determine filename from header or generate default
       const contentDisposition = response.headers.get("Content-Disposition");
-      const filename =
-        extractFilenameFromHeader(contentDisposition) ||
-        generateCsvFilename(companyName);
+      const filename = extractFilenameFromHeader(contentDisposition) || generateCsvFilename(companyName);
 
       // Trigger download
       const url = window.URL.createObjectURL(blob);
@@ -135,4 +123,3 @@ export function useExportCsv() {
 
   return { exportCsv, isExporting, error };
 }
-

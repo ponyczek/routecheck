@@ -1,9 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
@@ -26,15 +21,11 @@ interface AssignmentCardProps {
 
 /**
  * AssignmentCard
- * 
+ *
  * Pojedyncza karta przedstawiająca przypisanie w widoku mobilnym.
  * Kompaktowy layout z kluczowymi informacjami i menu akcji.
  */
-export function AssignmentCard({ 
-  assignment, 
-  onEdit, 
-  onDelete 
-}: AssignmentCardProps) {
+export function AssignmentCard({ assignment, onEdit, onDelete }: AssignmentCardProps) {
   const { assignment: assignmentData, driverName, vehicleRegistration, status, daysRemaining } = assignment;
 
   // Status badge variants
@@ -57,7 +48,7 @@ export function AssignmentCard({
 
   // Format dates
   const formatDate = (dateString: string) => {
-    return format(new Date(dateString), 'dd MMM yyyy', { locale: pl });
+    return format(new Date(dateString), "dd MMM yyyy", { locale: pl });
   };
 
   return (
@@ -68,9 +59,7 @@ export function AssignmentCard({
             <User className="h-4 w-4 text-muted-foreground" />
             <h3 className="font-semibold">{driverName}</h3>
           </div>
-          <Badge variant={statusInfo.variant}>
-            {statusInfo.label}
-          </Badge>
+          <Badge variant={statusInfo.variant}>{statusInfo.label}</Badge>
         </div>
       </CardHeader>
 
@@ -97,7 +86,7 @@ export function AssignmentCard({
                   <span className="font-medium">{formatDate(assignmentData.endDate)}</span>
                   {daysRemaining !== null && daysRemaining > 0 && (
                     <span className="text-xs text-muted-foreground ml-1">
-                      ({daysRemaining} {daysRemaining === 1 ? 'dzień' : 'dni'})
+                      ({daysRemaining} {daysRemaining === 1 ? "dzień" : "dni"})
                     </span>
                   )}
                 </>
@@ -112,12 +101,7 @@ export function AssignmentCard({
       <CardFooter className="pt-3 border-t">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="ml-auto"
-              aria-label="Otwórz menu akcji"
-            >
+            <Button variant="ghost" size="sm" className="ml-auto" aria-label="Otwórz menu akcji">
               <MoreHorizontal className="h-4 w-4 mr-2" />
               Akcje
             </Button>
@@ -140,5 +124,3 @@ export function AssignmentCard({
     </Card>
   );
 }
-
-

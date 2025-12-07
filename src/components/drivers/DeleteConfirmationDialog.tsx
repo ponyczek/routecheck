@@ -7,9 +7,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { Loader2 } from 'lucide-react';
-import type { DriverDTO } from '@/types';
+} from "@/components/ui/alert-dialog";
+import { Loader2 } from "lucide-react";
+import type { DriverDTO } from "@/types";
 
 interface DeleteConfirmationDialogProps {
   isOpen: boolean;
@@ -46,15 +46,12 @@ export function DeleteConfirmationDialog({
           <AlertDialogDescription asChild>
             <div className="space-y-2">
               <p>
-                Czy na pewno chcesz usunąć kierowcę{' '}
-                <span className="font-semibold text-gray-900 dark:text-gray-100">
-                  {driver.name}
-                </span>
-                ?
+                Czy na pewno chcesz usunąć kierowcę{" "}
+                <span className="font-semibold text-gray-900 dark:text-gray-100">{driver.name}</span>?
               </p>
               <p className="text-sm">
-                Kierowca zostanie dezaktywowany i ukryty, ale jego historyczne raporty pozostaną
-                widoczne w systemie. Ta operacja nie usuwa trwale danych.
+                Kierowca zostanie dezaktywowany i ukryty, ale jego historyczne raporty pozostaną widoczne w systemie. Ta
+                operacja nie usuwa trwale danych.
               </p>
             </div>
           </AlertDialogDescription>
@@ -77,6 +74,3 @@ export function DeleteConfirmationDialog({
     </AlertDialog>
   );
 }
-
-
-

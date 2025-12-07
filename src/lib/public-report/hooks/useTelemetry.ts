@@ -1,7 +1,7 @@
-import { useState, useCallback, useRef } from 'react';
-import { sendTelemetry } from '../api';
-import type { TelemetryFormState } from '../validation';
-import type { Uuid } from '@/types';
+import { useState, useCallback, useRef } from "react";
+import { sendTelemetry } from "../api";
+import type { TelemetryFormState } from "../validation";
+import type { Uuid } from "@/types";
 
 interface UseTelemetryReturn {
   recordInteraction: () => void;
@@ -13,16 +13,16 @@ interface UseTelemetryReturn {
 /**
  * Hook to track form interactions and send telemetry
  * Tracks start time, interactions count, and problem path switches
- * 
+ *
  * @param token - The report link token
  * @returns Telemetry recording functions and current state
- * 
+ *
  * @example
  * const { recordInteraction, recordProblemSwitch, sendFormTelemetry } = useTelemetry(token);
- * 
+ *
  * // On field interaction
  * <input onFocus={recordInteraction} />
- * 
+ *
  * // On submit
  * await sendFormTelemetry(reportUuid);
  */
@@ -38,44 +38,47 @@ export function useTelemetry(token: string): UseTelemetryReturn {
   const hasSentRef = useRef(false);
 
   const recordInteraction = useCallback(() => {
-    setTelemetryState(prev => ({ 
-      ...prev, 
-      interactions: prev.interactions + 1 
+    setTelemetryState((prev) => ({
+      ...prev,
+      interactions: prev.interactions + 1,
     }));
   }, []);
 
   const recordProblemSwitch = useCallback(() => {
-    setTelemetryState(prev => ({ 
-      ...prev, 
-      switchedToProblems: true 
+    setTelemetryState((prev) => ({
+      ...prev,
+      switchedToProblems: true,
     }));
   }, []);
 
-  const sendFormTelemetry = useCallback(async (reportUuid?: Uuid) => {
-    // Prevent duplicate sends
-    if (hasSentRef.current) return;
-    hasSentRef.current = true;
+  const sendFormTelemetry = useCallback(
+    async (reportUuid?: Uuid) => {
+      // Prevent duplicate sends
+      if (hasSentRef.current) return;
+      hasSentRef.current = true;
 
-    const endTime = Date.now();
-    const duration = (endTime - telemetryState.startTime) / 1000; // seconds
+      const endTime = Date.now();
+      const duration = (endTime - telemetryState.startTime) / 1000; // seconds
 
-    await sendTelemetry({
-      eventType: 'FORM_SUBMIT',
-      occurredAt: new Date().toISOString(),
-      metadata: {
-        duration,
-        interactions: telemetryState.interactions,
-        switchedToProblems: telemetryState.switchedToProblems,
-      },
-      linkUuid: token,
-      reportUuid: reportUuid || null,
-    });
+      await sendTelemetry({
+        eventType: "FORM_SUBMIT",
+        occurredAt: new Date().toISOString(),
+        metadata: {
+          duration,
+          interactions: telemetryState.interactions,
+          switchedToProblems: telemetryState.switchedToProblems,
+        },
+        linkUuid: token,
+        reportUuid: reportUuid || null,
+      });
 
-    setTelemetryState(prev => ({
-      ...prev,
-      endTime,
-    }));
-  }, [telemetryState, token]);
+      setTelemetryState((prev) => ({
+        ...prev,
+        endTime,
+      }));
+    },
+    [telemetryState, token]
+  );
 
   return {
     recordInteraction,
@@ -84,5 +87,3 @@ export function useTelemetry(token: string): UseTelemetryReturn {
     telemetryState,
   };
 }
-
-

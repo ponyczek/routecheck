@@ -28,4 +28,3 @@ export function AuthErrorAlert({ error, onRetry }: AuthErrorAlertProps) {
     </Alert>
   );
 }
-

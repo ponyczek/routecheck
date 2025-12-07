@@ -9,7 +9,10 @@ export const prerender = false;
  * Validation schema for UpdateReportCommand
  */
 const updateReportSchema = z.object({
-  reportDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  reportDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/)
+    .optional(),
   timezone: z.string().min(1).optional(),
   routeStatus: z.enum(["COMPLETED", "PARTIALLY_COMPLETED", "CANCELLED"]).optional(),
   delayMinutes: z.number().min(0).int().optional(),
@@ -23,7 +26,7 @@ const updateReportSchema = z.object({
 
 /**
  * GET /api/reports/{uuid}
- * 
+ *
  * Fetches a single report with optional AI and tags
  */
 export const GET: APIRoute = async ({ locals, params, request }) => {
@@ -32,18 +35,18 @@ export const GET: APIRoute = async ({ locals, params, request }) => {
     const session = await supabase.auth.getSession();
 
     if (!session.data.session) {
-      return errorResponse('UNAUTHORIZED', 'Authentication required', 401);
+      return errorResponse("UNAUTHORIZED", "Authentication required", 401);
     }
 
     // Get user's company_uuid
     const { data: userData, error: userError } = await supabase
-      .from('users')
-      .select('company_uuid')
-      .eq('uuid', session.data.session.user.id)
+      .from("users")
+      .select("company_uuid")
+      .eq("uuid", session.data.session.user.id)
       .single();
 
     if (userError || !userData) {
-      return errorResponse('FORBIDDEN', 'User not associated with a company', 403);
+      return errorResponse("FORBIDDEN", "User not associated with a company", 403);
     }
 
     const companyUuid = userData.company_uuid;
@@ -51,29 +54,29 @@ export const GET: APIRoute = async ({ locals, params, request }) => {
 
     // Parse query parameters
     const url = new URL(request.url);
-    const includeAi = url.searchParams.get('includeAi') !== 'false';
-    const includeTags = url.searchParams.get('includeTags') === 'true';
+    const includeAi = url.searchParams.get("includeAi") !== "false";
+    const includeTags = url.searchParams.get("includeTags") === "true";
 
     // Fetch report
     const { data: report, error: reportError } = await supabase
-      .from('reports')
-      .select('*')
-      .eq('uuid', reportUuid)
-      .eq('company_uuid', companyUuid)
+      .from("reports")
+      .select("*")
+      .eq("uuid", reportUuid)
+      .eq("company_uuid", companyUuid)
       .single();
 
     if (reportError || !report) {
-      return errorResponse('NOT_FOUND', 'Report not found', 404);
+      return errorResponse("NOT_FOUND", "Report not found", 404);
     }
 
     // Fetch AI results if requested
     let aiResult = null;
     if (includeAi) {
       const { data: aiData } = await supabase
-        .from('report_ai_results')
-        .select('*')
-        .eq('report_uuid', reportUuid)
-        .eq('report_date', report.report_date)
+        .from("report_ai_results")
+        .select("*")
+        .eq("report_uuid", reportUuid)
+        .eq("report_date", report.report_date)
         .single();
 
       if (aiData) {
@@ -92,10 +95,10 @@ export const GET: APIRoute = async ({ locals, params, request }) => {
     let tags: string[] = [];
     if (includeTags) {
       const { data: tagData } = await supabase
-        .from('report_risk_tags')
-        .select('risk_tags(tag_name)')
-        .eq('report_uuid', reportUuid)
-        .eq('report_date', report.report_date);
+        .from("report_risk_tags")
+        .select("risk_tags(tag_name)")
+        .eq("report_uuid", reportUuid)
+        .eq("report_date", report.report_date);
 
       if (tagData) {
         tags = tagData.map((t: any) => t.risk_tags?.tag_name).filter(Boolean);
@@ -126,14 +129,14 @@ export const GET: APIRoute = async ({ locals, params, request }) => {
 
     return jsonResponse(reportDto, 200);
   } catch (error) {
-    console.error('Error in GET /api/reports/[uuid]:', error);
-    return errorResponse('INTERNAL_ERROR', 'An unexpected error occurred', 500);
+    console.error("Error in GET /api/reports/[uuid]:", error);
+    return errorResponse("INTERNAL_ERROR", "An unexpected error occurred", 500);
   }
 };
 
 /**
  * PATCH /api/reports/{uuid}
- * 
+ *
  * Updates an existing report
  */
 export const PATCH: APIRoute = async ({ locals, params, request }) => {
@@ -142,18 +145,18 @@ export const PATCH: APIRoute = async ({ locals, params, request }) => {
     const session = await supabase.auth.getSession();
 
     if (!session.data.session) {
-      return errorResponse('UNAUTHORIZED', 'Authentication required', 401);
+      return errorResponse("UNAUTHORIZED", "Authentication required", 401);
     }
 
     // Get user's company_uuid
     const { data: userData, error: userError } = await supabase
-      .from('users')
-      .select('company_uuid')
-      .eq('uuid', session.data.session.user.id)
+      .from("users")
+      .select("company_uuid")
+      .eq("uuid", session.data.session.user.id)
       .single();
 
     if (userError || !userData) {
-      return errorResponse('FORBIDDEN', 'User not associated with a company', 403);
+      return errorResponse("FORBIDDEN", "User not associated with a company", 403);
     }
 
     const companyUuid = userData.company_uuid;
@@ -161,14 +164,14 @@ export const PATCH: APIRoute = async ({ locals, params, request }) => {
 
     // Verify report exists and belongs to company
     const { data: existingReport, error: checkError } = await supabase
-      .from('reports')
-      .select('uuid')
-      .eq('uuid', reportUuid)
-      .eq('company_uuid', companyUuid)
+      .from("reports")
+      .select("uuid")
+      .eq("uuid", reportUuid)
+      .eq("company_uuid", companyUuid)
       .single();
 
     if (checkError || !existingReport) {
-      return errorResponse('NOT_FOUND', 'Report not found', 404);
+      return errorResponse("NOT_FOUND", "Report not found", 404);
     }
 
     // Parse and validate request body
@@ -176,12 +179,9 @@ export const PATCH: APIRoute = async ({ locals, params, request }) => {
     const validation = updateReportSchema.safeParse(body);
 
     if (!validation.success) {
-      return errorResponse(
-        'VALIDATION_ERROR',
-        'Invalid request body',
-        400,
-        { errors: formatZodError(validation.error) }
-      );
+      return errorResponse("VALIDATION_ERROR", "Invalid request body", 400, {
+        errors: formatZodError(validation.error),
+      });
     }
 
     const data = validation.data;
@@ -194,23 +194,24 @@ export const PATCH: APIRoute = async ({ locals, params, request }) => {
     if (data.delayMinutes !== undefined) updateData.delay_minutes = data.delayMinutes;
     if (data.delayReason !== undefined) updateData.delay_reason = data.delayReason;
     if (data.cargoDamageDescription !== undefined) updateData.cargo_damage_description = data.cargoDamageDescription;
-    if (data.vehicleDamageDescription !== undefined) updateData.vehicle_damage_description = data.vehicleDamageDescription;
+    if (data.vehicleDamageDescription !== undefined)
+      updateData.vehicle_damage_description = data.vehicleDamageDescription;
     if (data.nextDayBlockers !== undefined) updateData.next_day_blockers = data.nextDayBlockers;
     if (data.isProblem !== undefined) updateData.is_problem = data.isProblem;
     if (data.riskLevel !== undefined) updateData.risk_level = data.riskLevel;
 
     // Update report
     const { data: updatedReport, error: updateError } = await supabase
-      .from('reports')
+      .from("reports")
       .update(updateData)
-      .eq('uuid', reportUuid)
-      .eq('company_uuid', companyUuid)
+      .eq("uuid", reportUuid)
+      .eq("company_uuid", companyUuid)
       .select()
       .single();
 
     if (updateError) {
-      console.error('Error updating report:', updateError);
-      return errorResponse('DATABASE_ERROR', updateError.message, 500);
+      console.error("Error updating report:", updateError);
+      return errorResponse("DATABASE_ERROR", updateError.message, 500);
     }
 
     // TODO: Schedule AI reprocessing if content changed
@@ -237,14 +238,14 @@ export const PATCH: APIRoute = async ({ locals, params, request }) => {
 
     return jsonResponse(reportDto, 200);
   } catch (error) {
-    console.error('Error in PATCH /api/reports/[uuid]:', error);
-    return errorResponse('INTERNAL_ERROR', 'An unexpected error occurred', 500);
+    console.error("Error in PATCH /api/reports/[uuid]:", error);
+    return errorResponse("INTERNAL_ERROR", "An unexpected error occurred", 500);
   }
 };
 
 /**
  * DELETE /api/reports/{uuid}
- * 
+ *
  * Deletes a report (admin only)
  */
 export const DELETE: APIRoute = async ({ locals, params }) => {
@@ -253,18 +254,18 @@ export const DELETE: APIRoute = async ({ locals, params }) => {
     const session = await supabase.auth.getSession();
 
     if (!session.data.session) {
-      return errorResponse('UNAUTHORIZED', 'Authentication required', 401);
+      return errorResponse("UNAUTHORIZED", "Authentication required", 401);
     }
 
     // Get user's company_uuid
     const { data: userData, error: userError } = await supabase
-      .from('users')
-      .select('company_uuid')
-      .eq('uuid', session.data.session.user.id)
+      .from("users")
+      .select("company_uuid")
+      .eq("uuid", session.data.session.user.id)
       .single();
 
     if (userError || !userData) {
-      return errorResponse('FORBIDDEN', 'User not associated with a company', 403);
+      return errorResponse("FORBIDDEN", "User not associated with a company", 403);
     }
 
     const companyUuid = userData.company_uuid;
@@ -272,22 +273,19 @@ export const DELETE: APIRoute = async ({ locals, params }) => {
 
     // Delete report
     const { error: deleteError } = await supabase
-      .from('reports')
+      .from("reports")
       .delete()
-      .eq('uuid', reportUuid)
-      .eq('company_uuid', companyUuid);
+      .eq("uuid", reportUuid)
+      .eq("company_uuid", companyUuid);
 
     if (deleteError) {
-      console.error('Error deleting report:', deleteError);
-      return errorResponse('DATABASE_ERROR', deleteError.message, 500);
+      console.error("Error deleting report:", deleteError);
+      return errorResponse("DATABASE_ERROR", deleteError.message, 500);
     }
 
     return new Response(null, { status: 204 });
   } catch (error) {
-    console.error('Error in DELETE /api/reports/[uuid]:', error);
-    return errorResponse('INTERNAL_ERROR', 'An unexpected error occurred', 500);
+    console.error("Error in DELETE /api/reports/[uuid]:", error);
+    return errorResponse("INTERNAL_ERROR", "An unexpected error occurred", 500);
   }
 };
-
-
-

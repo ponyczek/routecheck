@@ -60,4 +60,3 @@ export const Breadcrumbs = memo(function Breadcrumbs({ crumbs, className }: Brea
     </nav>
   );
 });
-

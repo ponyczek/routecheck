@@ -16,19 +16,20 @@ import { useNetworkStatus } from "@/lib/layout/useNetworkStatus";
  * @returns Network status indicator badge
  */
 export function NetworkIndicator() {
-  const { isOnline, status } = useNetworkStatus();
+  const { status } = useNetworkStatus();
 
   // Determine status label for screen readers
-  const statusLabel = status === "online" 
-    ? "Połączenie internetowe aktywne" 
-    : status === "slow" 
-    ? "Wolne połączenie internetowe" 
-    : "Brak połączenia internetowego";
+  const statusLabel =
+    status === "online"
+      ? "Połączenie internetowe aktywne"
+      : status === "slow"
+        ? "Wolne połączenie internetowe"
+        : "Brak połączenia internetowego";
 
   if (status === "online") {
     return (
-      <Badge 
-        variant="outline" 
+      <Badge
+        variant="outline"
         className="gap-1.5 border-green-500/50 bg-green-500/10 text-green-700 dark:text-green-400"
         role="status"
         aria-label={statusLabel}
@@ -41,8 +42,8 @@ export function NetworkIndicator() {
 
   if (status === "slow") {
     return (
-      <Badge 
-        variant="outline" 
+      <Badge
+        variant="outline"
         className="gap-1.5 border-yellow-500/50 bg-yellow-500/10 text-yellow-700 dark:text-yellow-400"
         role="status"
         aria-label={statusLabel}
@@ -55,8 +56,8 @@ export function NetworkIndicator() {
 
   // Offline
   return (
-    <Badge 
-      variant="outline" 
+    <Badge
+      variant="outline"
       className="gap-1.5 border-red-500/50 bg-red-500/10 text-red-700 dark:text-red-400"
       role="alert"
       aria-label={statusLabel}
@@ -66,4 +67,3 @@ export function NetworkIndicator() {
     </Badge>
   );
 }
-

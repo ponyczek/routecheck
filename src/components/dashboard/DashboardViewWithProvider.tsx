@@ -19,4 +19,3 @@ export function DashboardViewWithProvider(props: DashboardViewProps) {
     </QueryProvider>
   );
 }
-

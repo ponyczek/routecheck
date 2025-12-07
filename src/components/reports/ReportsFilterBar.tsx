@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { DateRangePicker, type DateRange } from "./DateRangePicker";
 import { MultiSelect, type MultiSelectOption } from "./MultiSelect";
-import { DriverSelect } from "./DriverSelect";
 import { ActiveFiltersList } from "./ActiveFiltersList";
 import type { ReportsFiltersState } from "@/lib/reports/types";
 import type { ReportRiskLevel, ReportRouteStatus } from "@/types";
@@ -26,11 +25,7 @@ interface ReportsFilterBarProps {
  * - Driver multi-select (TODO: fetch drivers list)
  * - Active filters list with chips
  */
-export function ReportsFilterBar({
-  filters,
-  onFilterChange,
-  onResetFilters,
-}: ReportsFilterBarProps) {
+export function ReportsFilterBar({ filters, onFilterChange, onResetFilters }: ReportsFilterBarProps) {
   const [searchQuery, setSearchQuery] = React.useState(filters.q || "");
   const searchTimeoutRef = React.useRef<NodeJS.Timeout>();
 
@@ -186,12 +181,7 @@ export function ReportsFilterBar({
       </div>
 
       {/* Active filters list */}
-      <ActiveFiltersList
-        filters={filters}
-        onRemove={handleRemoveFilter}
-        onClear={onResetFilters}
-      />
+      <ActiveFiltersList filters={filters} onRemove={handleRemoveFilter} onClear={onResetFilters} />
     </div>
   );
 }
-

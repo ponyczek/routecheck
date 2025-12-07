@@ -6,7 +6,10 @@ import { AccountSettingsViewWithProvider } from "@/components/settings";
 const supabase = Astro.locals.supabase;
 
 // Check authentication (middleware already handles this, but double-check)
-const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+const {
+  data: { session },
+  error: sessionError,
+} = await supabase.auth.getSession();
 
 if (sessionError || !session) {
   return Astro.redirect("/signin?returnUrl=/settings/account&expired=true");
@@ -17,14 +20,23 @@ if (sessionError || !session) {
 // This provides better reactivity and automatic updates
 ---
 
-<AuthenticatedLayout title="Konto i sesja - Ustawienia - RouteCheck" description="Zarządzaj sesją i bezpieczeństwem konta">
+<AuthenticatedLayout
+  title="Konto i sesja - Ustawienia - RouteCheck"
+  description="Zarządzaj sesją i bezpieczeństwem konta"
+>
   <div class="container mx-auto space-y-6 p-6">
     <!-- Settings navigation tabs -->
     <div class="flex gap-4 border-b border-border">
-      <a href="/settings/profile" class="border-b-2 border-transparent px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+      <a
+        href="/settings/profile"
+        class="border-b-2 border-transparent px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground"
+      >
         Profil
       </a>
-      <a href="/settings/alerts" class="border-b-2 border-transparent px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+      <a
+        href="/settings/alerts"
+        class="border-b-2 border-transparent px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground"
+      >
         Alerty
       </a>
       <a href="/settings/account" class="border-b-2 border-primary px-4 py-2 text-sm font-medium text-primary">
@@ -36,4 +48,3 @@ if (sessionError || !session) {
     <AccountSettingsViewWithProvider client:load />
   </div>
 </AuthenticatedLayout>
-

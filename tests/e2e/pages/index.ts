@@ -1,8 +1,8 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator } from "@playwright/test";
 
 /**
  * Page Object Model: Login Page
- * 
+ *
  * Encapsulates login page interactions and locators
  */
 export class LoginPage {
@@ -19,11 +19,11 @@ export class LoginPage {
     this.passwordInput = page.locator('input[type="password"]');
     this.submitButton = page.locator('button[type="submit"]');
     this.errorMessage = page.locator('[role="alert"], .error-message');
-    this.sessionExpiredNotice = page.locator('text=/sesja wygasła|session expired/i');
+    this.sessionExpiredNotice = page.locator("text=/sesja wygasła|session expired/i");
   }
 
   async goto() {
-    await this.page.goto('/signin');
+    await this.page.goto("/signin");
   }
 
   async login(email: string, password: string) {
@@ -33,11 +33,11 @@ export class LoginPage {
   }
 
   async waitForError() {
-    await this.errorMessage.waitFor({ state: 'visible', timeout: 5000 });
+    await this.errorMessage.waitFor({ state: "visible", timeout: 5000 });
   }
 
   async getErrorText(): Promise<string> {
-    return await this.errorMessage.textContent() || '';
+    return (await this.errorMessage.textContent()) || "";
   }
 }
 
@@ -53,19 +53,19 @@ export class DashboardPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.pageTitle = page.locator('h1, h2').filter({ hasText: /Dashboard|Dzisiaj/i });
+    this.pageTitle = page.locator("h1, h2").filter({ hasText: /Dashboard|Dzisiaj/i });
     this.metricsCards = page.locator('[data-testid="metric-card"], .metric-card');
-    this.activeDriversMetric = page.locator('text=/Aktywni kierowcy|Active drivers/i');
+    this.activeDriversMetric = page.locator("text=/Aktywni kierowcy|Active drivers/i");
     this.refreshButton = page.locator('button:has-text("Odśwież"), button:has-text("Refresh")');
   }
 
   async goto() {
-    await this.page.goto('/dashboard');
+    await this.page.goto("/dashboard");
   }
 
   async waitForLoad() {
-    await this.pageTitle.waitFor({ state: 'visible', timeout: 10000 });
-    await this.activeDriversMetric.waitFor({ state: 'visible', timeout: 5000 });
+    await this.pageTitle.waitFor({ state: "visible", timeout: 10000 });
+    await this.activeDriversMetric.waitFor({ state: "visible", timeout: 5000 });
   }
 
   async isLoaded(): Promise<boolean> {
@@ -86,19 +86,19 @@ export class DriversPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.pageTitle = page.locator('h1').filter({ hasText: /Kierowcy|Drivers/i });
+    this.pageTitle = page.locator("h1").filter({ hasText: /Kierowcy|Drivers/i });
     this.addDriverButton = page.locator('button:has-text("Dodaj"), button:has-text("Add")');
     this.searchInput = page.locator('input[type="search"], input[placeholder*="Szukaj"], input[placeholder*="Search"]');
     this.driversList = page.locator('table, [data-testid="driver-card"]');
-    this.emptyState = page.locator('text=/Brak kierowców|No drivers/i');
+    this.emptyState = page.locator("text=/Brak kierowców|No drivers/i");
   }
 
   async goto() {
-    await this.page.goto('/drivers');
+    await this.page.goto("/drivers");
   }
 
   async waitForLoad() {
-    await this.pageTitle.waitFor({ state: 'visible', timeout: 5000 });
+    await this.pageTitle.waitFor({ state: "visible", timeout: 5000 });
   }
 
   async clickAddDriver() {
@@ -106,7 +106,7 @@ export class DriversPage {
   }
 
   async searchDriver(query: string) {
-    if (await this.searchInput.count() > 0) {
+    if ((await this.searchInput.count()) > 0) {
       await this.searchInput.fill(query);
       // Wait for debounce
       await this.page.waitForTimeout(500);
@@ -147,21 +147,21 @@ export class DriverFormModal {
   }
 
   async waitForOpen() {
-    await this.modal.waitFor({ state: 'visible', timeout: 5000 });
+    await this.modal.waitFor({ state: "visible", timeout: 5000 });
   }
 
   async fillForm(data: { name: string; email: string; timezone?: string }) {
     await this.nameInput.fill(data.name);
     await this.emailInput.fill(data.email);
 
-    if (data.timezone && await this.timezoneField.count() > 0) {
-      const isSelect = await this.timezoneField.evaluate(el => el.tagName === 'SELECT');
+    if (data.timezone && (await this.timezoneField.count()) > 0) {
+      const isSelect = await this.timezoneField.evaluate((el) => el.tagName === "SELECT");
       if (isSelect) {
         await this.timezoneField.selectOption(data.timezone);
       } else {
         // Combobox
         await this.timezoneField.fill(data.timezone);
-        await this.page.keyboard.press('Enter');
+        await this.page.keyboard.press("Enter");
       }
     }
   }
@@ -171,7 +171,7 @@ export class DriverFormModal {
   }
 
   async waitForClose() {
-    await this.modal.waitFor({ state: 'hidden', timeout: 5000 });
+    await this.modal.waitFor({ state: "hidden", timeout: 5000 });
   }
 
   async hasError(): Promise<boolean> {
@@ -193,7 +193,7 @@ export class ReportsPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.pageTitle = page.locator('h1').filter({ hasText: /Raporty|Reports/i });
+    this.pageTitle = page.locator("h1").filter({ hasText: /Raporty|Reports/i });
     this.filtersBar = page.locator('[data-testid="filters-bar"], .filters-bar');
     this.searchInput = page.locator('input[type="search"]');
     this.reportsList = page.locator('[data-testid="reports-list"], table, .reports-grid');
@@ -202,11 +202,11 @@ export class ReportsPage {
   }
 
   async goto() {
-    await this.page.goto('/reports');
+    await this.page.goto("/reports");
   }
 
   async waitForLoad() {
-    await this.pageTitle.waitFor({ state: 'visible', timeout: 5000 });
+    await this.pageTitle.waitFor({ state: "visible", timeout: 5000 });
   }
 
   async hasFilters(): Promise<boolean> {
@@ -254,4 +254,3 @@ export class Navigation {
     await this.settingsLink.click();
   }
 }
-

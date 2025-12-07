@@ -1,9 +1,9 @@
-import { TableCell, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { StatusBadge } from './StatusBadge';
-import { RowActionsMenu } from './RowActionsMenu';
-import { formatDate } from '@/lib/utils/date';
-import type { VehicleDTO } from '@/types';
+import { TableCell, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "./StatusBadge";
+import { RowActionsMenu } from "./RowActionsMenu";
+import { formatDate } from "@/lib/utils/date";
+import type { VehicleDTO } from "@/types";
 
 interface VehicleRowProps {
   vehicle: VehicleDTO;
@@ -22,7 +22,7 @@ export function VehicleRow({ vehicle, onEdit, onToggleActive, onDelete }: Vehicl
   const isDeleted = vehicle.deletedAt !== null;
 
   return (
-    <TableRow className={isDeleted ? 'opacity-60' : ''}>
+    <TableRow className={isDeleted ? "opacity-60" : ""}>
       {/* Numer rejestracyjny */}
       <TableCell className="font-medium">
         <div className="flex items-center gap-2">
@@ -36,9 +36,7 @@ export function VehicleRow({ vehicle, onEdit, onToggleActive, onDelete }: Vehicl
       </TableCell>
 
       {/* VIN */}
-      <TableCell className="text-muted-foreground">
-        {vehicle.vin || '-'}
-      </TableCell>
+      <TableCell className="text-muted-foreground">{vehicle.vin || "-"}</TableCell>
 
       {/* Status aktywności */}
       <TableCell>
@@ -46,19 +44,12 @@ export function VehicleRow({ vehicle, onEdit, onToggleActive, onDelete }: Vehicl
       </TableCell>
 
       {/* Data utworzenia */}
-      <TableCell className="text-muted-foreground">
-        {formatDate(vehicle.createdAt, 'dd MMM yyyy')}
-      </TableCell>
+      <TableCell className="text-muted-foreground">{formatDate(vehicle.createdAt, "dd MMM yyyy")}</TableCell>
 
       {/* Akcje */}
       <TableCell>
         {!isDeleted ? (
-          <RowActionsMenu
-            vehicle={vehicle}
-            onEdit={onEdit}
-            onToggleActive={onToggleActive}
-            onDelete={onDelete}
-          />
+          <RowActionsMenu vehicle={vehicle} onEdit={onEdit} onToggleActive={onToggleActive} onDelete={onDelete} />
         ) : (
           <span className="text-xs text-muted-foreground">—</span>
         )}
@@ -66,5 +57,3 @@ export function VehicleRow({ vehicle, onEdit, onToggleActive, onDelete }: Vehicl
     </TableRow>
   );
 }
-
-

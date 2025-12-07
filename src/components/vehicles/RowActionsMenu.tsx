@@ -4,10 +4,10 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-import { Edit, MoreVertical, Power, Trash2 } from 'lucide-react';
-import type { VehicleDTO } from '@/types';
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { Edit, MoreVertical, Power, Trash2 } from "lucide-react";
+import type { VehicleDTO } from "@/types";
 
 interface RowActionsMenuProps {
   vehicle: VehicleDTO;
@@ -38,7 +38,7 @@ export function RowActionsMenu({ vehicle, onEdit, onToggleActive, onDelete }: Ro
         </DropdownMenuItem>
         <DropdownMenuItem onClick={onToggleActive}>
           <Power className="mr-2 h-4 w-4" />
-          {vehicle.isActive ? 'Dezaktywuj' : 'Aktywuj'}
+          {vehicle.isActive ? "Dezaktywuj" : "Aktywuj"}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={onDelete} className="text-red-600 focus:text-red-600">
@@ -49,5 +49,3 @@ export function RowActionsMenu({ vehicle, onEdit, onToggleActive, onDelete }: Ro
     </DropdownMenu>
   );
 }
-
-

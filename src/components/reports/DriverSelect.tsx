@@ -2,17 +2,9 @@ import * as React from "react";
 import { Check, ChevronsUpDown, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useDriversList } from "@/lib/drivers";
-import type { DriverDTO } from "@/types";
 
 interface DriverSelectProps {
   value: string;
@@ -71,11 +63,7 @@ export function DriverSelect({
           role="combobox"
           aria-expanded={open}
           disabled={disabled}
-          className={cn(
-            "w-full justify-between",
-            !value && "text-muted-foreground",
-            className
-          )}
+          className={cn("w-full justify-between", !value && "text-muted-foreground", className)}
         >
           <span className="flex items-center gap-2 truncate">
             <User className="h-4 w-4 shrink-0" />
@@ -86,22 +74,12 @@ export function DriverSelect({
       </PopoverTrigger>
       <PopoverContent className="w-full p-0" align="start">
         <Command shouldFilter={false}>
-          <CommandInput
-            placeholder="Szukaj kierowcy..."
-            value={searchQuery}
-            onValueChange={setSearchQuery}
-          />
+          <CommandInput placeholder="Szukaj kierowcy..." value={searchQuery} onValueChange={setSearchQuery} />
           <CommandList>
             {isLoading ? (
-              <div className="py-6 text-center text-sm text-muted-foreground">
-                Ładowanie kierowców...
-              </div>
+              <div className="py-6 text-center text-sm text-muted-foreground">Ładowanie kierowców...</div>
             ) : drivers.length === 0 ? (
-              <CommandEmpty>
-                {searchQuery
-                  ? "Nie znaleziono kierowcy."
-                  : "Brak aktywnych kierowców."}
-              </CommandEmpty>
+              <CommandEmpty>{searchQuery ? "Nie znaleziono kierowcy." : "Brak aktywnych kierowców."}</CommandEmpty>
             ) : (
               <CommandGroup>
                 {drivers.map((driver) => {
@@ -115,17 +93,10 @@ export function DriverSelect({
                         setOpen(false);
                       }}
                     >
-                      <Check
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          isSelected ? "opacity-100" : "opacity-0"
-                        )}
-                      />
+                      <Check className={cn("mr-2 h-4 w-4", isSelected ? "opacity-100" : "opacity-0")} />
                       <div className="flex flex-col">
                         <span className="font-medium">{driver.name}</span>
-                        <span className="text-xs text-muted-foreground">
-                          {driver.email}
-                        </span>
+                        <span className="text-xs text-muted-foreground">{driver.email}</span>
                       </div>
                     </CommandItem>
                   );
@@ -138,6 +109,3 @@ export function DriverSelect({
     </Popover>
   );
 }
-
-
-

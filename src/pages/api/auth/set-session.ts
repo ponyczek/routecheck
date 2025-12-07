@@ -4,13 +4,13 @@ import { z } from "zod";
 
 /**
  * API endpoint to sync session from browser localStorage to server cookies
- * 
+ *
  * This is needed because:
  * 1. Browser Supabase client stores session in localStorage
  * 2. Server middleware checks session in cookies
  * 3. After signup, session exists in localStorage but not in cookies
  * 4. This endpoint bridges that gap by setting the session in cookies
- * 
+ *
  * Usage:
  * POST /api/auth/set-session
  * Body: { access_token, refresh_token }
@@ -93,4 +93,3 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 };
 
 export const prerender = false;
-

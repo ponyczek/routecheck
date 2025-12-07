@@ -21,7 +21,7 @@ export {
 export { useSessionData } from "./useSessionData";
 
 // Types
-export type { 
+export type {
   EditCompanyNameFormValues,
   SessionStatus,
   SessionViewModel,
@@ -51,4 +51,3 @@ export type { EditCompanyNameFormValues as CompanyFormData } from "./validation"
 
 // Form hooks
 export { useCompanyNameForm } from "./useCompanyNameForm";
-

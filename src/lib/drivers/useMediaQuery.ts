@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 /**
  * Hook do wykrywania szerokości ekranu i breakpointów
@@ -10,10 +10,10 @@ export function useMediaQuery(query: string): boolean {
 
   useEffect(() => {
     // Check if window is defined (client-side only)
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
     const media = window.matchMedia(query);
-    
+
     // Set initial value
     setMatches(media.matches);
 
@@ -23,16 +23,13 @@ export function useMediaQuery(query: string): boolean {
     };
 
     // Add listener
-    media.addEventListener('change', listener);
+    media.addEventListener("change", listener);
 
     // Cleanup
     return () => {
-      media.removeEventListener('change', listener);
+      media.removeEventListener("change", listener);
     };
   }, [query]);
 
   return matches;
 }
-
-
-

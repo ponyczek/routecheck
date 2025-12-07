@@ -7,7 +7,10 @@ import type { CompanyDTO } from "@/types";
 const supabase = Astro.locals.supabase;
 
 // Check authentication
-const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+const {
+  data: { session },
+  error: sessionError,
+} = await supabase.auth.getSession();
 
 if (sessionError || !session) {
   return Astro.redirect("/signin?returnUrl=/settings/profile");
@@ -27,7 +30,7 @@ try {
   if (!response.ok) {
     const errorData = await response.json();
     error = errorData.message || "Nie udało się pobrać danych firmy";
-    
+
     // For critical errors, redirect to error page
     if (response.status === 500) {
       return Astro.redirect(`/error?code=500&message=company_fetch_failed`);
@@ -53,31 +56,37 @@ if (!company && !error) {
       <a href="/settings/profile" class="border-b-2 border-primary px-4 py-2 text-sm font-medium text-primary">
         Profil
       </a>
-      <a href="/settings/alerts" class="border-b-2 border-transparent px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+      <a
+        href="/settings/alerts"
+        class="border-b-2 border-transparent px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground"
+      >
         Alerty
       </a>
-      <a href="/settings/account" class="border-b-2 border-transparent px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+      <a
+        href="/settings/account"
+        class="border-b-2 border-transparent px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground"
+      >
         Konto
       </a>
     </div>
 
     <!-- Company profile view -->
-    {company && (
-      <CompanyProfileViewWithProvider client:load initialCompany={company} />
-    )}
+    {company && <CompanyProfileViewWithProvider client:load initialCompany={company} />}
 
     <!-- Error state (if fetch failed but not critical) -->
-    {error && !company && (
-      <div class="rounded-lg border border-destructive bg-destructive/10 p-6">
-        <h2 class="text-lg font-semibold text-destructive">Błąd ładowania danych</h2>
-        <p class="mt-2 text-sm text-muted-foreground">{error}</p>
-        <button
-          onclick="window.location.reload()"
-          class="mt-4 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-        >
-          Spróbuj ponownie
-        </button>
-      </div>
-    )}
+    {
+      error && !company && (
+        <div class="rounded-lg border border-destructive bg-destructive/10 p-6">
+          <h2 class="text-lg font-semibold text-destructive">Błąd ładowania danych</h2>
+          <p class="mt-2 text-sm text-muted-foreground">{error}</p>
+          <button
+            onclick="window.location.reload()"
+            class="mt-4 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+          >
+            Spróbuj ponownie
+          </button>
+        </div>
+      )
+    }
   </div>
 </AuthenticatedLayout>

@@ -9,10 +9,7 @@ export const signInFormSchema = z.object({
     .min(1, "Podaj adres e-mail")
     .email("Podaj poprawny adres e-mail")
     .max(150, "Adres e-mail jest za długi"),
-  password: z
-    .string()
-    .min(6, "Hasło musi mieć min. 6 znaków")
-    .max(128, "Hasło jest za długie"),
+  password: z.string().min(6, "Hasło musi mieć min. 6 znaków").max(128, "Hasło jest za długie"),
 });
 
 /**
@@ -37,10 +34,7 @@ export const signUpFormSchema = z
       .min(1, "Podaj hasło")
       .min(8, "Hasło musi mieć min. 8 znaków")
       .max(128, "Hasło jest za długie (max. 128 znaków)")
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-        "Hasło powinno zawierać małe i wielkie litery oraz cyfry"
-      ),
+      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "Hasło powinno zawierać małe i wielkie litery oraz cyfry"),
     confirmPassword: z.string().min(1, "Potwierdź hasło"),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -76,4 +70,3 @@ export function validateReturnTo(returnTo: string | undefined | null): string {
 export function parseExpiredParam(expired: string | undefined | null): boolean {
   return expired === "true" || expired === "1";
 }
-

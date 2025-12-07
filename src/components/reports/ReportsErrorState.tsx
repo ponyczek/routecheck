@@ -36,6 +36,3 @@ export function ReportsErrorState({ message, onRetry, className }: ReportsErrorS
     </div>
   );
 }
-
-
-

@@ -67,4 +67,3 @@ export interface RefreshState {
   lastRefreshAt: IsoDateString;
   error: string | null;
 }
-

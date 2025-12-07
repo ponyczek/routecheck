@@ -192,4 +192,3 @@ export function createCompanyErrorResponse(error: unknown): {
     },
   };
 }
-

@@ -33,11 +33,11 @@ export function ActiveFiltersList({ filters, onRemove, onClear }: ActiveFiltersL
     });
     return map;
   }, [drivers]);
-  const activeFilters: Array<{
+  const activeFilters: {
     key: keyof ReportsFiltersState;
     label: string;
     value?: string;
-  }> = [];
+  }[] = [];
 
   // Add search filter
   if (filters.q) {
@@ -108,15 +108,9 @@ export function ActiveFiltersList({ filters, onRemove, onClear }: ActiveFiltersL
           </button>
         </Badge>
       ))}
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={onClear}
-        className="h-auto px-2 py-1 text-xs"
-      >
+      <Button variant="ghost" size="sm" onClick={onClear} className="h-auto px-2 py-1 text-xs">
         Wyczyść wszystkie
       </Button>
     </div>
   );
 }
-

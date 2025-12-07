@@ -1,14 +1,8 @@
 import * as React from "react";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Edit, Loader2, AlertCircle } from "lucide-react";
+import { Edit, AlertCircle } from "lucide-react";
 import { useReportDetail } from "@/lib/reports";
 import { ReportSummaryHeader } from "./ReportSummaryHeader";
 import { AITimeline } from "./AITimeline";
@@ -27,12 +21,7 @@ interface ReportDetailSheetProps {
  * Includes summary, AI analysis, and metadata
  * Loads data dynamically when opened
  */
-export function ReportDetailSheet({
-  reportId,
-  isOpen,
-  onClose,
-  onEdit,
-}: ReportDetailSheetProps) {
+export function ReportDetailSheet({ reportId, isOpen, onClose, onEdit }: ReportDetailSheetProps) {
   const { data: report, isLoading, isError, error } = useReportDetail(reportId, true, true);
 
   return (
@@ -40,9 +29,7 @@ export function ReportDetailSheet({
       <SheetContent className="w-full sm:max-w-2xl overflow-y-auto">
         <SheetHeader>
           <SheetTitle>Szczegóły raportu</SheetTitle>
-          <SheetDescription>
-            Pełne informacje o raporcie z analizą AI
-          </SheetDescription>
+          <SheetDescription>Pełne informacje o raporcie z analizą AI</SheetDescription>
         </SheetHeader>
 
         <div className="mt-6 space-y-6">
@@ -90,11 +77,7 @@ export function ReportDetailSheet({
               {/* Edit Button */}
               {onEdit && (
                 <div className="pt-4 border-t">
-                  <Button
-                    onClick={() => onEdit(report)}
-                    className="w-full gap-2"
-                    variant="outline"
-                  >
+                  <Button onClick={() => onEdit(report)} className="w-full gap-2" variant="outline">
                     <Edit className="h-4 w-4" />
                     Edytuj raport
                   </Button>
@@ -107,6 +90,3 @@ export function ReportDetailSheet({
     </Sheet>
   );
 }
-
-
-

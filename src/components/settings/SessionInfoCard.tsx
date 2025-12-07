@@ -8,24 +8,24 @@ import type { SessionInfoCardProps } from "@/lib/settings/types";
 
 /**
  * SessionInfoCard - Karta wyświetlająca informacje o aktualnej sesji użytkownika
- * 
+ *
  * Komponent prezentuje szczegółowe informacje o sesji:
  * - Status sesji (aktywna/wygasająca/wygasła) z ikoną
  * - Data wygaśnięcia sesji
  * - Data ostatniej aktywności
  * - Ostrzeżenie o automatycznym wygaśnięciu (jeśli status wymaga)
- * 
+ *
  * Obsługuje stan ładowania poprzez wyświetlanie szkieletów.
  * Warunkowo wyświetla ostrzeżenie o wygasającej sesji.
- * 
+ *
  * @param props - Props komponentu
  * @param props.session - Dane sesji do wyświetlenia (SessionViewModel)
  * @param props.isLoading - Opcjonalna flaga stanu ładowania
- * 
+ *
  * @example
  * ```tsx
- * <SessionInfoCard 
- *   session={sessionData} 
+ * <SessionInfoCard
+ *   session={sessionData}
  *   isLoading={false}
  * />
  * ```
@@ -55,7 +55,7 @@ export function SessionInfoCard({ session, isLoading = false }: SessionInfoCardP
   const formattedLastActivity = formatSessionDate(session.lastActivityAt);
 
   // Pokaż ostrzeżenie tylko dla sesji wygasających lub wygasłych
-  const shouldShowWarning = session.status === 'expiring_soon' || session.status === 'expired';
+  const shouldShowWarning = session.status === "expiring_soon" || session.status === "expired";
 
   return (
     <Card>
@@ -74,10 +74,7 @@ export function SessionInfoCard({ session, isLoading = false }: SessionInfoCardP
 
         {/* Ostrzeżenie o wygasającej sesji */}
         {shouldShowWarning && (
-          <SessionExpiryWarning 
-            expiresAt={session.expiresAt}
-            remainingHours={session.remainingHours}
-          />
+          <SessionExpiryWarning expiresAt={session.expiresAt} remainingHours={session.remainingHours} />
         )}
 
         {/* Data wygaśnięcia */}
@@ -101,13 +98,11 @@ export function SessionInfoCard({ session, isLoading = false }: SessionInfoCardP
         {/* Informacja dodatkowa */}
         <div className="pt-2 border-t">
           <p className="text-xs text-muted-foreground">
-            Sesja jest ważna przez 24 godziny od ostatniej aktywności. 
-            Po wygaśnięciu zostaniesz automatycznie wylogowany.
+            Sesja jest ważna przez 24 godziny od ostatniej aktywności. Po wygaśnięciu zostaniesz automatycznie
+            wylogowany.
           </p>
         </div>
       </CardContent>
     </Card>
   );
 }
-
-

@@ -155,7 +155,7 @@ Widok dostępny pod ścieżką: `/dashboard`
     icon?: React.ReactNode;
     description?: string;
     onClick?: () => void;
-    variant?: 'default' | 'accent';
+    variant?: "default" | "accent";
     isLoading?: boolean;
   }
   ```
@@ -207,7 +207,7 @@ Widok dostępny pod ścieżką: `/dashboard`
     level: ReportRiskLevel;
     showIcon?: boolean;
     onClick?: () => void;
-    size?: 'sm' | 'md' | 'lg';
+    size?: "sm" | "md" | "lg";
   }
   ```
 
@@ -682,12 +682,9 @@ export function useDashboard(timezone: string = "Europe/Warsaw") {
     staleTime: 30_000,
   });
 
-  const isLoading =
-    summaryQuery.isLoading || reportsQuery.isLoading || pendingQuery.isLoading;
-  const isRefreshing =
-    summaryQuery.isFetching || reportsQuery.isFetching || pendingQuery.isFetching;
-  const error =
-    summaryQuery.error || reportsQuery.error || pendingQuery.error;
+  const isLoading = summaryQuery.isLoading || reportsQuery.isLoading || pendingQuery.isLoading;
+  const isRefreshing = summaryQuery.isFetching || reportsQuery.isFetching || pendingQuery.isFetching;
+  const error = summaryQuery.error || reportsQuery.error || pendingQuery.error;
 
   const data: DashboardData | undefined =
     summaryQuery.data && reportsQuery.data && pendingQuery.data
@@ -700,11 +697,7 @@ export function useDashboard(timezone: string = "Europe/Warsaw") {
       : undefined;
 
   const refetch = async () => {
-    await Promise.all([
-      summaryQuery.refetch(),
-      reportsQuery.refetch(),
-      pendingQuery.refetch(),
-    ]);
+    await Promise.all([summaryQuery.refetch(), reportsQuery.refetch(), pendingQuery.refetch()]);
   };
 
   return {
@@ -731,6 +724,7 @@ export function useDashboard(timezone: string = "Europe/Warsaw") {
 **Opis**: Zwraca podsumowanie raportów dzisiejszych z metrykami i rozkładem ryzyka.
 
 **Query params**:
+
 - `timezone` (opcjonalny): strefa czasowa do interpretacji „dzisiaj" (default: `Europe/Warsaw`)
 
 **Typ żądania**: brak body (GET).
@@ -752,6 +746,7 @@ export interface ReportsTodaySummaryDTO {
 ```
 
 **Obsługa błędów**:
+
 - `401 Unauthorized` → przekierowanie do `/signin`
 - `500 Internal Server Error` → wyświetlenie toastu błędu, dane z cache (jeśli dostępne)
 - `429 Too Many Requests` → toast z komunikatem o limicie, retry po czasie z nagłówka `Retry-After`
@@ -759,18 +754,12 @@ export interface ReportsTodaySummaryDTO {
 **Przykład wywołania**:
 
 ```typescript
-async function fetchReportsTodaySummary(
-  date: string,
-  timezone: string
-): Promise<ReportsTodaySummaryDTO> {
-  const response = await fetch(
-    `/api/reports/today/summary?timezone=${encodeURIComponent(timezone)}`,
-    {
-      headers: {
-        Authorization: `Bearer ${await getSupabaseToken()}`,
-      },
-    }
-  );
+async function fetchReportsTodaySummary(date: string, timezone: string): Promise<ReportsTodaySummaryDTO> {
+  const response = await fetch(`/api/reports/today/summary?timezone=${encodeURIComponent(timezone)}`, {
+    headers: {
+      Authorization: `Bearer ${await getSupabaseToken()}`,
+    },
+  });
 
   if (!response.ok) {
     throw new Error(`Failed to fetch summary: ${response.status}`);
@@ -785,6 +774,7 @@ async function fetchReportsTodaySummary(
 **Opis**: Zwraca listę raportów z możliwością filtrowania.
 
 **Query params**:
+
 - `from`: `YYYY-MM-DD` (required)
 - `to`: `YYYY-MM-DD` (required)
 - `includeAi`: `true` (wymagane dla wyświetlenia ryzyka)
@@ -814,18 +804,12 @@ export type ReportListItemDTO = ReportDTO & {
 **Przykład wywołania**:
 
 ```typescript
-async function fetchTodayReports(
-  date: string,
-  timezone: string
-): Promise<ReportListItemDTO[]> {
-  const response = await fetch(
-    `/api/reports?from=${date}&to=${date}&includeAi=true&sortBy=reportDate&sortDir=desc`,
-    {
-      headers: {
-        Authorization: `Bearer ${await getSupabaseToken()}`,
-      },
-    }
-  );
+async function fetchTodayReports(date: string, timezone: string): Promise<ReportListItemDTO[]> {
+  const response = await fetch(`/api/reports?from=${date}&to=${date}&includeAi=true&sortBy=reportDate&sortDir=desc`, {
+    headers: {
+      Authorization: `Bearer ${await getSupabaseToken()}`,
+    },
+  });
 
   if (!response.ok) {
     throw new Error(`Failed to fetch reports: ${response.status}`);
@@ -841,6 +825,7 @@ async function fetchTodayReports(
 **Opis**: Zwraca listę aktywnych kierowców.
 
 **Query params**:
+
 - `isActive`: `true`
 - `includeDeleted`: `false` (default)
 - `limit`: number (opcjonalnie)
@@ -856,35 +841,24 @@ export type DriversListResponseDTO = Paginated<DriverDTO>;
 **Logika obliczania pending drivers** (w custom hook lub API):
 
 ```typescript
-async function fetchPendingDrivers(
-  date: string,
-  timezone: string
-): Promise<PendingDriver[]> {
+async function fetchPendingDrivers(date: string, timezone: string): Promise<PendingDriver[]> {
   // 1. Pobierz wszystkich aktywnych kierowców
-  const driversResponse = await fetch(
-    `/api/drivers?isActive=true&includeDeleted=false`,
-    {
-      headers: {
-        Authorization: `Bearer ${await getSupabaseToken()}`,
-      },
-    }
-  );
+  const driversResponse = await fetch(`/api/drivers?isActive=true&includeDeleted=false`, {
+    headers: {
+      Authorization: `Bearer ${await getSupabaseToken()}`,
+    },
+  });
   const driversData: DriversListResponseDTO = await driversResponse.json();
   const allDrivers = driversData.items;
 
   // 2. Pobierz dzisiejsze raporty
-  const reportsResponse = await fetch(
-    `/api/reports?from=${date}&to=${date}`,
-    {
-      headers: {
-        Authorization: `Bearer ${await getSupabaseToken()}`,
-      },
-    }
-  );
+  const reportsResponse = await fetch(`/api/reports?from=${date}&to=${date}`, {
+    headers: {
+      Authorization: `Bearer ${await getSupabaseToken()}`,
+    },
+  });
   const reportsData: ReportsListResponseDTO = await reportsResponse.json();
-  const reportedDriverUuids = new Set(
-    reportsData.items.map((r) => r.driverUuid)
-  );
+  const reportedDriverUuids = new Set(reportsData.items.map((r) => r.driverUuid));
 
   // 3. Oblicz kierowców bez raportu
   const pending = allDrivers
@@ -916,7 +890,7 @@ async function fetchPendingDrivers(
 
 - **Trigger**: Kliknięcie przycisku `RefreshButton` w nagłówku.
 - **Akcja**: Wywołanie `refetch()` na wszystkich query jednocześnie.
-- **Feedback**: 
+- **Feedback**:
   - Przycisk pokazuje spinner podczas ładowania.
   - Przycisk jest zablokowany (disabled) podczas odświeżania.
   - Debouncing 2s zapobiega spamowaniu.
@@ -944,7 +918,7 @@ async function fetchPendingDrivers(
 ### 6. Kliknięcie w kartę pending driver
 
 - **Trigger**: Kliknięcie w `PendingDriverCard`.
-- **Akcja**: 
+- **Akcja**:
   - Opcja A: Nawigacja do `/drivers/[uuid]` (profil kierowcy).
   - Opcja B: Otwarcie modalnego okna kontaktu (email/telefon).
 - **Feedback**: Przejście do profilu lub otwarcie klienta email/telefonu.
@@ -958,7 +932,7 @@ async function fetchPendingDrivers(
 ### 8. Obsługa offline
 
 - **Trigger**: Utrata połączenia internetowego.
-- **Akcja**: 
+- **Akcja**:
   - `ConnectionBadge` zmienia status na „Offline".
   - TanStack Query zatrzymuje automatyczne odświeżanie.
   - Dane z cache pozostają widoczne.
@@ -967,7 +941,7 @@ async function fetchPendingDrivers(
 ### 9. Powrót online
 
 - **Trigger**: Przywrócenie połączenia.
-- **Akcja**: 
+- **Akcja**:
   - `ConnectionBadge` zmienia status na „Online".
   - TanStack Query automatycznie wznawia refetch.
 - **Feedback**: Badge online, toast „Połączenie przywrócone. Odświeżanie danych..." (opcjonalnie).
@@ -999,7 +973,7 @@ Dashboard jest głównie widokiem prezentacyjnym, jednak kilka warunków musi by
    - Komponent: `RefreshButton`
    - Implementacja: Lokalny state `isRefreshing` + setTimeout.
 
-2. **Wyświetlanie danych**: 
+2. **Wyświetlanie danych**:
    - Jeśli `isLoading = true` → wyświetl `LoadingSkeletons`.
    - Jeśli `error` → wyświetl komunikat błędu z przyciskiem „Spróbuj ponownie".
    - Jeśli `data` → wyświetl pełny widok.
@@ -1017,14 +991,14 @@ Dashboard jest głównie widokiem prezentacyjnym, jednak kilka warunków musi by
 
 ### Błędy HTTP z API
 
-| Kod | Opis | Obsługa UI |
-|-----|------|------------|
-| 401 | Unauthorized (brak lub nieprawidłowy token) | Automatyczne przekierowanie do `/signin` przez middleware. Toast: „Sesja wygasła. Zaloguj się ponownie." |
-| 403 | Forbidden (brak uprawnień) | Toast: „Brak dostępu do tej funkcji." + wyświetlenie komunikatu błędu. |
-| 404 | Not Found (np. firma nie istnieje) | Toast: „Nie znaleziono danych." + komunikat w sekcji. |
-| 429 | Too Many Requests (rate limit) | Toast: „Zbyt wiele żądań. Spróbuj za chwilę." + disable przycisku odświeżania na czas z nagłówka `Retry-After`. |
-| 500 | Internal Server Error | Toast: „Wystąpił błąd serwera. Spróbuj ponownie." + wyświetlenie danych z cache (jeśli dostępne). |
-| 503 | Service Unavailable | Toast: „Serwis chwilowo niedostępny. Spróbuj ponownie za chwilę." + wyświetlenie danych z cache. |
+| Kod | Opis                                        | Obsługa UI                                                                                                      |
+| --- | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| 401 | Unauthorized (brak lub nieprawidłowy token) | Automatyczne przekierowanie do `/signin` przez middleware. Toast: „Sesja wygasła. Zaloguj się ponownie."        |
+| 403 | Forbidden (brak uprawnień)                  | Toast: „Brak dostępu do tej funkcji." + wyświetlenie komunikatu błędu.                                          |
+| 404 | Not Found (np. firma nie istnieje)          | Toast: „Nie znaleziono danych." + komunikat w sekcji.                                                           |
+| 429 | Too Many Requests (rate limit)              | Toast: „Zbyt wiele żądań. Spróbuj za chwilę." + disable przycisku odświeżania na czas z nagłówka `Retry-After`. |
+| 500 | Internal Server Error                       | Toast: „Wystąpił błąd serwera. Spróbuj ponownie." + wyświetlenie danych z cache (jeśli dostępne).               |
+| 503 | Service Unavailable                         | Toast: „Serwis chwilowo niedostępny. Spróbuj ponownie za chwilę." + wyświetlenie danych z cache.                |
 
 ### Błędy sieciowe
 
@@ -1248,17 +1222,15 @@ Dashboard jest głównie widokiem prezentacyjnym, jednak kilka warunków musi by
 **Szacowany całkowity czas implementacji**: 35-50 godzin (w zależności od doświadczenia programisty i dostępności komponentów z shadcn/ui).
 
 **Priorytety**:
+
 - **Fazy 1-8**: Krytyczne – implementacja core functionality.
 - **Fazy 9-12**: Wysokie – UX, responsywność, integracja.
 - **Fazy 13-15**: Średnie – A11y, testy, obsługa błędów.
 - **Fazy 16-20**: Niskie (nice-to-have) – E2E, optymalizacje, dokumentacja.
 
 **Zależności**:
+
 - AuthenticatedLayout musi być już zaimplementowany.
 - Shadcn/ui komponenty (Card, Badge, Table, Button, Skeleton) muszą być zainstalowane.
 - TanStack Query musi być skonfigurowany w projekcie.
 - Supabase client musi być dostępny z helperami do pobierania tokenu JWT.
-
-
-
-

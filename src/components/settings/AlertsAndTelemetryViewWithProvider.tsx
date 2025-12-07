@@ -19,12 +19,7 @@ export function AlertsAndTelemetryViewWithProvider({
 }: AlertsAndTelemetryViewWithProviderProps) {
   return (
     <QueryProvider>
-      <AlertsAndTelemetryView
-        initialTelemetryData={initialTelemetryData}
-        initialEmailLogs={initialEmailLogs}
-      />
+      <AlertsAndTelemetryView initialTelemetryData={initialTelemetryData} initialEmailLogs={initialEmailLogs} />
     </QueryProvider>
   );
 }
-
-

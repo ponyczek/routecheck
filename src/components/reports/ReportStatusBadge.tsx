@@ -37,6 +37,3 @@ export function ReportStatusBadge({ status, className }: ReportStatusBadgeProps)
     </Badge>
   );
 }
-
-
-

@@ -68,12 +68,8 @@ export function RefreshButton({ onRefresh, isRefreshing, disabled = false, class
       aria-label="Odśwież dane dashboardu"
       title="Odśwież dane"
     >
-      <RefreshCw
-        className={cn("size-4 transition-transform", isRefreshing && "animate-spin")}
-        aria-hidden="true"
-      />
+      <RefreshCw className={cn("size-4 transition-transform", isRefreshing && "animate-spin")} aria-hidden="true" />
       <span className="hidden sm:inline">Odśwież</span>
     </Button>
   );
 }
-

@@ -28,21 +28,18 @@ export interface MetricsCardsGridProps {
  * 3. Pending Reports (Clock icon) - clickable → scrolls to pending section
  * 4. Problems (AlertTriangle icon) - clickable → navigates to /reports (risk filter)
  */
-export function MetricsCardsGrid({ 
-  metrics, 
-  isLoading = false, 
+export function MetricsCardsGrid({
+  metrics,
+  isLoading = false,
   onActiveDriversClick,
   onSubmittedClick,
-  onPendingClick, 
+  onPendingClick,
   onProblemsClick,
-  className 
+  className,
 }: MetricsCardsGridProps) {
   return (
     <div
-      className={cn(
-        "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4",
-        className
-      )}
+      className={cn("grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4", className)}
       role="region"
       aria-label="Metryki dashboardu"
     >
@@ -76,11 +73,7 @@ export function MetricsCardsGrid({
 
       <MetricCard
         title="Raporty z problemami"
-        value={
-          metrics.riskBreakdown.low +
-          metrics.riskBreakdown.medium +
-          metrics.riskBreakdown.high
-        }
+        value={metrics.riskBreakdown.low + metrics.riskBreakdown.medium + metrics.riskBreakdown.high}
         icon={<AlertTriangle className="size-5" />}
         description={onProblemsClick ? "Kliknij aby filtrować raporty z ryzykiem" : undefined}
         onClick={onProblemsClick}
@@ -89,4 +82,3 @@ export function MetricsCardsGrid({
     </div>
   );
 }
-

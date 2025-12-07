@@ -21,9 +21,7 @@ describe("AlertToggleCard", () => {
         />
       );
 
-      expect(
-        screen.getByText("Alerty o brakujących raportach")
-      ).toBeInTheDocument();
+      expect(screen.getByText("Alerty o brakujących raportach")).toBeInTheDocument();
     });
 
     it("renders card description", () => {
@@ -36,9 +34,7 @@ describe("AlertToggleCard", () => {
         />
       );
 
-      expect(
-        screen.getByText("Automatyczne powiadomienia e-mail wysyłane do kierowców")
-      ).toBeInTheDocument();
+      expect(screen.getByText("Automatyczne powiadomienia e-mail wysyłane do kierowców")).toBeInTheDocument();
     });
 
     it("renders info banner", () => {
@@ -51,9 +47,7 @@ describe("AlertToggleCard", () => {
         />
       );
 
-      expect(
-        screen.getByText(/Alert jest wysyłany raz na brakujący raport/)
-      ).toBeInTheDocument();
+      expect(screen.getByText(/Alert jest wysyłany raz na brakujący raport/)).toBeInTheDocument();
     });
 
     it("renders recipient email", () => {
@@ -79,9 +73,7 @@ describe("AlertToggleCard", () => {
         />
       );
 
-      expect(
-        screen.getByText("Adres e-mail administratora")
-      ).toBeInTheDocument();
+      expect(screen.getByText("Adres e-mail administratora")).toBeInTheDocument();
     });
 
     it("renders toggle switch", () => {
@@ -310,12 +302,7 @@ describe("AlertToggleCard", () => {
     it("handles very long email address", () => {
       const longEmail = "very.long.email.address.test@example-company-domain.com";
       render(
-        <AlertToggleCard
-          alertsEnabled={true}
-          recipientEmail={longEmail}
-          onToggle={mockOnToggle}
-          isPending={false}
-        />
+        <AlertToggleCard alertsEnabled={true} recipientEmail={longEmail} onToggle={mockOnToggle} isPending={false} />
       );
 
       expect(screen.getByText(longEmail)).toBeInTheDocument();
@@ -324,12 +311,7 @@ describe("AlertToggleCard", () => {
     it("handles special characters in email", () => {
       const specialEmail = "test+filter@example.com";
       render(
-        <AlertToggleCard
-          alertsEnabled={true}
-          recipientEmail={specialEmail}
-          onToggle={mockOnToggle}
-          isPending={false}
-        />
+        <AlertToggleCard alertsEnabled={true} recipientEmail={specialEmail} onToggle={mockOnToggle} isPending={false} />
       );
 
       expect(screen.getByText(specialEmail)).toBeInTheDocument();
@@ -411,5 +393,3 @@ describe("AlertToggleCard", () => {
     });
   });
 });
-
-

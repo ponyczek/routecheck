@@ -32,4 +32,3 @@ export function SessionExpiryNotice({ reason }: SessionExpiryNoticeProps) {
     </Alert>
   );
 }
-

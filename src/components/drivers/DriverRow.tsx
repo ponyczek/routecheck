@@ -1,9 +1,9 @@
-import { TableCell, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { StatusBadge } from './StatusBadge';
-import { RowActionsMenu } from './RowActionsMenu';
-import { formatDate } from '@/lib/utils/date';
-import type { DriverDTO } from '@/types';
+import { TableCell, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "./StatusBadge";
+import { RowActionsMenu } from "./RowActionsMenu";
+import { formatDate } from "@/lib/utils/date";
+import type { DriverDTO } from "@/types";
 
 interface DriverRowProps {
   driver: DriverDTO;
@@ -22,7 +22,7 @@ export function DriverRow({ driver, onEdit, onToggleActive, onDelete }: DriverRo
   const isDeleted = driver.deletedAt !== null;
 
   return (
-    <TableRow className={isDeleted ? 'opacity-60' : ''}>
+    <TableRow className={isDeleted ? "opacity-60" : ""}>
       {/* Imię i nazwisko */}
       <TableCell className="font-medium">
         <div className="flex items-center gap-2">
@@ -47,19 +47,12 @@ export function DriverRow({ driver, onEdit, onToggleActive, onDelete }: DriverRo
       </TableCell>
 
       {/* Data dodania */}
-      <TableCell className="text-muted-foreground">
-        {formatDate(driver.createdAt, 'dd MMM yyyy')}
-      </TableCell>
+      <TableCell className="text-muted-foreground">{formatDate(driver.createdAt, "dd MMM yyyy")}</TableCell>
 
       {/* Akcje */}
       <TableCell>
         {!isDeleted ? (
-          <RowActionsMenu
-            driver={driver}
-            onEdit={onEdit}
-            onToggleActive={onToggleActive}
-            onDelete={onDelete}
-          />
+          <RowActionsMenu driver={driver} onEdit={onEdit} onToggleActive={onToggleActive} onDelete={onDelete} />
         ) : (
           <span className="text-xs text-muted-foreground">—</span>
         )}

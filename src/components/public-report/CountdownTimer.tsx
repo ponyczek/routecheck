@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { Clock } from 'lucide-react';
-import { formatDuration, getTimeLeft } from '@/lib/public-report/utils/formatters';
-import type { IsoDateString } from '@/types';
+import { useState, useEffect } from "react";
+import { Clock } from "lucide-react";
+import { formatDuration, getTimeLeft } from "@/lib/public-report/utils/formatters";
+import type { IsoDateString } from "@/types";
 
 interface CountdownTimerProps {
   targetTime: IsoDateString;
@@ -11,9 +11,9 @@ interface CountdownTimerProps {
 /**
  * CountdownTimer - Displays countdown to edit window expiration
  * Updates every second and calls onExpire when time runs out
- * 
+ *
  * @example
- * <CountdownTimer 
+ * <CountdownTimer
  *   targetTime={editableUntil}
  *   onExpire={() => setCanEdit(false)}
  * />
@@ -46,7 +46,7 @@ export function CountdownTimer({ targetTime, onExpire }: CountdownTimerProps) {
   }
 
   return (
-    <div 
+    <div
       className="flex items-center justify-center gap-2 text-blue-700 p-4 bg-blue-50 border border-blue-200 rounded-lg"
       aria-live="polite"
       aria-atomic="true"
@@ -58,5 +58,3 @@ export function CountdownTimer({ targetTime, onExpire }: CountdownTimerProps) {
     </div>
   );
 }
-
-

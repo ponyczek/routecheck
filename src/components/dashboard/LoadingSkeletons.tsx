@@ -117,4 +117,3 @@ export function LoadingSkeletons({ className }: LoadingSkeletonsProps) {
     </div>
   );
 }
-

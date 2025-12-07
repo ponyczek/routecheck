@@ -6,11 +6,11 @@ interface PasswordStrengthIndicatorProps {
 
 /**
  * Visual indicator showing password strength in real-time
- * 
+ *
  * Displays:
  * - Progress bar with color-coded strength (red/yellow/green)
  * - Text feedback ("Słabe", "Średnie", "Mocne")
- * 
+ *
  * Accessible via ARIA live region for screen readers
  */
 export function PasswordStrengthIndicator({ password }: PasswordStrengthIndicatorProps) {
@@ -48,4 +48,3 @@ export function PasswordStrengthIndicator({ password }: PasswordStrengthIndicato
     </div>
   );
 }
-

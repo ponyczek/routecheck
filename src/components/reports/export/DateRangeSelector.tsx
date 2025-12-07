@@ -5,11 +5,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Label } from "@/components/ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import type { DateRangeSelectorProps } from "@/lib/reports/export/types";
 
 /**
@@ -17,12 +13,7 @@ import type { DateRangeSelectorProps } from "@/lib/reports/export/types";
  * Uses shadcn/ui Calendar with range selection mode
  * Validates date range and displays error messages
  */
-export function DateRangeSelector({
-  value,
-  onChange,
-  error,
-  disabled = false,
-}: DateRangeSelectorProps) {
+export function DateRangeSelector({ value, onChange, error, disabled = false }: DateRangeSelectorProps) {
   const formatDateRange = () => {
     if (value.from) {
       if (value.to) {
@@ -69,18 +60,10 @@ export function DateRangeSelector({
         </PopoverContent>
       </Popover>
       {error && (
-        <p
-          id="date-range-error"
-          className="text-sm text-destructive"
-          role="alert"
-          aria-live="polite"
-        >
+        <p id="date-range-error" className="text-sm text-destructive" role="alert" aria-live="polite">
           {error}
         </p>
       )}
     </div>
   );
 }
-
-
-

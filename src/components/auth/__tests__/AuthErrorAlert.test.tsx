@@ -17,7 +17,7 @@ describe("AuthErrorAlert", () => {
     };
 
     render(<AuthErrorAlert error={error} />);
-    
+
     expect(screen.getByText("Błąd logowania")).toBeInTheDocument();
     expect(screen.getByText("Nieprawidłowy email lub hasło")).toBeInTheDocument();
   });
@@ -30,7 +30,7 @@ describe("AuthErrorAlert", () => {
     const onRetry = vi.fn();
 
     render(<AuthErrorAlert error={error} onRetry={onRetry} />);
-    
+
     const retryButton = screen.getByRole("button", { name: /spróbuj ponownie/i });
     expect(retryButton).toBeInTheDocument();
   });
@@ -44,7 +44,7 @@ describe("AuthErrorAlert", () => {
     const onRetry = vi.fn();
 
     render(<AuthErrorAlert error={error} onRetry={onRetry} />);
-    
+
     const retryButton = screen.getByRole("button", { name: /spróbuj ponownie/i });
     await user.click(retryButton);
 
@@ -58,7 +58,7 @@ describe("AuthErrorAlert", () => {
     };
 
     render(<AuthErrorAlert error={error} />);
-    
+
     const retryButton = screen.queryByRole("button", { name: /spróbuj ponownie/i });
     expect(retryButton).not.toBeInTheDocument();
   });
@@ -71,8 +71,7 @@ describe("AuthErrorAlert", () => {
 
     const { container } = render(<AuthErrorAlert error={error} />);
     const alert = container.querySelector('[aria-live="assertive"]');
-    
+
     expect(alert).toBeInTheDocument();
   });
 });
-

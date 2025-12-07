@@ -11,21 +11,30 @@ export const prerender = false;
 const exportQuerySchema = z.object({
   from: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format (YYYY-MM-DD)"),
   to: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format (YYYY-MM-DD)"),
-  includeAi: z.string().optional().transform((val) => val !== "false"),
-  includeTags: z.string().optional().transform((val) => val !== "false"),
+  includeAi: z
+    .string()
+    .optional()
+    .transform((val) => val !== "false"),
+  includeTags: z
+    .string()
+    .optional()
+    .transform((val) => val !== "false"),
 });
 
 /**
  * GET /api/reports/export
- * 
+ *
  * Exports reports as CSV file
  */
 export const GET: APIRoute = async ({ locals, request }) => {
   try {
     const supabase = locals.supabase;
-    
+
     // Get session first (before any response is sent)
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    const {
+      data: { session },
+      error: sessionError,
+    } = await supabase.auth.getSession();
 
     if (sessionError || !session) {
       return errorResponse("UNAUTHORIZED", "Authentication required", 401);
@@ -57,12 +66,9 @@ export const GET: APIRoute = async ({ locals, request }) => {
     const validation = exportQuerySchema.safeParse(params);
 
     if (!validation.success) {
-      return errorResponse(
-        "INVALID_DATE_RANGE",
-        "Invalid or missing query parameters",
-        400,
-        { errors: formatZodError(validation.error) }
-      );
+      return errorResponse("INVALID_DATE_RANGE", "Invalid or missing query parameters", 400, {
+        errors: formatZodError(validation.error),
+      });
     }
 
     const { from, to, includeAi, includeTags } = validation.data;
@@ -73,19 +79,11 @@ export const GET: APIRoute = async ({ locals, request }) => {
     const daysDiff = Math.ceil((toDate.getTime() - fromDate.getTime()) / (1000 * 60 * 60 * 24));
 
     if (daysDiff > 31) {
-      return errorResponse(
-        "DATE_RANGE_TOO_LARGE",
-        "Zakres dat przekracza maksymalny limit 31 dni",
-        413
-      );
+      return errorResponse("DATE_RANGE_TOO_LARGE", "Zakres dat przekracza maksymalny limit 31 dni", 413);
     }
 
     if (fromDate > toDate) {
-      return errorResponse(
-        "INVALID_DATE_RANGE",
-        "Data początkowa musi być wcześniejsza niż końcowa",
-        400
-      );
+      return errorResponse("INVALID_DATE_RANGE", "Data początkowa musi być wcześniejsza niż końcowa", 400);
     }
 
     // Fetch reports with optional AI results and tags
@@ -127,16 +125,14 @@ export const GET: APIRoute = async ({ locals, request }) => {
       return errorResponse("DATABASE_ERROR", error.message, 500);
     }
 
-
     // Fetch tags if requested
-    let reportTags: Map<string, string[]> = new Map();
+    const reportTags = new Map<string, string[]>();
     if (includeTags && reports && reports.length > 0) {
       const reportUuids = reports.map((r: any) => r.uuid);
       const { data: tagsData } = await supabase
         .from("report_risk_tags")
         .select("report_uuid, risk_tags(tag_name)")
         .in("report_uuid", reportUuids);
-
 
       if (tagsData) {
         tagsData.forEach((tag: any) => {
@@ -190,10 +186,7 @@ export const GET: APIRoute = async ({ locals, request }) => {
 
       if (includeAi) {
         const aiResult = report.report_ai_results?.[0];
-        row.push(
-          escapeCsvField(aiResult?.ai_summary),
-          aiResult?.risk_level || ""
-        );
+        row.push(escapeCsvField(aiResult?.ai_summary), aiResult?.risk_level || "");
       }
 
       if (includeTags) {
@@ -244,4 +237,3 @@ function escapeCsvField(value: string | null | undefined): string {
 
   return stringValue;
 }
-

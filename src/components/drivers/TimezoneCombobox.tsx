@@ -1,17 +1,10 @@
-import { useState, useMemo } from 'react';
-import { Check, ChevronsUpDown } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { getTimezoneOptions, searchTimezones } from '@/lib/drivers/timezones';
-import { cn } from '@/lib/utils';
+import { useState, useMemo } from "react";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { getTimezoneOptions, searchTimezones } from "@/lib/drivers/timezones";
+import { cn } from "@/lib/utils";
 
 interface TimezoneComboboxProps {
   value: string;
@@ -26,7 +19,7 @@ interface TimezoneComboboxProps {
  */
 export function TimezoneCombobox({ value, onChange, disabled }: TimezoneComboboxProps) {
   const [open, setOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Pobierz wszystkie dostępne strefy czasowe
   const allTimezones = useMemo(() => getTimezoneOptions(), []);
@@ -49,17 +42,13 @@ export function TimezoneCombobox({ value, onChange, disabled }: TimezoneCombobox
           className="w-full justify-between"
           disabled={disabled}
         >
-          {selectedTimezone ? selectedTimezone.label : 'Wybierz strefę czasową...'}
+          {selectedTimezone ? selectedTimezone.label : "Wybierz strefę czasową..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[400px] p-0" align="start">
         <Command shouldFilter={false}>
-          <CommandInput
-            placeholder="Szukaj strefy czasowej..."
-            value={searchQuery}
-            onValueChange={setSearchQuery}
-          />
+          <CommandInput placeholder="Szukaj strefy czasowej..." value={searchQuery} onValueChange={setSearchQuery} />
           <CommandList>
             <CommandEmpty>Nie znaleziono strefy czasowej.</CommandEmpty>
             <CommandGroup>
@@ -70,15 +59,10 @@ export function TimezoneCombobox({ value, onChange, disabled }: TimezoneCombobox
                   onSelect={(currentValue) => {
                     onChange(currentValue);
                     setOpen(false);
-                    setSearchQuery('');
+                    setSearchQuery("");
                   }}
                 >
-                  <Check
-                    className={cn(
-                      'mr-2 h-4 w-4',
-                      value === timezone.value ? 'opacity-100' : 'opacity-0'
-                    )}
-                  />
+                  <Check className={cn("mr-2 h-4 w-4", value === timezone.value ? "opacity-100" : "opacity-0")} />
                   {timezone.label}
                 </CommandItem>
               ))}
@@ -89,6 +73,3 @@ export function TimezoneCombobox({ value, onChange, disabled }: TimezoneCombobox
     </Popover>
   );
 }
-
-
-

@@ -217,7 +217,7 @@ describe("EditCompanyNameForm", () => {
       render(<EditCompanyNameForm company={mockCompany} />);
 
       const form = screen.getByTestId("card-content").querySelector("form");
-      
+
       // Should not throw error
       expect(() => {
         form!.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
@@ -237,4 +237,3 @@ describe("EditCompanyNameForm", () => {
     });
   });
 });
-

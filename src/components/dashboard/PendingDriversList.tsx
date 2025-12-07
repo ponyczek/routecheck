@@ -27,21 +27,13 @@ export function PendingDriversList({ drivers, onDriverClick, className }: Pendin
 
   return (
     <div
-      className={cn(
-        "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3",
-        className
-      )}
+      className={cn("grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3", className)}
       role="list"
       aria-label="Lista kierowców oczekujących na wysłanie raportu"
     >
       {drivers.map((driver) => (
-        <PendingDriverCard
-          key={driver.uuid}
-          driver={driver}
-          onDriverClick={onDriverClick}
-        />
+        <PendingDriverCard key={driver.uuid} driver={driver} onDriverClick={onDriverClick} />
       ))}
     </div>
   );
 }
-

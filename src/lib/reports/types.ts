@@ -24,6 +24,3 @@ export function getDefaultFilters(): ReportsFiltersState {
     includeAi: true,
   };
 }
-
-
-

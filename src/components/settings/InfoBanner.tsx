@@ -21,5 +21,3 @@ export function InfoBanner({ title, description, variant = "default" }: InfoBann
     </Alert>
   );
 }
-
-

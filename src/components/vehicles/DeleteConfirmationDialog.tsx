@@ -7,9 +7,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { Loader2 } from 'lucide-react';
-import type { VehicleDTO } from '@/types';
+} from "@/components/ui/alert-dialog";
+import { Loader2 } from "lucide-react";
+import type { VehicleDTO } from "@/types";
 
 interface DeleteConfirmationDialogProps {
   isOpen: boolean;
@@ -46,15 +46,12 @@ export function DeleteConfirmationDialog({
           <AlertDialogDescription asChild>
             <div className="space-y-2">
               <p>
-                Czy na pewno chcesz usunąć pojazd{' '}
-                <span className="font-semibold text-gray-900 dark:text-gray-100">
-                  {vehicle.registrationNumber}
-                </span>
-                ?
+                Czy na pewno chcesz usunąć pojazd{" "}
+                <span className="font-semibold text-gray-900 dark:text-gray-100">{vehicle.registrationNumber}</span>?
               </p>
               <p className="text-sm">
-                Pojazd zostanie oznaczony jako usunięty i ukryty, ale jego historia raportów pozostanie
-                widoczna w systemie. Ta operacja nie usuwa trwale danych.
+                Pojazd zostanie oznaczony jako usunięty i ukryty, ale jego historia raportów pozostanie widoczna w
+                systemie. Ta operacja nie usuwa trwale danych.
               </p>
             </div>
           </AlertDialogDescription>
@@ -77,5 +74,3 @@ export function DeleteConfirmationDialog({
     </AlertDialog>
   );
 }
-
-

@@ -103,13 +103,16 @@ export function MobileLayout({
   const { isOpen, toggle, close } = useMobileMenu();
 
   // Keyboard shortcuts
-  useKeyboardShortcuts([
-    {
-      key: COMMON_SHORTCUTS.ESCAPE,
-      callback: close,
-      description: "Zamknij menu",
-    },
-  ], isOpen); // Only enabled when menu is open
+  useKeyboardShortcuts(
+    [
+      {
+        key: COMMON_SHORTCUTS.ESCAPE,
+        callback: close,
+        description: "Zamknij menu",
+      },
+    ],
+    isOpen
+  ); // Only enabled when menu is open
 
   return (
     <div className="flex min-h-screen flex-col md:hidden">
@@ -131,7 +134,12 @@ export function MobileLayout({
 
           <div className="mt-6 flex flex-col gap-6">
             {/* Main navigation */}
-            <MainNavigation items={MOBILE_NAV_ITEMS} activeRoute={activeRoute} orientation="vertical" onItemClick={close} />
+            <MainNavigation
+              items={MOBILE_NAV_ITEMS}
+              activeRoute={activeRoute}
+              orientation="vertical"
+              onItemClick={close}
+            />
 
             {/* User menu */}
             <div className="border-t border-border pt-4">
@@ -143,4 +151,3 @@ export function MobileLayout({
     </div>
   );
 }
-

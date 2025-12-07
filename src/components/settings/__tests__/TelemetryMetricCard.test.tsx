@@ -34,13 +34,7 @@ describe("TelemetryMetricCard", () => {
     });
 
     it("renders trend badge when provided", () => {
-      render(
-        <TelemetryMetricCard
-          label="Metric"
-          value={100}
-          trend={{ direction: "up", value: "5%" }}
-        />
-      );
+      render(<TelemetryMetricCard label="Metric" value={100} trend={{ direction: "up", value: "5%" }} />);
 
       expect(screen.getByText("5%")).toBeInTheDocument();
     });
@@ -54,11 +48,7 @@ describe("TelemetryMetricCard", () => {
 
     it("renders up arrow for positive trend", () => {
       const { container } = render(
-        <TelemetryMetricCard
-          label="Metric"
-          value={100}
-          trend={{ direction: "up", value: "10%" }}
-        />
+        <TelemetryMetricCard label="Metric" value={100} trend={{ direction: "up", value: "10%" }} />
       );
 
       // Check for arrow-up icon (lucide-react uses data-lucide attribute)
@@ -68,11 +58,7 @@ describe("TelemetryMetricCard", () => {
 
     it("renders down arrow for negative trend", () => {
       const { container } = render(
-        <TelemetryMetricCard
-          label="Metric"
-          value={100}
-          trend={{ direction: "down", value: "5%" }}
-        />
+        <TelemetryMetricCard label="Metric" value={100} trend={{ direction: "down", value: "5%" }} />
       );
 
       const icon = container.querySelector('[data-slot="badge"] svg');
@@ -99,9 +85,7 @@ describe("TelemetryMetricCard", () => {
     });
 
     it("applies custom className when provided", () => {
-      const { container } = render(
-        <TelemetryMetricCard label="Test" value={42} className="custom-class" />
-      );
+      const { container } = render(<TelemetryMetricCard label="Test" value={42} className="custom-class" />);
 
       const card = container.querySelector('[data-slot="card"]');
       expect(card).toHaveClass("custom-class");
@@ -168,7 +152,7 @@ describe("TelemetryMetricCard", () => {
       expect(screen.getByText("Complete Metric")).toBeInTheDocument();
       expect(screen.getByText(/85/)).toBeInTheDocument();
       expect(screen.getByText("5s")).toBeInTheDocument();
-      
+
       // Check that unit is rendered
       const unitElement = container.querySelector(".text-xl.ml-1");
       expect(unitElement).toBeInTheDocument();
@@ -183,4 +167,3 @@ describe("TelemetryMetricCard", () => {
     });
   });
 });
-

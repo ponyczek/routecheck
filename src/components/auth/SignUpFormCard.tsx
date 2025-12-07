@@ -14,7 +14,7 @@ interface SignUpFormCardProps {
 
 /**
  * Sign up form card container
- * 
+ *
  * Responsibilities:
  * - Manages auth error state
  * - Provides QueryProvider for React Query
@@ -41,7 +41,7 @@ export function SignUpFormCard({ returnTo, supabaseUrl, supabaseKey }: SignUpFor
 
   const handleRetry = () => {
     setAuthError(null);
-  }
+  };
 
   return (
     <QueryProvider>
@@ -69,5 +69,3 @@ export function SignUpFormCard({ returnTo, supabaseUrl, supabaseKey }: SignUpFor
     </QueryProvider>
   );
 }
-
-

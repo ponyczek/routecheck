@@ -10,12 +10,9 @@ export function ExportInfoBanner() {
     <Alert>
       <Info className="h-4 w-4" />
       <AlertDescription>
-        Eksport może objąć maksymalnie 31 dni. Generowanie pliku może potrwać
-        kilka sekund w zależności od liczby raportów.
+        Eksport może objąć maksymalnie 31 dni. Generowanie pliku może potrwać kilka sekund w zależności od liczby
+        raportów.
       </AlertDescription>
     </Alert>
   );
 }
-
-
-

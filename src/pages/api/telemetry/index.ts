@@ -45,8 +45,10 @@ export const GET: APIRoute = async ({ locals, url }) => {
       );
     }
 
-    // Parse query params
+    // Parse query params (reserved for future use)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const eventType = url.searchParams.get("eventType") || "FORM_SUBMIT";
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const bucket = url.searchParams.get("bucket") || "day";
     const from = url.searchParams.get("from");
     const to = url.searchParams.get("to");
@@ -95,5 +97,3 @@ export const GET: APIRoute = async ({ locals, url }) => {
     );
   }
 };
-
-

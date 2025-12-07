@@ -1,17 +1,9 @@
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Switch } from '@/components/ui/switch';
-import { vehicleFormSchema, type VehicleFormData } from '@/lib/vehicles/validation';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { vehicleFormSchema, type VehicleFormData } from "@/lib/vehicles/validation";
 
 interface VehicleFormProps {
   defaultValues?: Partial<VehicleFormData>;
@@ -30,11 +22,11 @@ export function VehicleForm({ defaultValues, onSubmit, isSubmitting }: VehicleFo
   const form = useForm<VehicleFormData>({
     resolver: zodResolver(vehicleFormSchema),
     defaultValues: {
-      registrationNumber: defaultValues?.registrationNumber || '',
+      registrationNumber: defaultValues?.registrationNumber || "",
       vin: defaultValues?.vin || null,
       isActive: defaultValues?.isActive ?? true,
     },
-    mode: 'onBlur', // Walidacja przy onBlur
+    mode: "onBlur", // Walidacja przy onBlur
   });
 
   const handleSubmit = async (data: VehicleFormData) => {
@@ -44,15 +36,15 @@ export function VehicleForm({ defaultValues, onSubmit, isSubmitting }: VehicleFo
       // Obsługa błędów z API
       // Np. 409 Conflict dla duplikatu numeru rejestracyjnego
       if (error.response?.status === 409) {
-        form.setError('registrationNumber', {
-          type: 'manual',
-          message: 'Pojazd o tym numerze rejestracyjnym już istnieje',
+        form.setError("registrationNumber", {
+          type: "manual",
+          message: "Pojazd o tym numerze rejestracyjnym już istnieje",
         });
       } else if (error.response?.data?.errors) {
         // Mapowanie błędów walidacji z API na pola formularza
         Object.entries(error.response.data.errors).forEach(([field, message]) => {
           form.setError(field as keyof VehicleFormData, {
-            type: 'manual',
+            type: "manual",
             message: message as string,
           });
         });
@@ -84,9 +76,7 @@ export function VehicleForm({ defaultValues, onSubmit, isSubmitting }: VehicleFo
                   }}
                 />
               </FormControl>
-              <FormDescription>
-                Unikalny numer rejestracyjny pojazdu w ramach firmy.
-              </FormDescription>
+              <FormDescription>Unikalny numer rejestracyjny pojazdu w ramach firmy.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -103,14 +93,14 @@ export function VehicleForm({ defaultValues, onSubmit, isSubmitting }: VehicleFo
                 <Input
                   placeholder="1HGBH41JXMN109186"
                   {...field}
-                  value={field.value || ''}
+                  value={field.value || ""}
                   disabled={isSubmitting}
                   autoComplete="off"
                   className="uppercase"
                   onChange={(e) => {
                     // Automatyczna konwersja na wielkie litery i obsługa pustego stringa
                     const value = e.target.value.toUpperCase();
-                    field.onChange(value === '' ? null : value);
+                    field.onChange(value === "" ? null : value);
                   }}
                 />
               </FormControl>
@@ -130,9 +120,7 @@ export function VehicleForm({ defaultValues, onSubmit, isSubmitting }: VehicleFo
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
               <div className="space-y-0.5">
                 <FormLabel className="text-base">Status aktywny</FormLabel>
-                <FormDescription>
-                  Nieaktywne pojazdy nie będą dostępne do przypisania do kierowców.
-                </FormDescription>
+                <FormDescription>Nieaktywne pojazdy nie będą dostępne do przypisania do kierowców.</FormDescription>
               </div>
               <FormControl>
                 <Switch
@@ -149,5 +137,3 @@ export function VehicleForm({ defaultValues, onSubmit, isSubmitting }: VehicleFo
     </Form>
   );
 }
-
-

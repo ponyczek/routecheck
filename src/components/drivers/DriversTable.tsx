@@ -1,21 +1,14 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react';
-import { DriverRow } from './DriverRow';
-import type { DriverDTO } from '@/types';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { DriverRow } from "./DriverRow";
+import type { DriverDTO } from "@/types";
 
 interface DriversTableProps {
   drivers: DriverDTO[];
-  sortBy: 'name' | 'createdAt';
-  sortDir: 'asc' | 'desc';
-  onSortChange: (sortBy: 'name' | 'createdAt', sortDir: 'asc' | 'desc') => void;
+  sortBy: "name" | "createdAt";
+  sortDir: "asc" | "desc";
+  onSortChange: (sortBy: "name" | "createdAt", sortDir: "asc" | "desc") => void;
   onEditClick: (driver: DriverDTO) => void;
   onToggleActiveClick: (driver: DriverDTO) => void;
   onDeleteClick: (driver: DriverDTO) => void;
@@ -43,25 +36,21 @@ export function DriversTable({
   onDeleteClick,
   pagination,
 }: DriversTableProps) {
-  const handleSort = (column: 'name' | 'createdAt') => {
+  const handleSort = (column: "name" | "createdAt") => {
     if (sortBy === column) {
       // Toggle direction
-      onSortChange(column, sortDir === 'asc' ? 'desc' : 'asc');
+      onSortChange(column, sortDir === "asc" ? "desc" : "asc");
     } else {
       // New column, default asc
-      onSortChange(column, 'asc');
+      onSortChange(column, "asc");
     }
   };
 
-  const getSortIcon = (column: 'name' | 'createdAt') => {
+  const getSortIcon = (column: "name" | "createdAt") => {
     if (sortBy !== column) {
       return <ArrowUpDown className="ml-2 h-4 w-4" />;
     }
-    return sortDir === 'asc' ? (
-      <ArrowUp className="ml-2 h-4 w-4" />
-    ) : (
-      <ArrowDown className="ml-2 h-4 w-4" />
-    );
+    return sortDir === "asc" ? <ArrowUp className="ml-2 h-4 w-4" /> : <ArrowDown className="ml-2 h-4 w-4" />;
   };
 
   return (
@@ -73,11 +62,11 @@ export function DriversTable({
               <TableHead>
                 <Button
                   variant="ghost"
-                  onClick={() => handleSort('name')}
+                  onClick={() => handleSort("name")}
                   className="-ml-4 h-auto p-2 hover:bg-transparent"
                 >
                   Imię i nazwisko
-                  {getSortIcon('name')}
+                  {getSortIcon("name")}
                 </Button>
               </TableHead>
               <TableHead>E-mail</TableHead>
@@ -86,11 +75,11 @@ export function DriversTable({
               <TableHead>
                 <Button
                   variant="ghost"
-                  onClick={() => handleSort('createdAt')}
+                  onClick={() => handleSort("createdAt")}
                   className="-ml-4 h-auto p-2 hover:bg-transparent"
                 >
                   Data dodania
-                  {getSortIcon('createdAt')}
+                  {getSortIcon("createdAt")}
                 </Button>
               </TableHead>
               <TableHead className="w-[70px]">Akcje</TableHead>
@@ -125,21 +114,11 @@ export function DriversTable({
             {drivers.length > 0 && `Wyświetlono ${drivers.length} kierowców`}
           </div>
           <div className="flex gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={pagination.onPrev}
-              disabled={!pagination.hasPrev}
-            >
+            <Button variant="outline" size="sm" onClick={pagination.onPrev} disabled={!pagination.hasPrev}>
               <ChevronLeft className="mr-1 h-4 w-4" />
               Poprzednia
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={pagination.onNext}
-              disabled={!pagination.hasNext}
-            >
+            <Button variant="outline" size="sm" onClick={pagination.onNext} disabled={!pagination.hasNext}>
               Następna
               <ChevronRight className="ml-1 h-4 w-4" />
             </Button>

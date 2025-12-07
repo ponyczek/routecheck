@@ -77,4 +77,3 @@ function computeIsActive(itemHref: string, activeRoute: string): boolean {
 
   return false;
 }
-

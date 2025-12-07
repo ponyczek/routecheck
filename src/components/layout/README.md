@@ -38,6 +38,7 @@ LayoutContent (główny orkestrator)
 ### `LayoutContent.tsx`
 
 **Główny komponent** łączący wszystkie elementy layoutu. Zarządza:
+
 - Stanem uwierzytelnienia (useAuthContext)
 - Monitorowaniem sieci (useNetworkStatus)
 - Informacjami o route (useActiveRoute)
@@ -46,6 +47,7 @@ LayoutContent (główny orkestrator)
 **Props**: `{ children: React.ReactNode }`
 
 **Używane hooki**:
+
 - `useAuthContext` - pobiera dane użytkownika i firmy
 - `useNetworkStatus` - monitoruje stan połączenia
 - `useActiveRoute` - parsuje pathname i generuje breadcrumbs
@@ -53,11 +55,13 @@ LayoutContent (główny orkestrator)
 ### `DesktopSidebar.tsx`
 
 Fixed sidebar dla desktop view (>= 768px). Zawiera:
+
 - Logo RouteCheck (link do /dashboard)
 - Główną nawigację (Dashboard, Kierowcy, Raporty, Ustawienia)
 - UserMenu na dole
 
 **Props**:
+
 ```typescript
 {
   companyName: string;
@@ -71,11 +75,13 @@ Fixed sidebar dla desktop view (>= 768px). Zawiera:
 ### `MobileLayout.tsx`
 
 Layout dla urządzeń mobilnych (< 768px). Składa się z:
+
 - **TopBar**: sticky header z hamburgerem, logo i tytułem
 - **BottomNavigation**: fixed bottom bar z 4 ikonami
 - **Sheet**: wysuwane menu z pełną nawigacją
 
 **Props**:
+
 ```typescript
 {
   children: React.ReactNode;
@@ -89,6 +95,7 @@ Layout dla urządzeń mobilnych (< 768px). Składa się z:
 ```
 
 **Keyboard shortcuts**:
+
 - `Escape` - zamyka menu (gdy otwarte)
 
 ### `MainNavigation.tsx`
@@ -96,6 +103,7 @@ Layout dla urządzeń mobilnych (< 768px). Składa się z:
 Lista linków nawigacyjnych. Automatycznie oblicza active state na podstawie pathname.
 
 **Props**:
+
 ```typescript
 {
   items: NavItem[];
@@ -106,6 +114,7 @@ Lista linków nawigacyjnych. Automatycznie oblicza active state na podstawie pat
 ```
 
 **Elementy nawigacji**:
+
 - Dashboard - `/dashboard`
 - Kierowcy - `/drivers`
 - Raporty - `/reports`
@@ -116,6 +125,7 @@ Lista linków nawigacyjnych. Automatycznie oblicza active state na podstawie pat
 Pojedynczy element nawigacji z ikoną i tekstem.
 
 **Features**:
+
 - Active state styling
 - Disabled state dla flagowanych features
 - Badge "Wkrótce" dla isFlagged items
@@ -127,6 +137,7 @@ Pojedynczy element nawigacji z ikoną i tekstem.
 Dropdown menu z opcjami użytkownika (Shadcn DropdownMenu).
 
 **Menu items**:
+
 - Nazwa firmy (label, disabled)
 - Ustawienia firmy → `/settings/profile`
 - Ustawienia konta → `/settings/account`
@@ -137,6 +148,7 @@ Dropdown menu z opcjami użytkownika (Shadcn DropdownMenu).
 ### `NetworkIndicator.tsx`
 
 Badge pokazujący stan połączenia:
+
 - 🟢 **Online** - normalne połączenie
 - 🟡 **Wolne** - wolne połączenie (2G, slow-2g)
 - 🔴 **Offline** - brak połączenia
@@ -156,6 +168,7 @@ Nie renderuje się gdy jest tylko 1 crumb (current page only).
 Alert banner wyświetlany gdy aplikacja jest offline.
 
 **Features**:
+
 - Komunikat o braku połączenia
 - Przycisk "Spróbuj ponownie"
 - Informacja o ograniczonej funkcjonalności
@@ -165,6 +178,7 @@ Alert banner wyświetlany gdy aplikacja jest offline.
 React Error Boundary przechwytujący błędy renderowania.
 
 **Features**:
+
 - Fallback UI z przyjaznym komunikatem
 - Opcje recovery: "Odśwież stronę", "Wróć do Dashboard"
 - Stack trace w development mode
@@ -177,6 +191,7 @@ React Error Boundary przechwytujący błędy renderowania.
 Zarządza stanem uwierzytelnienia.
 
 **Returns**:
+
 ```typescript
 {
   user: UserDTO | null;
@@ -189,6 +204,7 @@ Zarządza stanem uwierzytelnienia.
 ```
 
 **Features**:
+
 - TanStack Query z 5-minutowym cache
 - Auto-refetch co 5 minut
 - Auto-redirect przy 401
@@ -199,6 +215,7 @@ Zarządza stanem uwierzytelnienia.
 Monitoruje stan połączenia sieciowego.
 
 **Returns**:
+
 ```typescript
 {
   isOnline: boolean;
@@ -207,6 +224,7 @@ Monitoruje stan połączenia sieciowego.
 ```
 
 **Features**:
+
 - Nasłuchuje `online`/`offline` events
 - Wykrywa wolne połączenie (Network Information API)
 - Pokazuje toasty przy zmianie stanu
@@ -216,6 +234,7 @@ Monitoruje stan połączenia sieciowego.
 Parsuje pathname i generuje informacje o route.
 
 **Returns**:
+
 ```typescript
 {
   pathname: string;
@@ -226,6 +245,7 @@ Parsuje pathname i generuje informacje o route.
 ```
 
 **Route mapping**:
+
 - `/dashboard` → "Dashboard"
 - `/drivers` → "Kierowcy"
 - `/reports` → "Raporty"
@@ -238,6 +258,7 @@ Parsuje pathname i generuje informacje o route.
 Zarządza stanem mobile menu (Sheet).
 
 **Returns**:
+
 ```typescript
 {
   isOpen: boolean;
@@ -248,6 +269,7 @@ Zarządza stanem mobile menu (Sheet).
 ```
 
 **Features**:
+
 - Auto-close przy zmianie route
 - Blokuje scroll body gdy menu otwarte
 
@@ -256,11 +278,15 @@ Zarządza stanem mobile menu (Sheet).
 Centralizuje obsługę keyboard shortcuts.
 
 **Usage**:
+
 ```typescript
-useKeyboardShortcuts([
-  { key: "Escape", callback: closeMenu },
-  { key: "k", ctrlKey: true, callback: openSearch },
-], enabled);
+useKeyboardShortcuts(
+  [
+    { key: "Escape", callback: closeMenu },
+    { key: "k", ctrlKey: true, callback: openSearch },
+  ],
+  enabled
+);
 ```
 
 ## Typy
@@ -325,8 +351,11 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
   // Auth guard for protected routes
   if (isProtectedRoute(context.url.pathname)) {
-    const { data: { session }, error } = await supabaseClient.auth.getSession();
-    
+    const {
+      data: { session },
+      error,
+    } = await supabaseClient.auth.getSession();
+
     if (error || !session?.user) {
       return context.redirect(`/signin?returnTo=${encodeURIComponent(context.url.pathname)}&expired=true`);
     }
@@ -356,15 +385,18 @@ import AuthenticatedLayout from "@/layouts/AuthenticatedLayout.astro";
 Layout używa Tailwind CSS z custom variables zdefiniowanymi w `global.css`:
 
 ### Breakpoints
+
 - Mobile: `< 768px`
 - Desktop: `>= 768px`
 
 ### Key classes
+
 - `.container` - max-width 1280px, centered
 - `.custom-scrollbar` - stylowany scrollbar dla webkit
 - Animations: `.animate-in`, `.fade-in`, `.slide-in-left`
 
 ### Colors (CSS variables)
+
 - `--background`, `--foreground`
 - `--primary`, `--primary-foreground`
 - `--muted`, `--muted-foreground`
@@ -378,14 +410,14 @@ Layout używa Tailwind CSS z custom variables zdefiniowanymi w `global.css`:
 ✅ **Keyboard navigation**: pełna obsługa Tab, Enter, Escape  
 ✅ **Focus management**: focus-visible rings, focus trap w modals  
 ✅ **Screen reader support**: aria-current, aria-expanded, aria-controls  
-✅ **Icons**: decorative icons mają aria-hidden="true"  
+✅ **Icons**: decorative icons mają aria-hidden="true"
 
 ## Performance
 
 🚀 **Memoization**: NavItem, MainNavigation, Breadcrumbs  
 🚀 **Lazy loading**: client:only="react" dla React islands  
 🚀 **TanStack Query caching**: 5 min stale time, background refetch  
-🚀 **Bundle size**: < 50kb gzipped dla layout bundle  
+🚀 **Bundle size**: < 50kb gzipped dla layout bundle
 
 ## Testing
 
@@ -393,26 +425,31 @@ Comprehensive test checklist dostępny w:
 `.ai/authenticated-layout-testing-checklist.md`
 
 Unit testy:
+
 - `src/lib/layout/__tests__/useActiveRoute.test.tsx`
 
 ## Troubleshooting
 
 ### "Nieskończone ładowanie"
+
 - Sprawdź czy API endpoints zwracają 200
 - Sprawdź console dla błędów
 - Verify TanStack Query DevTools
 
 ### "Redirect loop"
+
 - Sprawdź czy server-side guard działa poprawnie
 - Verify session w cookies/localStorage
 - Check middleware configuration
 
 ### "Layout nie responsywny"
+
 - Verify breakpoint (768px)
 - Check CSS classes (md:hidden, md:flex)
 - Inspect computed styles in DevTools
 
 ### "Network indicator nie działa"
+
 - Check if `navigator.onLine` is available
 - Verify event listeners (online/offline)
 - Test with DevTools Network throttling
@@ -431,4 +468,3 @@ Unit testy:
 
 Dokument tworzony podczas implementacji AuthenticatedLayout zgodnie z planem:
 `.ai/authenticated-layout-view-implementation-plan.md`
-

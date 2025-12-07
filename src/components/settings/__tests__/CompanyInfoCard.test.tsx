@@ -178,7 +178,7 @@ describe("CompanyInfoCard", () => {
 
       // Check that card title is rendered (this is a good accessibility check)
       expect(screen.getByText("Dane firmy")).toBeInTheDocument();
-      
+
       // Check that info rows are accessible
       expect(screen.getByTestId("info-row-Nazwa")).toBeInTheDocument();
       expect(screen.getByTestId("info-row-Identyfikator")).toBeInTheDocument();
@@ -186,4 +186,3 @@ describe("CompanyInfoCard", () => {
     });
   });
 });
-

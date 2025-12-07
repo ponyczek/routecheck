@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { RiskBadge } from "./RiskBadge";
 import type { ReportListItemDTO, Uuid } from "@/types";
 import { Eye, Clock } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 export interface ReportCardProps {
   report: ReportListItemDTO;
@@ -72,8 +71,7 @@ export function ReportCard({ report, onCardClick }: ReportCardProps) {
           <div className="flex items-center justify-between text-sm">
             <span className="text-muted-foreground">Opóźnienie:</span>
             <span className="flex items-center gap-1 text-orange-600 dark:text-orange-400 font-medium">
-              <Clock className="size-3" />
-              +{report.delayMinutes} min
+              <Clock className="size-3" />+{report.delayMinutes} min
             </span>
           </div>
         )}
@@ -102,4 +100,3 @@ export function ReportCard({ report, onCardClick }: ReportCardProps) {
     </Card>
   );
 }
-

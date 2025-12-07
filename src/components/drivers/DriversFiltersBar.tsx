@@ -1,17 +1,11 @@
-import { useEffect, useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Search } from 'lucide-react';
-import { useDebouncedValue } from '@/lib/drivers/useDebouncedValue';
-import type { DriversFiltersState } from '@/lib/drivers/types';
+import { useEffect, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Search } from "lucide-react";
+import { useDebouncedValue } from "@/lib/drivers/useDebouncedValue";
+import type { DriversFiltersState } from "@/lib/drivers/types";
 
 interface DriversFiltersBarProps {
   filters: DriversFiltersState;
@@ -26,11 +20,7 @@ interface DriversFiltersBarProps {
  * - Toggle "Pokaż usuniętych"
  * - Sortowanie (Nazwa A-Z, Nazwa Z-A, Najnowsi, Najstarsi)
  */
-export function DriversFiltersBar({
-  filters,
-  onFiltersChange,
-  resultsCount,
-}: DriversFiltersBarProps) {
+export function DriversFiltersBar({ filters, onFiltersChange, resultsCount }: DriversFiltersBarProps) {
   // Local state dla wyszukiwarki (bez debounce)
   const [searchValue, setSearchValue] = useState(filters.q);
   // Debounced wartość do wysłania do API
@@ -51,29 +41,21 @@ export function DriversFiltersBar({
   }, [filters.q]);
 
   const handleActiveFilterChange = (value: string) => {
-    if (value === 'all') {
+    if (value === "all") {
       onFiltersChange({ isActive: undefined });
-    } else if (value === 'active') {
+    } else if (value === "active") {
       onFiltersChange({ isActive: true });
-    } else if (value === 'inactive') {
+    } else if (value === "inactive") {
       onFiltersChange({ isActive: false });
     }
   };
 
   const handleSortChange = (value: string) => {
-    const [sortBy, sortDir] = value.split('-') as [
-      'name' | 'createdAt',
-      'asc' | 'desc',
-    ];
+    const [sortBy, sortDir] = value.split("-") as ["name" | "createdAt", "asc" | "desc"];
     onFiltersChange({ sortBy, sortDir });
   };
 
-  const activeFilterValue =
-    filters.isActive === undefined
-      ? 'all'
-      : filters.isActive
-        ? 'active'
-        : 'inactive';
+  const activeFilterValue = filters.isActive === undefined ? "all" : filters.isActive ? "active" : "inactive";
 
   const sortValue = `${filters.sortBy}-${filters.sortDir}`;
 
@@ -116,9 +98,7 @@ export function DriversFiltersBar({
             <Checkbox
               id="show-deleted"
               checked={filters.includeDeleted}
-              onCheckedChange={(checked) =>
-                onFiltersChange({ includeDeleted: checked === true })
-              }
+              onCheckedChange={(checked) => onFiltersChange({ includeDeleted: checked === true })}
             />
             <Label
               htmlFor="show-deleted"
@@ -160,6 +140,3 @@ export function DriversFiltersBar({
     </div>
   );
 }
-
-
-

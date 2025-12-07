@@ -9,7 +9,7 @@ interface UsePasswordStrengthReturn {
 
 /**
  * Hook for calculating password strength in real-time
- * 
+ *
  * Scoring system:
  * - Length (8+ chars): 25 points
  * - Length (12+ chars): 25 points
@@ -17,7 +17,7 @@ interface UsePasswordStrengthReturn {
  * - Uppercase letters: 15 points
  * - Numbers: 10 points
  * - Special characters: 10 points
- * 
+ *
  * Strength levels:
  * - Weak: < 40 points
  * - Medium: 40-69 points
@@ -58,4 +58,3 @@ export function usePasswordStrength(password: string): UsePasswordStrengthReturn
     return { strength, score, feedback };
   }, [password]);
 }
-

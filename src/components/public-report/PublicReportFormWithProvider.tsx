@@ -1,6 +1,6 @@
-import { QueryProvider } from '@/lib/query-client';
-import { Toaster } from '@/components/ui/sonner';
-import { PublicReportForm } from './PublicReportForm';
+import { QueryProvider } from "@/lib/query-client";
+import { Toaster } from "@/components/ui/sonner";
+import { PublicReportForm } from "./PublicReportForm";
 
 interface PublicReportFormWithProviderProps {
   token: string;
@@ -18,5 +18,3 @@ export function PublicReportFormWithProvider({ token }: PublicReportFormWithProv
     </QueryProvider>
   );
 }
-
-

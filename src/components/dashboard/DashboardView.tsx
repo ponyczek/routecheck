@@ -50,13 +50,10 @@ export function DashboardView({ timezone = "Europe/Warsaw", baseUrl = "" }: Dash
   const [isDetailSheetOpen, setIsDetailSheetOpen] = React.useState(false);
 
   // Handle navigation to report details (opens sheet instead of navigation)
-  const handleReportClick = React.useCallback(
-    (reportUuid: Uuid) => {
-      setSelectedReportId(reportUuid);
-      setIsDetailSheetOpen(true);
-    },
-    []
-  );
+  const handleReportClick = React.useCallback((reportUuid: Uuid) => {
+    setSelectedReportId(reportUuid);
+    setIsDetailSheetOpen(true);
+  }, []);
 
   // Handle close detail sheet
   const handleCloseDetailSheet = React.useCallback(() => {
@@ -79,7 +76,7 @@ export function DashboardView({ timezone = "Europe/Warsaw", baseUrl = "" }: Dash
 
   // Handle click on submitted reports metric (navigate to today's reports)
   const handleSubmittedReportsClick = React.useCallback(() => {
-    const today = new Date().toLocaleDateString('en-CA', { timeZone: timezone }); // YYYY-MM-DD
+    const today = new Date().toLocaleDateString("en-CA", { timeZone: timezone }); // YYYY-MM-DD
     window.location.href = `${baseUrl}/reports?from=${today}&to=${today}`;
   }, [baseUrl, timezone]);
 
@@ -93,7 +90,6 @@ export function DashboardView({ timezone = "Europe/Warsaw", baseUrl = "" }: Dash
     (riskLevel: ReportRiskLevel) => {
       // Option A: Navigate to reports page with filter
       window.location.href = `${baseUrl}/reports?riskLevel=${riskLevel}`;
-
     },
     [baseUrl]
   );
@@ -137,11 +133,7 @@ export function DashboardView({ timezone = "Europe/Warsaw", baseUrl = "" }: Dash
   return (
     <div className="space-y-8 pb-20">
       {/* Header */}
-      <DashboardHeader
-        lastUpdatedAt={data.lastUpdatedAt}
-        isRefreshing={isRefreshing}
-        onRefresh={handleRefresh}
-      />
+      <DashboardHeader lastUpdatedAt={data.lastUpdatedAt} isRefreshing={isRefreshing} onRefresh={handleRefresh} />
 
       {/* Metrics Grid */}
       <MetricsCardsGrid
@@ -167,15 +159,10 @@ export function DashboardView({ timezone = "Europe/Warsaw", baseUrl = "" }: Dash
       <PendingDriversSection pendingDrivers={data.pendingDrivers} onDriverClick={handleDriverClick} />
 
       {/* Report Detail Sheet */}
-      <ReportDetailSheet
-        reportId={selectedReportId}
-        isOpen={isDetailSheetOpen}
-        onClose={handleCloseDetailSheet}
-      />
+      <ReportDetailSheet reportId={selectedReportId} isOpen={isDetailSheetOpen} onClose={handleCloseDetailSheet} />
 
       {/* Connection Badge (fixed bottom-right) */}
       <ConnectionBadge isOnline={isOnline} refetchInterval={60_000} />
     </div>
   );
 }
-

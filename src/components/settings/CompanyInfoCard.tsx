@@ -29,6 +29,3 @@ export function CompanyInfoCard({ company }: CompanyInfoCardProps) {
     </Card>
   );
 }
-
-
-

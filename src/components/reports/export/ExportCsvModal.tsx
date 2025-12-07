@@ -1,26 +1,10 @@
 import { useState, useEffect } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetFooter,
-} from "@/components/ui/sheet";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Loader2, Download } from "lucide-react";
 import { useMediaQuery } from "@/lib/drivers/useMediaQuery";
-import type {
-  ExportCsvModalProps,
-  ExportCsvFormData,
-  ExportCsvValidationErrors,
-} from "@/lib/reports/export/types";
+import type { ExportCsvModalProps, ExportCsvFormData, ExportCsvValidationErrors } from "@/lib/reports/export/types";
 import { validateDateRange } from "@/lib/reports/export/validation";
 import { formatDateToIsoDateOnly } from "@/lib/reports/export/utils";
 import { useExportCsv } from "@/lib/reports/export/useExportCsv";
@@ -35,11 +19,7 @@ import { ExportProgressSection } from "./ExportProgressSection";
  * Validates date range (max 31 days, no future dates) and handles export process
  * Uses Dialog on desktop and Sheet on mobile for better UX
  */
-export function ExportCsvModal({
-  open,
-  onOpenChange,
-  companyName,
-}: ExportCsvModalProps) {
+export function ExportCsvModal({ open, onOpenChange, companyName }: ExportCsvModalProps) {
   // Detect mobile viewport
   const isMobile = useMediaQuery("(max-width: 768px)");
 
@@ -50,8 +30,7 @@ export function ExportCsvModal({
     includeTags: true,
   });
 
-  const [validationErrors, setValidationErrors] =
-    useState<ExportCsvValidationErrors>({});
+  const [validationErrors, setValidationErrors] = useState<ExportCsvValidationErrors>({});
 
   // Export hook
   const { exportCsv, isExporting } = useExportCsv();
@@ -85,10 +64,7 @@ export function ExportCsvModal({
   }, [formData.dateRange]);
 
   // Check if form is valid
-  const isFormValid =
-    formData.dateRange.from &&
-    formData.dateRange.to &&
-    !validationErrors.dateRange;
+  const isFormValid = formData.dateRange.from && formData.dateRange.to && !validationErrors.dateRange;
 
   const isSubmitDisabled = !isFormValid || isExporting;
 
@@ -154,12 +130,8 @@ export function ExportCsvModal({
       <ExportOptionsCheckboxes
         includeAi={formData.includeAi}
         includeTags={formData.includeTags}
-        onIncludeAiChange={(checked) =>
-          setFormData((prev) => ({ ...prev, includeAi: checked }))
-        }
-        onIncludeTagsChange={(checked) =>
-          setFormData((prev) => ({ ...prev, includeTags: checked }))
-        }
+        onIncludeAiChange={(checked) => setFormData((prev) => ({ ...prev, includeAi: checked }))}
+        onIncludeTagsChange={(checked) => setFormData((prev) => ({ ...prev, includeTags: checked }))}
         disabled={isExporting}
       />
 
@@ -172,19 +144,10 @@ export function ExportCsvModal({
   // Shared footer buttons
   const footerButtons = (
     <>
-      <Button
-        variant="outline"
-        onClick={handleCancel}
-        disabled={isExporting}
-        className="flex-1 sm:flex-none"
-      >
+      <Button variant="outline" onClick={handleCancel} disabled={isExporting} className="flex-1 sm:flex-none">
         Anuluj
       </Button>
-      <Button 
-        onClick={handleExport} 
-        disabled={isSubmitDisabled}
-        className="flex-1 sm:flex-none"
-      >
+      <Button onClick={handleExport} disabled={isSubmitDisabled} className="flex-1 sm:flex-none">
         {isExporting ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -211,9 +174,7 @@ export function ExportCsvModal({
 
           {formContent}
 
-          <SheetFooter className="flex-row gap-2">
-            {footerButtons}
-          </SheetFooter>
+          <SheetFooter className="flex-row gap-2">{footerButtons}</SheetFooter>
         </SheetContent>
       </Sheet>
     );
@@ -229,11 +190,8 @@ export function ExportCsvModal({
 
         {formContent}
 
-        <DialogFooter>
-          {footerButtons}
-        </DialogFooter>
+        <DialogFooter>{footerButtons}</DialogFooter>
       </DialogContent>
     </Dialog>
   );
 }
-

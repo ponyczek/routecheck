@@ -17,7 +17,7 @@ export function QueryProvider({ children }: { children: ReactNode }) {
             retry: 1,
           },
         },
-      }),
+      })
   );
 
   return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
@@ -37,4 +37,3 @@ export function createQueryClient() {
     },
   });
 }
-

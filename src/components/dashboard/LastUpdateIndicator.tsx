@@ -43,4 +43,3 @@ export function LastUpdateIndicator({ lastUpdatedAt, className }: LastUpdateIndi
     </span>
   );
 }
-

@@ -98,9 +98,12 @@ describe("useDashboard", () => {
 
     const { result } = renderHook(() => useDashboard(), { wrapper });
 
-    await waitFor(() => {
-      expect(result.current.isLoading).toBe(false);
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        expect(result.current.isLoading).toBe(false);
+      },
+      { timeout: 3000 }
+    );
 
     expect(result.current.error).toBeTruthy();
     expect(result.current.data).toBeUndefined();
@@ -162,9 +165,12 @@ describe("useDashboard", () => {
 
     const { result } = renderHook(() => useDashboard(), { wrapper });
 
-    await waitFor(() => {
-      expect(result.current.isLoading).toBe(false);
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        expect(result.current.isLoading).toBe(false);
+      },
+      { timeout: 3000 }
+    );
 
     // Note: isRefreshing is very fast in tests and hard to catch
     // This test verifies the refetch functionality works
@@ -174,4 +180,3 @@ describe("useDashboard", () => {
     expect(result.current.isRefreshing).toBe(false);
   });
 });
-

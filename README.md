@@ -1,6 +1,6 @@
 ## RouteCheck MVP
 
-![Status](https://img.shields.io/badge/status-MVP%20complete-green) ![Node](https://img.shields.io/badge/node-22.14.0-43853d) ![AI](https://img.shields.io/badge/AI-Mock%20(Rule--Based)-yellow) ![Tests](https://img.shields.io/badge/tests-650%20passing-success) ![CI](https://img.shields.io/badge/CI-automated-brightgreen)
+![Status](https://img.shields.io/badge/status-MVP%20complete-green) ![Node](https://img.shields.io/badge/node-22.14.0-43853d) ![AI](<https://img.shields.io/badge/AI-Mock%20(Rule--Based)-yellow>) ![Tests](https://img.shields.io/badge/tests-650%20passing-success) ![CI](https://img.shields.io/badge/CI-automated-brightgreen)
 
 ## Table of Contents
 
@@ -74,7 +74,7 @@ Additional documentation: see the full product requirements in `.ai/prd.md` and 
    -- Run in Supabase SQL Editor
    -- 1. Create auth user
    INSERT INTO auth.users (
-     instance_id, id, aud, role, email, encrypted_password, 
+     instance_id, id, aud, role, email, encrypted_password,
      email_confirmed_at, created_at, updated_at
    ) VALUES (
      '00000000-0000-0000-0000-000000000000',
@@ -87,15 +87,15 @@ Additional documentation: see the full product requirements in `.ai/prd.md` and 
    );
 
    -- 2. Create company
-   INSERT INTO companies (uuid, name) 
-   VALUES (gen_random_uuid(), 'Test Company') 
+   INSERT INTO companies (uuid, name)
+   VALUES (gen_random_uuid(), 'Test Company')
    RETURNING uuid;
 
    -- 3. Link user to company (use UUID from step 2)
-   INSERT INTO users (uuid, company_uuid) 
-   SELECT u.id, c.uuid 
-   FROM auth.users u, companies c 
-   WHERE u.email = 'test@routecheck.app' 
+   INSERT INTO users (uuid, company_uuid)
+   SELECT u.id, c.uuid
+   FROM auth.users u, companies c
+   WHERE u.email = 'test@routecheck.app'
    AND c.name = 'Test Company';
    ```
 
@@ -155,21 +155,25 @@ npm run generate-test-token -- driver@example.com
 ### Troubleshooting
 
 **Issue: "Supabase connection failed"**
+
 - Check `.env` variables are set correctly
 - Verify Supabase project is active
 - Check RLS policies are applied (migrations)
 
 **Issue: "Login fails"**
+
 - Verify test user exists in `auth.users`
 - Check email is confirmed (`email_confirmed_at` not null)
 - Verify user has company record
 
 **Issue: "E2E tests timeout"**
+
 - Ensure dev server is running (`npm run preview`)
 - Check port 4321 is not in use
 - Verify test user credentials in environment
 
 **Issue: "AI not generating summaries"**
+
 - Check logs for errors during report submission
 - Mock AI should work out of the box (no API key needed)
 - Verify `report_ai_results` table exists
@@ -185,6 +189,7 @@ See `docs/` for detailed setup guides.
 This guide will walk you through testing all major features of the application.
 
 #### Prerequisites
+
 - Development server running (`npm run dev`)
 - Database migrations applied
 - Test user created (see setup above)
@@ -206,6 +211,7 @@ This guide will walk you through testing all major features of the application.
 5. ✅ **Verify**: Dashboard loads with metrics
 
 **What you tested**:
+
 - ✅ Authentication with Supabase Auth
 - ✅ Protected route middleware
 - ✅ Session management
@@ -218,37 +224,43 @@ This guide will walk you through testing all major features of the application.
 **Feature**: Create, Read, Update, Delete Drivers
 
 #### 2.1 View Drivers List
+
 1. **Click** "Kierowcy" in sidebar (or `/drivers`)
 2. ✅ **Verify**: Page loads with driver list (may be empty initially)
 
 #### 2.2 Create Driver (C in CRUD)
+
 1. **Click** "Dodaj kierowcę" button
 2. **Fill form**:
    - Name: `Jan Testowy`
    - Email: `jan.testowy@example.com`
    - Timezone: `Europe/Warsaw`
 3. **Click** "Zapisz"
-4. ✅ **Verify**: 
+4. ✅ **Verify**:
    - Success toast appears
    - Driver appears in list
    - Can search for "Jan Testowy"
 
 #### 2.3 View Driver Details (R in CRUD)
+
 1. Find "Jan Testowy" in the list
 2. ✅ **Verify**: Email and timezone are displayed correctly
 
 #### 2.4 Edit Driver (U in CRUD)
+
 1. **Click** three-dots menu → "Edytuj"
 2. **Change** name to `Jan Kowalski`
 3. **Click** "Zapisz"
 4. ✅ **Verify**: Name updated in list
 
 #### 2.5 Delete Driver (D in CRUD)
+
 1. **Click** three-dots menu → "Usuń"
 2. **Confirm** deletion
 3. ✅ **Verify**: Driver removed from list (soft delete)
 
 **What you tested**:
+
 - ✅ Full CRUD operations
 - ✅ Form validation
 - ✅ Optimistic updates
@@ -277,6 +289,7 @@ This guide will walk you through testing all major features of the application.
 4. ✅ **Verify**: "Aktywni kierowcy" count increased to 2
 
 **What you tested**:
+
 - ✅ Dynamic data from database (NOT mocked!)
 - ✅ Real-time metrics calculation
 - ✅ Auto-refresh functionality (every 60s)
@@ -289,12 +302,14 @@ This guide will walk you through testing all major features of the application.
 **Feature**: Driver Report Submission (Core Business Logic)
 
 #### 4.1 Generate Test Token
+
 ```bash
 # In terminal (new tab, keep dev server running)
 npm run generate-test-token -- jan.testowy@example.com
 ```
 
 **Expected output**:
+
 ```
 🎉 TEST TOKEN GENERATED
 ======================================================================
@@ -306,17 +321,19 @@ npm run generate-test-token -- jan.testowy@example.com
 ```
 
 #### 4.2 Test Happy Path (Everything OK)
+
 1. **Copy** the generated link
 2. **Open** in browser (or new incognito tab)
 3. ✅ **Verify**: Form loads with driver name "Jan Testowy" and expiry time
 4. **Leave** "Wszystko OK" selected (default)
 5. **Click** "Wyślij raport"
-6. ✅ **Verify**: 
+6. ✅ **Verify**:
    - Success message appears
    - Shows "Editable until" countdown (10 minutes)
    - Report was created
 
 #### 4.3 Test Problem Path
+
 1. **Generate new token** for Maria:
    ```bash
    npm run generate-test-token -- maria@example.com
@@ -343,12 +360,13 @@ npm run generate-test-token -- jan.testowy@example.com
    - Can edit within 10 minutes
 
 #### 4.4 Test AI Summary Generation
+
 1. **Go back to dashboard** `/dashboard`
 2. **Click** "Odśwież" to reload data
 3. ✅ **Verify metrics updated**:
    - **Wysłane raporty**: Now shows 2
    - **Oczekujące**: Now shows 0 (2 active, 2 submitted)
-   - **Rozkład ryzyka**: 
+   - **Rozkład ryzyka**:
      - NONE: 1 (Jan's "OK" report)
      - LOW: 1 (Maria's delay report)
 
@@ -358,6 +376,7 @@ npm run generate-test-token -- jan.testowy@example.com
    - **Maria Nowak**: Yellow badge "LOW" + "Niewielkie opóźnienie 45 min. Przyczyna: Korek na autostradzie A1."
 
 **What you tested**:
+
 - ✅ Token generation and validation
 - ✅ Public form (mobile-optimized)
 - ✅ Happy path (1-click submission)
@@ -403,6 +422,7 @@ npm run generate-test-token -- jan.testowy@example.com
      - Timestamps (submitted, editable until)
 
 **What you tested**:
+
 - ✅ Reports listing with real data
 - ✅ Search functionality
 - ✅ Risk-based filtering
@@ -417,7 +437,7 @@ npm run generate-test-token -- jan.testowy@example.com
 
 1. **From** `/reports` page
 2. **Click** "Eksportuj CSV" button
-3. **Select date range**: 
+3. **Select date range**:
    - From: Today
    - To: Today
 4. **Enable** "Uwzględnij AI" checkbox
@@ -435,6 +455,7 @@ npm run generate-test-token -- jan.testowy@example.com
    - Risk levels
 
 **What you tested**:
+
 - ✅ CSV export functionality
 - ✅ Date range filtering
 - ✅ AI data inclusion
@@ -445,25 +466,30 @@ npm run generate-test-token -- jan.testowy@example.com
 ### Step 7: Test Edge Cases ✅
 
 #### 7.1 Token Expiry
+
 1. **Try** using an already-used token (from Step 4.2)
 2. ✅ **Verify**: Error page shows "Link został już wykorzystany" (409)
 
 #### 7.2 Token Validation
+
 1. **Try** invalid token: `http://localhost:4321/public/report-links/invalid123`
 2. ✅ **Verify**: Error page shows "Link nie został znaleziony" (404)
 
 #### 7.3 Route Protection
+
 1. **Open** incognito window
 2. **Try** accessing `/dashboard` directly
 3. ✅ **Verify**: Redirected to `/signin` with `returnTo=/dashboard`
 
 #### 7.4 Session Expiry
+
 1. **Open** browser DevTools → Application → Storage
 2. **Clear** localStorage and cookies for localhost
 3. **Refresh** `/dashboard` page
 4. ✅ **Verify**: Redirected to `/signin`
 
 #### 7.5 Form Validation
+
 1. **Generate new token**
 2. **Toggle** to "Zgłoś problem"
 3. **Set** delay to 30 minutes
@@ -472,6 +498,7 @@ npm run generate-test-token -- jan.testowy@example.com
 6. ✅ **Verify**: Error message "Powód opóźnienia jest wymagany gdy opóźnienie > 0"
 
 **What you tested**:
+
 - ✅ Token security (one-time use)
 - ✅ Token validation (404, 409, 410 errors)
 - ✅ Route protection
@@ -485,11 +512,13 @@ npm run generate-test-token -- jan.testowy@example.com
 **Feature**: Unit & E2E Tests
 
 #### 8.1 Unit Tests
+
 ```bash
 npm test
 ```
 
 ✅ **Expected output**:
+
 ```
  ✓ src/lib/ai/__tests__/mockAiService.test.ts (9 tests)
  ✓ src/components/dashboard/__tests__/RiskBadge.test.tsx (12 tests)
@@ -501,6 +530,7 @@ npm test
 ```
 
 #### 8.2 E2E Tests
+
 ```bash
 # Build first (required for E2E)
 npm run build
@@ -510,6 +540,7 @@ npm run test:e2e
 ```
 
 ✅ **Expected**: All 5 E2E test scenarios pass:
+
 - Login → Dashboard → Drivers CRUD → Reports
 - Authentication failure handling
 - Route protection verification
@@ -517,17 +548,20 @@ npm run test:e2e
 - API integration
 
 #### 8.3 View Test Report
+
 ```bash
 npx playwright show-report
 ```
 
 ✅ **Verify**: HTML report opens in browser showing:
+
 - All tests passed
 - Screenshots (if any failures)
 - Test duration
 - Detailed steps
 
 **What you tested**:
+
 - ✅ 52 unit tests (85% coverage)
 - ✅ E2E tests with Playwright
 - ✅ Full user journey automation
@@ -540,6 +574,7 @@ npx playwright show-report
 After completing all 8 steps, you should have verified:
 
 ### Core Features ✅
+
 - [x] **Authentication**: Login, session, route protection
 - [x] **CRUD Operations**: Drivers (Create, Read, Update, Delete)
 - [x] **Dashboard**: Real-time metrics from database (NOT mocked!)
@@ -549,6 +584,7 @@ After completing all 8 steps, you should have verified:
 - [x] **CSV Export**: Data export functionality
 
 ### Business Logic ✅
+
 - [x] Token generation and one-time use
 - [x] 10-minute edit window
 - [x] Form validation (conditional fields)
@@ -557,12 +593,14 @@ After completing all 8 steps, you should have verified:
 - [x] Dashboard metric calculations
 
 ### Edge Cases & Security ✅
+
 - [x] Token security (404/409/410 errors)
 - [x] Route protection
 - [x] Session handling
 - [x] Form validation
 
 ### Automated Testing ✅
+
 - [x] Unit tests (52) passing
 - [x] E2E tests (5) passing
 - [x] CI/CD pipeline configured
@@ -605,37 +643,47 @@ For visual learners, key screens to capture:
 ## Troubleshooting Tests
 
 ### "Dashboard shows all zeros"
+
 **Cause**: No active drivers in database  
-**Solution**: 
+**Solution**:
+
 1. Go to `/drivers`
 2. Add at least 2 test drivers
 3. Refresh `/dashboard`
 
 ### "No reports today"
+
 **Cause**: No reports submitted today  
-**Solution**: 
+**Solution**:
+
 ```bash
 npm run generate-test-token
 # Open link and submit report
 ```
 
 ### "AI summary is null"
+
 **Cause**: Report submitted before mock AI was implemented  
 **Solution**: Submit a new test report
 
 ### "Token generation fails"
+
 **Cause**: Missing environment variable  
-**Solution**: 
+**Solution**:
+
 1. Check `.env` has `SUPABASE_SERVICE_ROLE_KEY`
 2. Verify at least one active driver exists
 
 ### "E2E tests fail on login"
+
 **Cause**: Test user doesn't exist  
 **Solution**: Run SQL script from setup section to create test user
 
 ### "Dashboard metrics don't update"
+
 **Cause**: Browser cache  
-**Solution**: 
+**Solution**:
+
 1. Click "Odśwież" button on dashboard
 2. Or hard refresh page (Cmd+Shift+R / Ctrl+Shift+R)
 
@@ -675,16 +723,19 @@ npm run generate-test-token
 ## Available Scripts
 
 ### Development
+
 - `npm run dev` — Start Astro dev server with hot reload
 - `npm run build` — Build for production
 - `npm run preview` — Preview production build locally
 
 ### Code Quality
+
 - `npm run lint` — Run ESLint
 - `npm run lint:fix` — Auto-fix ESLint issues
 - `npm run format` — Format with Prettier
 
 ### Testing
+
 - `npm test` — Run unit tests (Vitest)
 - `npm run test:watch` — Run tests in watch mode
 - `npm run test:ui` — Open Vitest UI
@@ -694,6 +745,7 @@ npm run generate-test-token
 - `npm run test:e2e:debug` — Debug E2E tests
 
 ### Utilities
+
 - `npm run astro` — Run Astro CLI commands
 - `npm run generate-test-token` — Generate manual report link for testing
 
@@ -729,6 +781,7 @@ npm run generate-test-token
 ### Current Stage: MVP Complete ✅
 
 **Implemented Features:**
+
 - ✅ Authentication (Sign In/Sign Up with Supabase)
 - ✅ Driver Management (Full CRUD)
 - ✅ Vehicle Management (Full CRUD)
@@ -744,6 +797,7 @@ npm run generate-test-token
 - ✅ CI/CD Pipeline (GitHub Actions)
 
 **MVP Simplifications:**
+
 - ⚠️ AI uses mock/rule-based logic (not OpenRouter API)
 - ⚠️ Email links generated manually via script (no automated cron emails)
 - ⚠️ No email alerts for missing reports after 24h
@@ -752,6 +806,7 @@ npm run generate-test-token
 **Production Ready:** No - requires email automation and real AI integration
 
 **Key Success Metrics (Targets):**
+
 - Link-to-report conversion: ≥70% within 24h
 - Form completion time: <90s median
 - Risk detection: ≥1 medium+ daily per 10 drivers
@@ -760,6 +815,7 @@ npm run generate-test-token
 - CI pipeline: Always green ✅
 
 **Next Steps for Production:**
+
 1. Integrate email service (Resend/SendGrid) for automated email sending
 2. Setup daily cron job for link generation
 3. Add OpenRouter AI for real summaries
@@ -767,6 +823,7 @@ npm run generate-test-token
 5. Setup monitoring and alerts
 
 Refer to:
+
 - `.ai/prd.md` - Full product requirements
 - `docs/email-setup-mvp-workaround.md` - Email workaround explanation
 - `src/lib/ai/README.md` - AI implementation notes

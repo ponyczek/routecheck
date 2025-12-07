@@ -23,7 +23,7 @@ interface SignUpFormProps {
 
 /**
  * Sign up form with validation and password strength indicator
- * 
+ *
  * Features:
  * - Company name, email, password, and confirm password fields
  * - Real-time validation with Zod
@@ -209,5 +209,3 @@ export function SignUpForm({ returnTo, onSuccess, onError, supabaseUrl, supabase
     </form>
   );
 }
-
-

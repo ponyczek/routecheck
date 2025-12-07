@@ -44,9 +44,7 @@ export function ReportSummaryHeader({ report }: ReportSummaryHeaderProps) {
         <div className="text-sm text-muted-foreground">Kierowca</div>
         <div>
           <div className="font-medium">{driver?.name || "Nieznany kierowca"}</div>
-          {driver && (
-            <div className="text-sm text-muted-foreground">{driver.email}</div>
-          )}
+          {driver && <div className="text-sm text-muted-foreground">{driver.email}</div>}
         </div>
       </div>
 
@@ -73,13 +71,10 @@ export function ReportSummaryHeader({ report }: ReportSummaryHeaderProps) {
             <span className="font-semibold">Opóźnienie: {report.delayMinutes} minut</span>
           </div>
           {report.delayReason && (
-            <div className="text-sm text-orange-600 dark:text-orange-300 mt-1">
-              {report.delayReason}
-            </div>
+            <div className="text-sm text-orange-600 dark:text-orange-300 mt-1">{report.delayReason}</div>
           )}
         </div>
       )}
     </div>
   );
 }
-

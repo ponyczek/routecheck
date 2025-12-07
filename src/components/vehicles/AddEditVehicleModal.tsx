@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -6,18 +6,18 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
-import { VehicleForm } from './VehicleForm';
-import { useCreateVehicle } from '@/lib/vehicles/useCreateVehicle';
-import { useUpdateVehicle } from '@/lib/vehicles/useUpdateVehicle';
-import type { VehicleDTO } from '@/types';
-import type { VehicleFormData } from '@/lib/vehicles/validation';
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
+import { VehicleForm } from "./VehicleForm";
+import { useCreateVehicle } from "@/lib/vehicles/useCreateVehicle";
+import { useUpdateVehicle } from "@/lib/vehicles/useUpdateVehicle";
+import type { VehicleDTO } from "@/types";
+import type { VehicleFormData } from "@/lib/vehicles/validation";
 
 interface AddEditVehicleModalProps {
   isOpen: boolean;
-  mode: 'add' | 'edit';
+  mode: "add" | "edit";
   vehicle?: VehicleDTO;
   onClose: () => void;
   onSuccess: () => void;
@@ -30,13 +30,7 @@ interface AddEditVehicleModalProps {
  * - Walidacja z Zod
  * - Optimistic updates przy edycji
  */
-export function AddEditVehicleModal({
-  isOpen,
-  mode,
-  vehicle,
-  onClose,
-  onSuccess,
-}: AddEditVehicleModalProps) {
+export function AddEditVehicleModal({ isOpen, mode, vehicle, onClose, onSuccess }: AddEditVehicleModalProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const createMutation = useCreateVehicle();
   const updateMutation = useUpdateVehicle();
@@ -52,7 +46,7 @@ export function AddEditVehicleModal({
   }, [isOpen]);
 
   const handleSubmit = async (data: VehicleFormData) => {
-    if (mode === 'add') {
+    if (mode === "add") {
       await createMutation.mutateAsync({
         registrationNumber: data.registrationNumber,
         vin: data.vin,
@@ -60,7 +54,7 @@ export function AddEditVehicleModal({
       });
       onSuccess();
       onClose();
-    } else if (mode === 'edit' && vehicle) {
+    } else if (mode === "edit" && vehicle) {
       await updateMutation.mutateAsync({
         uuid: vehicle.uuid,
         data: {
@@ -76,7 +70,7 @@ export function AddEditVehicleModal({
 
   const handleFormSubmit = () => {
     // Trigger submit na formularzu wewnątrz (form jest w VehicleForm)
-    const form = formRef.current?.querySelector('form');
+    const form = formRef.current?.querySelector("form");
     if (form) {
       form.requestSubmit();
     }
@@ -94,20 +88,16 @@ export function AddEditVehicleModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>{mode === 'add' ? 'Dodaj pojazd' : 'Edytuj pojazd'}</DialogTitle>
+          <DialogTitle>{mode === "add" ? "Dodaj pojazd" : "Edytuj pojazd"}</DialogTitle>
           <DialogDescription>
-            {mode === 'add'
-              ? 'Dodaj nowy pojazd do systemu. Pojazd będzie dostępny do przypisania do kierowców.'
-              : 'Edytuj dane pojazdu. Zmiany zostaną zapisane natychmiast.'}
+            {mode === "add"
+              ? "Dodaj nowy pojazd do systemu. Pojazd będzie dostępny do przypisania do kierowców."
+              : "Edytuj dane pojazdu. Zmiany zostaną zapisane natychmiast."}
           </DialogDescription>
         </DialogHeader>
 
         <div ref={formRef}>
-          <VehicleForm
-            defaultValues={defaultValues}
-            onSubmit={handleSubmit}
-            isSubmitting={isSubmitting}
-          />
+          <VehicleForm defaultValues={defaultValues} onSubmit={handleSubmit} isSubmitting={isSubmitting} />
         </div>
 
         <DialogFooter>
@@ -123,5 +113,3 @@ export function AddEditVehicleModal({
     </Dialog>
   );
 }
-
-

@@ -10,5 +10,3 @@ export const editCompanyNameSchema = z.object({
 });
 
 export type EditCompanyNameFormValues = z.infer<typeof editCompanyNameSchema>;
-
-

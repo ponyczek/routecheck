@@ -45,13 +45,10 @@ export function ReportsTable({ reports, onRowClick }: ReportsTableProps) {
               </td>
             </TableRow>
           ) : (
-            reports.map((report) => (
-              <ReportRow key={report.uuid} report={report} onRowClick={onRowClick} />
-            ))
+            reports.map((report) => <ReportRow key={report.uuid} report={report} onRowClick={onRowClick} />)
           )}
         </TableBody>
       </Table>
     </div>
   );
 }
-

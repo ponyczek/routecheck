@@ -1,8 +1,8 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { driversService } from '@/lib/services/driversService';
-import { driversKeys } from './queryKeys';
-import { toast } from 'sonner';
-import type { UpdateDriverCommand, DriverDTO, DriversListResponseDTO } from '@/types';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { driversService } from "@/lib/services/driversService";
+import { driversKeys } from "./queryKeys";
+import { toast } from "sonner";
+import type { UpdateDriverCommand, DriverDTO, DriversListResponseDTO } from "@/types";
 
 interface UpdateDriverVariables {
   uuid: string;
@@ -18,7 +18,7 @@ export function useUpdateDriver() {
 
   return useMutation({
     mutationFn: ({ uuid, data }: UpdateDriverVariables) => driversService.update(uuid, data),
-    
+
     // Optimistic update - aktualizuj UI natychmiast przed otrzymaniem odpowiedzi
     onMutate: async ({ uuid, data }) => {
       // Anuluj wszystkie pending queries dla list kierowców
@@ -28,23 +28,18 @@ export function useUpdateDriver() {
       const previousData = queryClient.getQueriesData({ queryKey: driversKeys.lists() });
 
       // Optimistically update wszystkie listy kierowców
-      queryClient.setQueriesData<DriversListResponseDTO>(
-        { queryKey: driversKeys.lists() },
-        (old) => {
-          if (!old) return old;
-          return {
-            ...old,
-            items: old.items.map((driver) =>
-              driver.uuid === uuid ? { ...driver, ...data } : driver
-            ),
-          };
-        }
-      );
+      queryClient.setQueriesData<DriversListResponseDTO>({ queryKey: driversKeys.lists() }, (old) => {
+        if (!old) return old;
+        return {
+          ...old,
+          items: old.items.map((driver) => (driver.uuid === uuid ? { ...driver, ...data } : driver)),
+        };
+      });
 
       // Zwróć context z poprzednim stanem
       return { previousData };
     },
-    
+
     // Rollback w przypadku błędu
     onError: (error: any, _variables, context) => {
       // Przywróć poprzedni stan
@@ -56,26 +51,23 @@ export function useUpdateDriver() {
 
       // Obsługa błędów
       if (error.response?.status === 409) {
-        toast.error('Kierowca z tym adresem e-mail już istnieje');
+        toast.error("Kierowca z tym adresem e-mail już istnieje");
       } else if (error.response?.status === 404) {
-        toast.error('Kierowca nie został znaleziony');
+        toast.error("Kierowca nie został znaleziony");
       } else if (error.response?.status === 400) {
-        const message = error.response?.data?.message || 'Nieprawidłowe dane';
+        const message = error.response?.data?.message || "Nieprawidłowe dane";
         toast.error(message);
       } else if (error.response?.status === 403) {
-        toast.error('Brak uprawnień do edycji kierowcy');
+        toast.error("Brak uprawnień do edycji kierowcy");
       } else {
-        toast.error('Nie udało się zaktualizować kierowcy');
+        toast.error("Nie udało się zaktualizować kierowcy");
       }
     },
-    
+
     // Po sukcesie - invalidate aby pobrać aktualne dane z serwera
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: driversKeys.lists() });
-      toast.success('Kierowca został zaktualizowany');
+      toast.success("Kierowca został zaktualizowany");
     },
   });
 }
-
-
-

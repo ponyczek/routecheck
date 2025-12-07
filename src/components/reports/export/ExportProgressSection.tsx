@@ -5,9 +5,7 @@ import type { ExportProgressSectionProps } from "@/lib/reports/export/types";
  * Progress section displayed during CSV export
  * Shows indeterminate progress bar and status message
  */
-export function ExportProgressSection({
-  isExporting,
-}: ExportProgressSectionProps) {
+export function ExportProgressSection({ isExporting }: ExportProgressSectionProps) {
   if (!isExporting) return null;
 
   return (
@@ -17,6 +15,3 @@ export function ExportProgressSection({
     </div>
   );
 }
-
-
-

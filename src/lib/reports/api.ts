@@ -47,9 +47,7 @@ export interface ReportsQueryParams {
  * @param params - Query parameters for filtering and pagination
  * @returns Paginated list of reports
  */
-export async function fetchReportsList(
-  params: ReportsQueryParams
-): Promise<ReportsListResponseDTO> {
+export async function fetchReportsList(params: ReportsQueryParams): Promise<ReportsListResponseDTO> {
   const token = await getSupabaseToken();
   const queryParams = new URLSearchParams();
 
@@ -85,10 +83,7 @@ export async function fetchReportsList(
       throw new Error("UNAUTHORIZED");
     }
     const errorData = await response.json().catch(() => ({}));
-    throw new Error(
-      `Failed to fetch reports: ${response.status} ${response.statusText}`,
-      { cause: errorData }
-    );
+    throw new Error(`Failed to fetch reports: ${response.status} ${response.statusText}`, { cause: errorData });
   }
 
   return response.json();
@@ -101,11 +96,7 @@ export async function fetchReportsList(
  * @param includeTags - Include risk tags
  * @returns Report detail DTO
  */
-export async function fetchReportById(
-  uuid: string,
-  includeAi = true,
-  includeTags = true
-): Promise<ReportDetailDTO> {
+export async function fetchReportById(uuid: string, includeAi = true, includeTags = true): Promise<ReportDetailDTO> {
   const token = await getSupabaseToken();
   const queryParams = new URLSearchParams();
 
@@ -126,10 +117,7 @@ export async function fetchReportById(
       throw new Error("NOT_FOUND");
     }
     const errorData = await response.json().catch(() => ({}));
-    throw new Error(
-      `Failed to fetch report: ${response.status} ${response.statusText}`,
-      { cause: errorData }
-    );
+    throw new Error(`Failed to fetch report: ${response.status} ${response.statusText}`, { cause: errorData });
   }
 
   return response.json();
@@ -140,9 +128,7 @@ export async function fetchReportById(
  * @param data - Report creation command
  * @returns Created report detail DTO
  */
-export async function createReport(
-  data: CreateReportCommand
-): Promise<ReportDetailDTO> {
+export async function createReport(data: CreateReportCommand): Promise<ReportDetailDTO> {
   const token = await getSupabaseToken();
 
   const response = await fetch("/api/reports", {
@@ -162,10 +148,7 @@ export async function createReport(
       throw new Error("DUPLICATE");
     }
     const errorData = await response.json().catch(() => ({}));
-    throw new Error(
-      `Failed to create report: ${response.status} ${response.statusText}`,
-      { cause: errorData }
-    );
+    throw new Error(`Failed to create report: ${response.status} ${response.statusText}`, { cause: errorData });
   }
 
   return response.json();
@@ -177,10 +160,7 @@ export async function createReport(
  * @param data - Report update command
  * @returns Updated report detail DTO
  */
-export async function updateReport(
-  uuid: string,
-  data: UpdateReportCommand
-): Promise<ReportDetailDTO> {
+export async function updateReport(uuid: string, data: UpdateReportCommand): Promise<ReportDetailDTO> {
   const token = await getSupabaseToken();
 
   const response = await fetch(`/api/reports/${uuid}`, {
@@ -200,10 +180,7 @@ export async function updateReport(
       throw new Error("NOT_FOUND");
     }
     const errorData = await response.json().catch(() => ({}));
-    throw new Error(
-      `Failed to update report: ${response.status} ${response.statusText}`,
-      { cause: errorData }
-    );
+    throw new Error(`Failed to update report: ${response.status} ${response.statusText}`, { cause: errorData });
   }
 
   return response.json();
@@ -231,10 +208,7 @@ export async function deleteReport(uuid: string): Promise<void> {
       throw new Error("NOT_FOUND");
     }
     const errorData = await response.json().catch(() => ({}));
-    throw new Error(
-      `Failed to delete report: ${response.status} ${response.statusText}`,
-      { cause: errorData }
-    );
+    throw new Error(`Failed to delete report: ${response.status} ${response.statusText}`, { cause: errorData });
   }
 }
 
@@ -246,12 +220,7 @@ export async function deleteReport(uuid: string): Promise<void> {
  * @param includeTags - Include risk tags columns
  * @returns Blob containing CSV data
  */
-export async function exportReportsCsv(
-  from: string,
-  to: string,
-  includeAi = true,
-  includeTags = true
-): Promise<Blob> {
+export async function exportReportsCsv(from: string, to: string, includeAi = true, includeTags = true): Promise<Blob> {
   const token = await getSupabaseToken();
   const queryParams = new URLSearchParams();
 
@@ -277,10 +246,7 @@ export async function exportReportsCsv(
       throw new Error("RANGE_TOO_LARGE");
     }
     const errorData = await response.json().catch(() => ({}));
-    throw new Error(
-      `Failed to export reports: ${response.status} ${response.statusText}`,
-      { cause: errorData }
-    );
+    throw new Error(`Failed to export reports: ${response.status} ${response.statusText}`, { cause: errorData });
   }
 
   return response.blob();
@@ -321,4 +287,3 @@ export function getErrorMessage(error: unknown): string {
   }
   return "Wystąpił nieoczekiwany błąd.";
 }
-

@@ -7,6 +7,7 @@ This directory contains the **mock AI service** used in the MVP. It provides rul
 ## Why Mock AI?
 
 For the MVP/course deadline, implementing a full AI integration would take too long and require:
+
 - OpenRouter API account and credits
 - Complex prompt engineering
 - Error handling for API rate limits
@@ -14,6 +15,7 @@ For the MVP/course deadline, implementing a full AI integration would take too l
 - Cost management
 
 The mock AI achieves the **same functional outcome** for demonstration purposes:
+
 - ✅ Generates Polish summaries
 - ✅ Classifies risk levels (NONE/LOW/MEDIUM/HIGH)
 - ✅ Adds relevant tags
@@ -27,22 +29,24 @@ The mock AI achieves the **same functional outcome** for demonstration purposes:
 ```typescript
 // Example: Delay analysis
 if (delayMinutes >= 120) {
-  riskLevel = 'HIGH';
-  summary = 'Znaczące opóźnienie...';
+  riskLevel = "HIGH";
+  summary = "Znaczące opóźnienie...";
 } else if (delayMinutes >= 60) {
-  riskLevel = 'MEDIUM';
-  summary = 'Opóźnienie...';
+  riskLevel = "MEDIUM";
+  summary = "Opóźnienie...";
 }
 ```
 
 ### Risk Upgrade Logic
 
 Risk levels are upgraded (never downgraded) as more issues are found:
+
 ```
 NONE → LOW → MEDIUM → HIGH
 ```
 
 Example:
+
 - Start with LOW (minor delay)
 - Find cargo damage → upgrade to MEDIUM
 - Find vehicle breakdown → upgrade to HIGH
@@ -50,6 +54,7 @@ Example:
 ### Tag Generation
 
 Tags are automatically added based on content analysis:
+
 - `delay` - Any delay > 0
 - `traffic` - Keywords: "korek", "ruch"
 - `breakdown` - Keywords: "awaria", "usterka"
@@ -64,6 +69,7 @@ Tags are automatically added based on content analysis:
 ### Automatic Processing
 
 AI processing is triggered automatically when:
+
 1. Driver submits report via public form
 2. Dispatcher creates manual report
 
@@ -75,6 +81,7 @@ await scheduleAiReprocess(reportUuid);
 ### Manual Reprocessing
 
 Can be triggered via API:
+
 ```bash
 POST /api/reports/{uuid}/ai/reprocess
 ```
@@ -82,6 +89,7 @@ POST /api/reports/{uuid}/ai/reprocess
 ## Database Schema
 
 Results stored in `report_ai_results` table:
+
 ```sql
 CREATE TABLE report_ai_results (
   report_uuid uuid,
@@ -99,6 +107,7 @@ Risk level also denormalized to `reports.risk_level` for fast filtering.
 ## Testing
 
 Unit tests cover all classification rules:
+
 ```bash
 npm test -- src/lib/ai
 ```
@@ -110,6 +119,7 @@ See `__tests__/mockAiService.test.ts` for examples.
 To replace with real AI (OpenRouter):
 
 ### 1. Add Environment Variables
+
 ```bash
 OPENROUTER_API_KEY=sk-or-...
 OPENROUTER_MODEL=anthropic/claude-3-haiku
@@ -117,24 +127,27 @@ USE_MOCK_AI=false
 ```
 
 ### 2. Create Real AI Service
+
 ```typescript
 // src/lib/ai/openrouterService.ts
 export async function generateAISummaryWithAI(report: ReportForAI): Promise<AIResult> {
-  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-    method: 'POST',
+  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
     headers: {
-      'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
-      'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: 'anthropic/claude-3-haiku',
-      messages: [{
-        role: 'user',
-        content: buildPrompt(report),
-      }],
+      model: "anthropic/claude-3-haiku",
+      messages: [
+        {
+          role: "user",
+          content: buildPrompt(report),
+        },
+      ],
     }),
   });
-  
+
   // Parse response and return AIResult
 }
 
@@ -148,10 +161,10 @@ Jesteś ekspertem od analiz transportowych. Przeanalizuj raport kierowcy i podaj
 Raport:
 - Status: ${report.routeStatus}
 - Opóźnienie: ${report.delayMinutes} min
-${report.delayReason ? `- Powód: ${report.delayReason}` : ''}
-${report.cargoDamageDescription ? `- Uszkodzenie ładunku: ${report.cargoDamageDescription}` : ''}
-${report.vehicleDamageDescription ? `- Usterka pojazdu: ${report.vehicleDamageDescription}` : ''}
-${report.nextDayBlockers ? `- Blokery: ${report.nextDayBlockers}` : ''}
+${report.delayReason ? `- Powód: ${report.delayReason}` : ""}
+${report.cargoDamageDescription ? `- Uszkodzenie ładunku: ${report.cargoDamageDescription}` : ""}
+${report.vehicleDamageDescription ? `- Usterka pojazdu: ${report.vehicleDamageDescription}` : ""}
+${report.nextDayBlockers ? `- Blokery: ${report.nextDayBlockers}` : ""}
 
 Odpowiedź w formacie JSON:
 {
@@ -164,20 +177,22 @@ Odpowiedź w formacie JSON:
 ```
 
 ### 3. Update Service Selection
+
 ```typescript
 // src/lib/services/reportsService.ts
 async function processReportAI(reportUuid: Uuid): Promise<void> {
-  const useRealAI = process.env.OPENROUTER_API_KEY && process.env.USE_MOCK_AI !== 'true';
-  
+  const useRealAI = process.env.OPENROUTER_API_KEY && process.env.USE_MOCK_AI !== "true";
+
   const { generateAISummary } = useRealAI
-    ? await import('@/lib/ai/openrouterService')
-    : await import('@/lib/ai/mockAiService');
-  
+    ? await import("@/lib/ai/openrouterService")
+    : await import("@/lib/ai/mockAiService");
+
   // Rest of the code stays the same
 }
 ```
 
 ### 4. Add Error Handling
+
 - Retry logic for API failures
 - Fallback to mock on errors
 - Rate limit handling
@@ -186,15 +201,17 @@ async function processReportAI(reportUuid: Uuid): Promise<void> {
 ## Configuration
 
 Current behavior controlled by environment:
+
 ```typescript
 export function isUsingMockAI(): boolean {
-  return !process.env.OPENROUTER_API_KEY || process.env.USE_MOCK_AI === 'true';
+  return !process.env.OPENROUTER_API_KEY || process.env.USE_MOCK_AI === "true";
 }
 ```
 
 ## Performance
 
 Mock AI is actually **faster** than real AI:
+
 - Mock: 50-200ms (simulated delay)
 - Real AI: 1-3s (API round trip)
 
@@ -203,10 +220,10 @@ This is acceptable for MVP and better for UX!
 ## Limitations
 
 Mock AI cannot:
+
 - Understand nuanced language
 - Learn from feedback
 - Handle edge cases beyond rules
 - Provide reasoning
 
 For MVP purposes, this is **acceptable**. Real AI can be added post-launch.
-

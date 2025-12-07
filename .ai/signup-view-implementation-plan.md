@@ -13,6 +13,7 @@ Widok jest zoptymalizowany pod kątem UX i dostępności, oferuje walidację inl
 **Dostępność:** Publiczny widok (bez wymagania uwierzytelnienia). Jeśli użytkownik jest już zalogowany, powinien być automatycznie przekierowany do dashboard.
 
 **Query params (opcjonalne):**
+
 - `returnTo` – URL do przekierowania po pomyślnej rejestracji (np. `/dashboard`)
 
 ## 3. Struktura komponentów
@@ -39,6 +40,7 @@ signup.astro (Astro Page)
 **Opis:** Główny kontener widoku rejestracji. Odpowiada za zarządzanie stanem błędów, komunikatów i koordynację między podkomponentami. Zawiera logikę obsługi sukcesu i błędów rejestracji.
 
 **Główne elementy:**
+
 - `<Card>` z Shadcn UI jako kontener wizualny
 - `<CardHeader>` z tytułem "Załóż konto firmowe" i opisem
 - Warunkowy `<SessionExpiryNotice>` jeśli przekazano `sessionExpiryReason`
@@ -47,17 +49,21 @@ signup.astro (Astro Page)
 - `<SignUpFooterLinks>` – linki nawigacyjne
 
 **Obsługiwane zdarzenia:**
+
 - `onSuccess` – callback po pomyślnej rejestracji, wykonuje redirect przez `window.location.href`
 - `onError` – callback przy błędzie, aktualizuje stan `errorState`
 
 **Warunki walidacji:**
+
 - N/A – ten komponent deleguje walidację do `SignUpForm`
 
 **Typy:**
+
 - Props: `SignUpFormCardProps`
 - State: `errorState: AuthErrorState | null`
 
 **Propsy:**
+
 ```typescript
 interface SignUpFormCardProps {
   returnTo?: string;
@@ -74,6 +80,7 @@ interface SignUpFormCardProps {
 **Opis:** Formularz rejestracji z czterema polami (nazwa firmy, email, hasło, potwierdzenie hasła). Wykorzystuje React Hook Form z walidacją Zod. Pokazuje błędy inline dla każdego pola oraz wskaźnik siły hasła dla pola hasło. Obsługuje toggle widoczności hasła.
 
 **Główne elementy:**
+
 - `<form>` z `handleSubmit` z React Hook Form
 - Pole nazwa firmy: `<Label>` + `<Input>`
 - Pole email: `<Label>` + `<Input type="email">`
@@ -83,12 +90,14 @@ interface SignUpFormCardProps {
 - `<div className="sr-only">` z `role="status"` dla ogłoszeń screen readera
 
 **Obsługiwane zdarzenia:**
+
 - `onSubmit` – wywołuje `signUp` z hooka `useSignUp`
 - `onClick` na przyciskach toggle – zmienia stan `showPassword` / `showConfirmPassword`
 - `onChange` / `onBlur` na polach – walidacja React Hook Form
 
 **Warunki walidacji:**
 Walidacja według schematu `signUpFormSchema`:
+
 1. **companyName:**
    - Wymagane (min. 1 znak)
    - Min. 2 znaki
@@ -109,10 +118,12 @@ Walidacja według schematu `signUpFormSchema`:
    - Musi być identyczne z polem `password` (refine w Zod)
 
 **Typy:**
+
 - Props: `SignUpFormProps`
 - Form values: `SignUpFormValues`
 
 **Propsy:**
+
 ```typescript
 interface SignUpFormProps {
   returnTo?: string;
@@ -130,21 +141,26 @@ interface SignUpFormProps {
 **Opis:** Komponent wizualizujący siłę hasła w czasie rzeczywistym. Pokazuje pasek postępu i etykietę tekstową ("Słabe", "Średnie", "Silne"). Wykorzystuje hook `usePasswordStrength` do obliczania siły hasła na podstawie jego długości i złożoności.
 
 **Główne elementy:**
+
 - `<div>` kontener z etykietą i paskiem
 - Etykieta tekstowa z dynamicznym kolorem (red/yellow/green)
 - Pasek postępu (3 segmenty, wypełniane na podstawie siły)
 
 **Obsługiwane zdarzenia:**
+
 - N/A – komponent tylko wizualizuje dane
 
 **Warunki walidacji:**
+
 - N/A – nie wykonuje walidacji, tylko prezentuje wynik z `usePasswordStrength`
 
 **Typy:**
+
 - Props: `PasswordStrengthIndicatorProps`
 - Strength: `PasswordStrength` ("weak" | "medium" | "strong")
 
 **Propsy:**
+
 ```typescript
 interface PasswordStrengthIndicatorProps {
   password: string;
@@ -159,21 +175,26 @@ interface PasswordStrengthIndicatorProps {
 **Opis:** Komponent wyświetlający alertu błędu autentykacji/rejestracji. Pokazuje komunikat błędu w czytelnej formie z odpowiednią ikoną i kolorystyką. Wykorzystuje komponent `<Alert>` z Shadcn UI.
 
 **Główne elementy:**
+
 - `<Alert variant="destructive">` z ikona `AlertCircle`
 - `<AlertTitle>` – tytuł błędu
 - `<AlertDescription>` – opis błędu
 
 **Obsługiwane zdarzenia:**
+
 - N/A – komponent tylko prezentacyjny
 
 **Warunki walidacji:**
+
 - N/A
 
 **Typy:**
+
 - Props: `AuthErrorAlertProps`
 - Error: `AuthErrorState`
 
 **Propsy:**
+
 ```typescript
 interface AuthErrorAlertProps {
   error: AuthErrorState;
@@ -187,19 +208,24 @@ interface AuthErrorAlertProps {
 **Opis:** Komponent z linkami nawigacyjnymi pod formularzem. Zawiera link powrotny do strony logowania ("Masz już konto? Zaloguj się").
 
 **Główne elementy:**
+
 - `<div>` kontener z tekstem i linkiem
 - `<a href="/signin">` link do strony logowania
 
 **Obsługiwane zdarzenia:**
+
 - N/A – standardowa nawigacja HTML
 
 **Warunki walidacji:**
+
 - N/A
 
 **Typy:**
+
 - Props: brak (komponent nie przyjmuje propsów)
 
 **Propsy:**
+
 ```typescript
 // Brak propsów
 ```
@@ -211,20 +237,25 @@ interface AuthErrorAlertProps {
 **Opis:** Komponent informacyjny pokazujący komunikat o wygaśnięciu sesji (jeśli użytkownik został przekierowany z powodu timeout lub wylogowania). Wykorzystuje `<Alert>` z Shadcn UI w wariancie "info".
 
 **Główne elementy:**
+
 - `<Alert variant="default">` z ikoną `Info`
 - `<AlertTitle>` – tytuł informacyjny
 - `<AlertDescription>` – opis przyczyny wygaśnięcia
 
 **Obsługiwane zdarzenia:**
+
 - N/A
 
 **Warunki walidacji:**
+
 - N/A
 
 **Typy:**
+
 - Props: `SessionExpiryNoticeProps`
 
 **Propsy:**
+
 ```typescript
 interface SessionExpiryNoticeProps {
   reason: SessionExpiryReason;
@@ -257,8 +288,8 @@ Dane zwracane po pomyślnej rejestracji:
 ```typescript
 export interface SignUpSuccessPayload {
   redirectTo: string;
-  userId: string;      // UUID użytkownika z Supabase Auth
-  companyId: string;   // UUID firmy z tabeli companies
+  userId: string; // UUID użytkownika z Supabase Auth
+  companyId: string; // UUID firmy z tabeli companies
 }
 ```
 
@@ -303,11 +334,13 @@ interface PasswordStrengthIndicatorProps {
 ### Istniejące typy wykorzystywane w implementacji
 
 Z `src/lib/auth/types.ts`:
+
 - `AuthErrorState` – stan błędu autentykacji
 - `AuthErrorCode` – kod błędu (rozszerzyć o "company_creation_failed")
 - `SessionExpiryReason` – powód wygaśnięcia sesji
 
 Z `src/types.ts`:
+
 - `CompanyDTO` – obiekt firmy zwracany przez `/api/companies/me`
 - `UserDTO` – obiekt użytkownika
 
@@ -320,6 +353,7 @@ Dedykowany custom hook zarządzający procesem rejestracji. Wykorzystuje TanStac
 **Lokalizacja:** `src/lib/auth/useSignUp.ts`
 
 **Interfejs:**
+
 ```typescript
 interface UseSignUpOptions {
   supabase: SupabaseClient;
@@ -335,10 +369,11 @@ function useSignUp(options: UseSignUpOptions): {
   isError: boolean;
   error: AuthErrorState | null;
   reset: () => void;
-}
+};
 ```
 
 **Logika:**
+
 1. Wywołanie `supabase.auth.signUp()` z email i password
 2. Mapowanie błędów Supabase na `AuthErrorState`:
    - "User already registered" → `email_already_exists`
@@ -354,6 +389,7 @@ function useSignUp(options: UseSignUpOptions): {
 4. Wywołanie `onSuccess` z `SignUpSuccessPayload` lub `onError` przy błędzie
 
 **Stan:**
+
 - `isPending` – rejestracja w toku
 - `isSuccess` – rejestracja zakończona pomyślnie
 - `isError` – wystąpił błąd
@@ -368,14 +404,16 @@ Hook obliczający siłę hasła na podstawie jego zawartości.
 **Lokalizacja:** `src/lib/auth/usePasswordStrength.ts`
 
 **Interfejs:**
+
 ```typescript
 function usePasswordStrength(password: string): {
   strength: PasswordStrength;
   score: number; // 0-3
-}
+};
 ```
 
 **Logika:**
+
 - Długość < 8 znaków → `weak`
 - Długość >= 8 i spełnia podstawowe wymagania (litera, cyfra) → `medium`
 - Długość >= 12, wielkie i małe litery, cyfry, znaki specjalne → `strong`
@@ -389,14 +427,13 @@ Hook sprawdzający czy użytkownik jest już zalogowany i przekierowujący do da
 **Lokalizacja:** `src/lib/auth/useAuthRedirect.ts`
 
 **Interfejs:**
+
 ```typescript
-function useAuthRedirect(
-  supabase: SupabaseClient,
-  returnTo?: string
-): void
+function useAuthRedirect(supabase: SupabaseClient, returnTo?: string): void;
 ```
 
 **Logika:**
+
 - `useEffect` sprawdza sesję przez `supabase.auth.getSession()`
 - Jeśli sesja istnieje → `window.location.href = returnTo || '/dashboard'`
 
@@ -405,9 +442,11 @@ function useAuthRedirect(
 ### Stan lokalny komponentów
 
 **SignUpFormCard:**
+
 - `errorState: AuthErrorState | null` – przechowuje błąd rejestracji
 
 **SignUpForm:**
+
 - `showPassword: boolean` – toggle widoczności pola hasła
 - `showConfirmPassword: boolean` – toggle widoczności pola potwierdzenia hasła
 - Form state zarządzany przez React Hook Form
@@ -419,6 +458,7 @@ function useAuthRedirect(
 **Endpoint:** Supabase Auth SDK – `signUp()`
 
 **Typ żądania:**
+
 ```typescript
 {
   email: string;
@@ -432,6 +472,7 @@ function useAuthRedirect(
 ```
 
 **Typ odpowiedzi (sukces):**
+
 ```typescript
 {
   user: {
@@ -444,6 +485,7 @@ function useAuthRedirect(
 ```
 
 **Typ odpowiedzi (błąd):**
+
 ```typescript
 {
   error: {
@@ -460,6 +502,7 @@ function useAuthRedirect(
 Synchronizacja sesji Supabase z cookies serwera (dla middleware).
 
 **Typ żądania:**
+
 ```typescript
 {
   access_token: string;
@@ -468,6 +511,7 @@ Synchronizacja sesji Supabase z cookies serwera (dla middleware).
 ```
 
 **Typ odpowiedzi (sukces):**
+
 ```typescript
 {
   success: true;
@@ -475,6 +519,7 @@ Synchronizacja sesji Supabase z cookies serwera (dla middleware).
 ```
 
 **Typ odpowiedzi (błąd):**
+
 ```typescript
 {
   code: string;
@@ -491,6 +536,7 @@ Utworzenie firmy dla nowo zarejestrowanego użytkownika.
 **Endpoint:** `POST /api/companies`
 
 **Typ żądania:**
+
 ```typescript
 {
   name: string;
@@ -498,8 +544,9 @@ Utworzenie firmy dla nowo zarejestrowanego użytkownika.
 ```
 
 **Typ odpowiedzi (sukces):**
+
 ```typescript
-CompanyDTO // z types.ts
+CompanyDTO; // z types.ts
 {
   uuid: string;
   name: string;
@@ -508,6 +555,7 @@ CompanyDTO // z types.ts
 ```
 
 **Typ odpowiedzi (błąd):**
+
 ```typescript
 ProblemDetail // z types.ts
 {
@@ -518,6 +566,7 @@ ProblemDetail // z types.ts
 ```
 
 **Kody błędów:**
+
 - 401 – Unauthorized (brak sesji)
 - 409 – Conflict (firma już istnieje dla tego użytkownika)
 - 500 – Internal Server Error
@@ -533,8 +582,9 @@ Weryfikacja utworzenia firmy i pobranie jej danych.
 **Typ żądania:** brak body (GET)
 
 **Typ odpowiedzi (sukces):**
+
 ```typescript
-CompanyDTO
+CompanyDTO;
 {
   uuid: string;
   name: string;
@@ -543,6 +593,7 @@ CompanyDTO
 ```
 
 **Typ odpowiedzi (błąd):**
+
 ```typescript
 ProblemDetail
 {
@@ -553,6 +604,7 @@ ProblemDetail
 ```
 
 **Kody błędów:**
+
 - 401 – Unauthorized
 - 404 – Not Found (firma nie istnieje)
 - 500 – Internal Server Error
@@ -652,6 +704,7 @@ Wszystkie warunki walidowane w komponencie `SignUpForm` przez schemat `signUpFor
    - Zgodność z polem `password`: "Hasła muszą być takie same"
 
 **Sposób walidacji:**
+
 - Mode: `onBlur` – walidacja uruchamia się po opuszczeniu pola
 - Błędy pokazują się pod odpowiednim polem z `role="alert"`
 - Stan błędu przekazywany do pola przez `aria-invalid`
@@ -692,12 +745,14 @@ Wszystkie warunki walidowane w komponencie `SignUpForm` przez schemat `signUpFor
 **Scenariusz:** Użytkownik próbuje submit formularza z nieprawidłowymi danymi
 
 **Obsługa:**
+
 - React Hook Form blokuje submit
 - Błędy pokazują się pod odpowiednimi polami
 - Pierwszy błędny input otrzymuje focus
 - Screen reader odczytuje komunikaty błędów
 
 **Kod:**
+
 ```typescript
 const {
   register,
@@ -718,6 +773,7 @@ const {
 **Kod błędu:** `email_already_exists`
 
 **Obsługa:**
+
 1. Supabase zwraca błąd "User already registered"
 2. Hook `useSignUp` mapuje błąd na `AuthErrorState`:
    ```typescript
@@ -740,6 +796,7 @@ const {
 **Kod błędu:** `weak_password`
 
 **Obsługa:**
+
 1. Supabase zwraca błąd password-related
 2. Mapowanie na `AuthErrorState`:
    ```typescript
@@ -762,6 +819,7 @@ const {
 **Kod błędu:** `rate_limited`
 
 **Obsługa:**
+
 1. Supabase zwraca status 429
 2. Mapowanie na `AuthErrorState`:
    ```typescript
@@ -784,6 +842,7 @@ const {
 **Kod błędu:** `company_creation_failed`
 
 **Obsługa:**
+
 1. `POST /api/companies` zwraca 409 lub 500
 2. Mapowanie na `AuthErrorState`:
    ```typescript
@@ -809,6 +868,7 @@ const {
 **Kod błędu:** `network`
 
 **Obsługa:**
+
 1. Catch TypeError z fetch
 2. Mapowanie na `AuthErrorState`:
    ```typescript
@@ -831,6 +891,7 @@ const {
 **Kod błędu:** `unknown`
 
 **Obsługa:**
+
 1. Catch-all w `useSignUp`
 2. Mapowanie na `AuthErrorState`:
    ```typescript
@@ -865,6 +926,7 @@ const {
 **Lokalizacja:** `src/lib/auth/types.ts`, `src/lib/auth/validation.ts`
 
 **Zadania:**
+
 1. Upewnij się, że `SignUpFormValues` istnieje w `types.ts` (jeśli nie – dodaj)
 2. Dodaj `SignUpSuccessPayload` do `types.ts`
 3. Rozszerz `AuthErrorCode` o `company_creation_failed` (jeśli jeszcze nie ma)
@@ -879,6 +941,7 @@ const {
 **Lokalizacja:** `src/lib/auth/usePasswordStrength.ts`
 
 **Zadania:**
+
 1. Utwórz hook `usePasswordStrength(password: string)`
 2. Implementuj logikę obliczania siły hasła:
    - Sprawdź długość (< 8: weak, >= 8: medium, >= 12: strong)
@@ -895,6 +958,7 @@ const {
 **Lokalizacja:** `src/lib/auth/useSignUp.ts`
 
 **Zadania:**
+
 1. Utwórz hook z interfejsem `UseSignUpOptions`
 2. Użyj `useMutation` z TanStack Query
 3. Implementuj `mutationFn`:
@@ -916,6 +980,7 @@ const {
 **Lokalizacja:** `src/components/auth/PasswordStrengthIndicator.tsx`
 
 **Zadania:**
+
 1. Utwórz komponent przyjmujący props `{ password, className? }`
 2. Użyj `usePasswordStrength` do obliczenia siły
 3. Zaimplementuj UI:
@@ -933,6 +998,7 @@ const {
 **Lokalizacja:** `src/components/auth/SignUpForm.tsx`
 
 **Zadania:**
+
 1. Utwórz komponent z propsami `SignUpFormProps`
 2. Użyj `useForm` z `zodResolver(signUpFormSchema)`
 3. Utwórz klienta Supabase (jak w `SignInForm.tsx`)
@@ -956,6 +1022,7 @@ const {
 **Lokalizacja:** `src/components/auth/SignUpFormCard.tsx`
 
 **Zadania:**
+
 1. Utwórz komponent z propsami `SignUpFormCardProps`
 2. Zarządzaj stanem `errorState`
 3. Zaimplementuj strukturę:
@@ -987,6 +1054,7 @@ const {
 **Lokalizacja:** `src/components/auth/SignUpFooterLinks.tsx`
 
 **Zadania:**
+
 1. Utwórz prosty komponent z linkiem do `/signin`
 2. Użyj Tailwind do stylizacji
 3. Tekst: "Masz już konto? Zaloguj się"
@@ -1000,6 +1068,7 @@ const {
 **Lokalizacja:** `src/pages/api/companies/index.ts`
 
 **Zadania:**
+
 1. Utwórz plik z handlerami `GET` i `POST`
 2. Implementuj `POST`:
    - Walidacja body przez Zod (pole `name`)
@@ -1022,6 +1091,7 @@ const {
 **Lokalizacja:** `src/pages/signup.astro`
 
 **Zadania:**
+
 1. Utwórz plik Astro analogicznie do `signin.astro`
 2. Ustaw `export const prerender = false`
 3. Pobierz i zwaliduj query param `returnTo`
@@ -1040,6 +1110,7 @@ const {
 ### Krok 10: Aktualizacja nawigacji
 
 **Zadania:**
+
 1. Upewnij się, że link do `/signup` jest dostępny na stronie `/signin` (już istnieje w `SignInFooterLinks`)
 2. Dodaj link do `/signup` w głównej nawigacji (jeśli ma być dostępny publicznie)
 
@@ -1052,6 +1123,7 @@ const {
 **Lokalizacja:** `src/lib/auth/__tests__/`, `src/components/auth/__tests__/`
 
 **Zadania:**
+
 1. Testy dla `useSignUp`:
    - Pomyślna rejestracja
    - Błąd email już istnieje
@@ -1075,6 +1147,7 @@ const {
 ### Krok 12: Testy E2E (opcjonalne)
 
 **Zadania:**
+
 1. Test happy path:
    - Otwarcie `/signup`
    - Wypełnienie formularza poprawnymi danymi
@@ -1094,6 +1167,7 @@ const {
 ### Krok 13: Dokumentacja
 
 **Zadania:**
+
 1. Dodaj komentarze JSDoc do wszystkich publicznych funkcji i komponentów
 2. Zaktualizuj README jeśli potrzeba
 3. Zapisz przykłady użycia API w dokumentacji
@@ -1105,6 +1179,7 @@ const {
 ### Krok 14: Code review i refaktoryzacja
 
 **Zadania:**
+
 1. Przejrzyj kod pod kątem spójności ze stylem projektu
 2. Sprawdź dostępność (ARIA, keyboard navigation)
 3. Przetestuj responsywność (mobile, tablet, desktop)
@@ -1118,6 +1193,7 @@ const {
 ### Krok 15: Deployment i monitorowanie
 
 **Zadania:**
+
 1. Deploy na środowisko staging
 2. Manualne testy na staging
 3. Sprawdź logi i telemetrię

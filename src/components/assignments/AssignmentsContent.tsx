@@ -17,14 +17,14 @@ interface AssignmentsContentProps {
   onRetry: () => void;
   onAddClick: () => void;
   hasActiveFilters: boolean;
-  sortBy: 'startDate' | 'endDate' | 'createdAt';
-  sortDir: 'asc' | 'desc';
-  onSortChange: (sortBy: string, sortDir: 'asc' | 'desc') => void;
+  sortBy: "startDate" | "endDate" | "createdAt";
+  sortDir: "asc" | "desc";
+  onSortChange: (sortBy: string, sortDir: "asc" | "desc") => void;
 }
 
 /**
  * AssignmentsContent
- * 
+ *
  * Wrapper odpowiedzialny za wyświetlanie odpowiedniego stanu listy przypisań:
  * loading, error, empty state lub właściwa zawartość (table/cards).
  */
@@ -59,11 +59,9 @@ export function AssignmentsContent({
     return (
       <div className="flex flex-col items-center justify-center p-12 border rounded-lg bg-card">
         <AlertCircle className="h-12 w-12 text-destructive mb-4" />
-        <h3 className="text-lg font-semibold mb-2">
-          Nie udało się załadować przypisań
-        </h3>
+        <h3 className="text-lg font-semibold mb-2">Nie udało się załadować przypisań</h3>
         <p className="text-muted-foreground text-center mb-4 max-w-md">
-          {error?.message || 'Wystąpił nieoczekiwany błąd podczas pobierania danych'}
+          {error?.message || "Wystąpił nieoczekiwany błąd podczas pobierania danych"}
         </p>
         <Button onClick={onRetry}>Spróbuj ponownie</Button>
       </div>
@@ -72,12 +70,7 @@ export function AssignmentsContent({
 
   // Empty state
   if (assignments.length === 0) {
-    return (
-      <EmptyState 
-        onAddClick={onAddClick} 
-        hasFilters={hasActiveFilters} 
-      />
-    );
+    return <EmptyState onAddClick={onAddClick} hasFilters={hasActiveFilters} />;
   }
 
   // Success state - renderuj zarówno table (desktop) jak i cards (mobile)
@@ -92,12 +85,7 @@ export function AssignmentsContent({
         onEdit={onEdit}
         onDelete={onDelete}
       />
-      <AssignmentCards
-        assignments={assignments}
-        onEdit={onEdit}
-        onDelete={onDelete}
-      />
+      <AssignmentCards assignments={assignments} onEdit={onEdit} onDelete={onDelete} />
     </div>
   );
 }
-

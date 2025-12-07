@@ -28,10 +28,7 @@ export function CompanyProfileView({ initialCompany }: CompanyProfileViewProps) 
 
   return (
     <div className="container mx-auto p-6 space-y-8 max-w-4xl">
-      <PageHeader
-        title="Profil firmy"
-        description="Zarządzaj podstawowymi danymi swojej firmy"
-      />
+      <PageHeader title="Profil firmy" description="Zarządzaj podstawowymi danymi swojej firmy" />
 
       {/* Loading state */}
       {showLoading && <CompanyProfileSkeleton />}
@@ -86,5 +83,3 @@ function CompanyProfileSkeleton() {
     </div>
   );
 }
-
-

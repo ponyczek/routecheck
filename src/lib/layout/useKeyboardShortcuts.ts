@@ -38,15 +38,12 @@ export function useKeyboardShortcuts(shortcuts: KeyboardShortcut[], enabled = tr
     const handleKeyDown = (event: KeyboardEvent) => {
       // Check if user is typing in an input/textarea
       const target = event.target as HTMLElement;
-      const isTyping =
-        target.tagName === "INPUT" ||
-        target.tagName === "TEXTAREA" ||
-        target.isContentEditable;
+      const isTyping = target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable;
 
       // Find matching shortcut
       for (const shortcut of shortcuts) {
         const isCorrectKey = event.key === shortcut.key || event.key.toLowerCase() === shortcut.key.toLowerCase();
-        const isCorrectCtrl = shortcut.ctrlKey ? (event.metaKey || event.ctrlKey) : !event.metaKey && !event.ctrlKey;
+        const isCorrectCtrl = shortcut.ctrlKey ? event.metaKey || event.ctrlKey : !event.metaKey && !event.ctrlKey;
         const isCorrectShift = shortcut.shiftKey ? event.shiftKey : !event.shiftKey;
 
         if (isCorrectKey && isCorrectCtrl && isCorrectShift) {
@@ -78,4 +75,3 @@ export const COMMON_SHORTCUTS = {
   SEARCH: "k",
   FORWARD_SLASH: "/",
 } as const;
-

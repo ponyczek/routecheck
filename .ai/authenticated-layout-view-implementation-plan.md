@@ -7,6 +7,7 @@ AuthenticatedLayout to główny shell aplikacji, który otacza wszystkie chronio
 ## 2. Routing widoku
 
 AuthenticatedLayout nie jest samodzielną stroną, lecz komponentem layoutu wykorzystywanym przez chronione strony:
+
 - `/dashboard` - Dashboard „Dzisiaj"
 - `/drivers` - Lista kierowców
 - `/reports` - Historia raportów
@@ -421,6 +422,7 @@ export interface RouteInfo {
 #### useAuthContext (src/lib/layout/useAuthContext.ts)
 
 Hook zarządzający kontekstem uwierzytelnienia, który:
+
 - Pobiera dane użytkownika z `/api/users/me`
 - Pobiera dane firmy z `/api/companies/me`
 - Używa TanStack Query z `stale-while-revalidate`
@@ -437,14 +439,14 @@ interface UseAuthContextOptions {
 function useAuthContext(options?: UseAuthContextOptions): AuthContextValue {
   // Implementacja z TanStack Query
   const userQuery = useQuery({
-    queryKey: ['user', 'me'],
+    queryKey: ["user", "me"],
     queryFn: fetchUser,
     staleTime: 5 * 60 * 1000, // 5 min
     refetchInterval: options?.refetchInterval ?? 5 * 60 * 1000,
   });
 
   const companyQuery = useQuery({
-    queryKey: ['company', 'me'],
+    queryKey: ["company", "me"],
     queryFn: fetchCompany,
     enabled: !!userQuery.data,
     staleTime: 5 * 60 * 1000,
@@ -459,7 +461,7 @@ function useAuthContext(options?: UseAuthContextOptions): AuthContextValue {
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
-    window.location.href = '/signin?reason=signed-out';
+    window.location.href = "/signin?reason=signed-out";
   }, []);
 
   return {
@@ -476,6 +478,7 @@ function useAuthContext(options?: UseAuthContextOptions): AuthContextValue {
 #### useNetworkStatus (src/lib/layout/useNetworkStatus.ts)
 
 Hook monitorujący stan połączenia sieciowego:
+
 - Nasłuchuje `online` i `offline` events
 - Wykrywa wolne połączenie (opcjonalnie, przez navigator.connection)
 - Pokazuje toast przy zmianie stanu
@@ -484,27 +487,27 @@ Hook monitorujący stan połączenia sieciowego:
 ```typescript
 function useNetworkStatus(): { isOnline: boolean; status: NetworkStatus } {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const [status, setStatus] = useState<NetworkStatus>('online');
+  const [status, setStatus] = useState<NetworkStatus>("online");
 
   useEffect(() => {
     const handleOnline = () => {
       setIsOnline(true);
-      setStatus('online');
-      toast.success('Połączenie przywrócone');
+      setStatus("online");
+      toast.success("Połączenie przywrócone");
     };
 
     const handleOffline = () => {
       setIsOnline(false);
-      setStatus('offline');
-      toast.error('Brak połączenia z internetem');
+      setStatus("offline");
+      toast.error("Brak połączenia z internetem");
     };
 
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
   }, []);
 
@@ -515,6 +518,7 @@ function useNetworkStatus(): { isOnline: boolean; status: NetworkStatus } {
 #### useActiveRoute (src/lib/layout/useActiveRoute.ts)
 
 Hook określający aktywny route i generujący informacje o stronie:
+
 - Parsuje `window.location.pathname`
 - Mapuje pathname do tytułu strony
 - Generuje breadcrumbs
@@ -527,8 +531,8 @@ function useActiveRoute(): RouteInfo {
   useEffect(() => {
     // Update on popstate (back/forward)
     const handlePopState = () => setPathname(window.location.pathname);
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
   }, []);
 
   const routeInfo = useMemo(() => {
@@ -541,16 +545,16 @@ function useActiveRoute(): RouteInfo {
 function parseRouteInfo(pathname: string): RouteInfo {
   // Mapping logic
   const routeMap: Record<string, { title: string; parent?: string }> = {
-    '/dashboard': { title: 'Dashboard' },
-    '/drivers': { title: 'Kierowcy' },
-    '/reports': { title: 'Raporty' },
-    '/settings': { title: 'Ustawienia' },
-    '/settings/profile': { title: 'Profil firmy', parent: '/settings' },
-    '/settings/alerts': { title: 'Alerty', parent: '/settings' },
-    '/settings/account': { title: 'Konto', parent: '/settings' },
+    "/dashboard": { title: "Dashboard" },
+    "/drivers": { title: "Kierowcy" },
+    "/reports": { title: "Raporty" },
+    "/settings": { title: "Ustawienia" },
+    "/settings/profile": { title: "Profil firmy", parent: "/settings" },
+    "/settings/alerts": { title: "Alerty", parent: "/settings" },
+    "/settings/account": { title: "Konto", parent: "/settings" },
   };
 
-  const route = routeMap[pathname] || { title: 'Strona' };
+  const route = routeMap[pathname] || { title: "Strona" };
   const breadcrumbs = generateBreadcrumbs(pathname, routeMap);
 
   return {
@@ -565,6 +569,7 @@ function parseRouteInfo(pathname: string): RouteInfo {
 #### useMobileMenu (src/lib/layout/useMobileMenu.ts)
 
 Hook zarządzający stanem mobile menu (Sheet):
+
 - Stan `isOpen`
 - Funkcje `open`, `close`, `toggle`
 - Auto-close przy zmianie route
@@ -580,7 +585,7 @@ function useMobileMenu(): MobileMenuState {
     setIsOpen(false);
   }, [pathname]);
 
-  const toggle = useCallback(() => setIsOpen(prev => !prev), []);
+  const toggle = useCallback(() => setIsOpen((prev) => !prev), []);
   const close = useCallback(() => setIsOpen(false), []);
   const open = useCallback(() => setIsOpen(true), []);
 
@@ -604,11 +609,13 @@ function useMobileMenu(): MobileMenuState {
 **Implementacja**: `src/pages/api/users/me.ts`
 
 **Request**:
+
 - Method: `GET`
 - Headers: `Authorization: Bearer <supabase_jwt>`
 - Body: brak
 
 **Response** (200):
+
 ```typescript
 {
   uuid: string;
@@ -618,6 +625,7 @@ function useMobileMenu(): MobileMenuState {
 ```
 
 **Błędy**:
+
 - 401: brak tokenu lub token wygasły → redirect na `/signin`
 - 404: użytkownik nie istnieje w bazie (rzadkie, po rejestracji)
 - 500: błąd serwera → toast error
@@ -632,24 +640,27 @@ import { createSupabaseClient } from "@/db/supabase.client";
 
 export async function fetchCurrentUser(): Promise<UserDTO> {
   const supabase = createSupabaseClient();
-  
+
   // Get current session
-  const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-  
+  const {
+    data: { session },
+    error: sessionError,
+  } = await supabase.auth.getSession();
+
   if (sessionError || !session) {
-    throw new Error('UNAUTHORIZED');
+    throw new Error("UNAUTHORIZED");
   }
 
   // Fetch user from database
   const { data, error } = await supabase
-    .from('users')
-    .select('uuid, company_uuid, created_at')
-    .eq('uuid', session.user.id)
+    .from("users")
+    .select("uuid, company_uuid, created_at")
+    .eq("uuid", session.user.id)
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') {
-      throw new Error('NOT_FOUND');
+    if (error.code === "PGRST116") {
+      throw new Error("NOT_FOUND");
     }
     throw error;
   }
@@ -672,39 +683,48 @@ import { fetchCurrentUser } from "@/lib/services/usersService";
 export const GET: APIRoute = async ({ locals }) => {
   try {
     const user = await fetchCurrentUser();
-    
+
     return new Response(JSON.stringify(user), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    if (error.message === 'UNAUTHORIZED') {
-      return new Response(JSON.stringify({
-        code: 'unauthorized',
-        message: 'Sesja wygasła. Zaloguj się ponownie.',
-      }), {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-    
-    if (error.message === 'NOT_FOUND') {
-      return new Response(JSON.stringify({
-        code: 'not_found',
-        message: 'Użytkownik nie istnieje.',
-      }), {
-        status: 404,
-        headers: { "Content-Type": "application/json" },
-      });
+    if (error.message === "UNAUTHORIZED") {
+      return new Response(
+        JSON.stringify({
+          code: "unauthorized",
+          message: "Sesja wygasła. Zaloguj się ponownie.",
+        }),
+        {
+          status: 401,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
     }
 
-    return new Response(JSON.stringify({
-      code: 'internal_error',
-      message: 'Wystąpił błąd serwera.',
-    }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    if (error.message === "NOT_FOUND") {
+      return new Response(
+        JSON.stringify({
+          code: "not_found",
+          message: "Użytkownik nie istnieje.",
+        }),
+        {
+          status: 404,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    return new Response(
+      JSON.stringify({
+        code: "internal_error",
+        message: "Wystąpił błąd serwera.",
+      }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   }
 };
 ```
@@ -714,11 +734,13 @@ export const GET: APIRoute = async ({ locals }) => {
 **Implementacja**: `src/pages/api/companies/me.ts`
 
 **Request**:
+
 - Method: `GET`
 - Headers: `Authorization: Bearer <supabase_jwt>`
 - Body: brak
 
 **Response** (200):
+
 ```typescript
 {
   uuid: string;
@@ -728,6 +750,7 @@ export const GET: APIRoute = async ({ locals }) => {
 ```
 
 **Błędy**:
+
 - 401: brak tokenu
 - 404: firma nie istnieje (nie powinno się zdarzyć po poprawnej rejestracji)
 - 500: błąd serwera
@@ -742,19 +765,22 @@ import { createSupabaseClient } from "@/db/supabase.client";
 
 export async function fetchCurrentCompany(): Promise<CompanyDTO> {
   const supabase = createSupabaseClient();
-  
+
   // Get current session
-  const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-  
+  const {
+    data: { session },
+    error: sessionError,
+  } = await supabase.auth.getSession();
+
   if (sessionError || !session) {
-    throw new Error('UNAUTHORIZED');
+    throw new Error("UNAUTHORIZED");
   }
 
   // Fetch user to get company_uuid
   const { data: userData, error: userError } = await supabase
-    .from('users')
-    .select('company_uuid')
-    .eq('uuid', session.user.id)
+    .from("users")
+    .select("company_uuid")
+    .eq("uuid", session.user.id)
     .single();
 
   if (userError) {
@@ -763,14 +789,14 @@ export async function fetchCurrentCompany(): Promise<CompanyDTO> {
 
   // Fetch company
   const { data, error } = await supabase
-    .from('companies')
-    .select('uuid, name, created_at')
-    .eq('uuid', userData.company_uuid)
+    .from("companies")
+    .select("uuid, name, created_at")
+    .eq("uuid", userData.company_uuid)
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') {
-      throw new Error('NOT_FOUND');
+    if (error.code === "PGRST116") {
+      throw new Error("NOT_FOUND");
     }
     throw error;
   }
@@ -793,39 +819,48 @@ import { fetchCurrentCompany } from "@/lib/services/companiesService";
 export const GET: APIRoute = async ({ locals }) => {
   try {
     const company = await fetchCurrentCompany();
-    
+
     return new Response(JSON.stringify(company), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    if (error.message === 'UNAUTHORIZED') {
-      return new Response(JSON.stringify({
-        code: 'unauthorized',
-        message: 'Sesja wygasła. Zaloguj się ponownie.',
-      }), {
-        status: 401,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-    
-    if (error.message === 'NOT_FOUND') {
-      return new Response(JSON.stringify({
-        code: 'not_found',
-        message: 'Firma nie istnieje.',
-      }), {
-        status: 404,
-        headers: { "Content-Type": "application/json" },
-      });
+    if (error.message === "UNAUTHORIZED") {
+      return new Response(
+        JSON.stringify({
+          code: "unauthorized",
+          message: "Sesja wygasła. Zaloguj się ponownie.",
+        }),
+        {
+          status: 401,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
     }
 
-    return new Response(JSON.stringify({
-      code: 'internal_error',
-      message: 'Wystąpił błąd serwera.',
-    }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    if (error.message === "NOT_FOUND") {
+      return new Response(
+        JSON.stringify({
+          code: "not_found",
+          message: "Firma nie istnieje.",
+        }),
+        {
+          status: 404,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    return new Response(
+      JSON.stringify({
+        code: "internal_error",
+        message: "Wystąpił błąd serwera.",
+      }),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   }
 };
 ```
@@ -1175,7 +1210,9 @@ export const GET: APIRoute = async ({ locals }) => {
 1. Utworzyć `src/layouts/AuthenticatedLayout.astro`:
    - Server-side sprawdzenie sesji:
      ```typescript
-     const { data: { session } } = await Astro.locals.supabase.auth.getSession();
+     const {
+       data: { session },
+     } = await Astro.locals.supabase.auth.getSession();
      if (!session?.user) {
        return Astro.redirect(`/signin?returnTo=${encodeURIComponent(Astro.url.pathname)}&expired=true`);
      }
@@ -1285,6 +1322,7 @@ export const GET: APIRoute = async ({ locals }) => {
 ### Icons
 
 Użyć biblioteki `lucide-react` dla ikon:
+
 - `LayoutDashboard` - Dashboard
 - `Users` - Kierowcy
 - `FileText` - Raporty
@@ -1312,6 +1350,7 @@ Użyć biblioteki `lucide-react` dla ikon:
 ### Feature Flags
 
 Dla flagowanych modułów (Pojazdy, Przypisania):
+
 ```typescript
 const FEATURE_FLAGS = {
   SHOW_VEHICLES: false,
@@ -1325,12 +1364,15 @@ const flaggedNavItems = [
 ```
 
 Renderowanie:
+
 ```tsx
-{flaggedNavItems.map(item => (
-  <NavItem key={item.id} item={item} disabled={item.isFlagged}>
-    {item.isFlagged && <Badge>Wkrótce</Badge>}
-  </NavItem>
-))}
+{
+  flaggedNavItems.map((item) => (
+    <NavItem key={item.id} item={item} disabled={item.isFlagged}>
+      {item.isFlagged && <Badge>Wkrótce</Badge>}
+    </NavItem>
+  ));
+}
 ```
 
 ### Performance Budget
@@ -1339,4 +1381,3 @@ Renderowanie:
 - Time to Interactive (TTI): < 3.5s
 - Layout shift (CLS): < 0.1
 - JavaScript bundle dla layout: < 50kb gzipped
-

@@ -67,4 +67,3 @@ export type { DashboardViewProps } from "./DashboardView";
 
 // DashboardView with QueryProvider (for Astro islands)
 export { DashboardViewWithProvider } from "./DashboardViewWithProvider";
-

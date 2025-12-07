@@ -1,6 +1,8 @@
 ---
 // Check if user is authenticated
-const { data: { session } } = await Astro.locals.supabase.auth.getSession();
+const {
+  data: { session },
+} = await Astro.locals.supabase.auth.getSession();
 
 // Redirect to dashboard if authenticated, otherwise to sign in
 if (session?.user) {

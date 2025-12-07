@@ -1,7 +1,7 @@
-import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { DriverCard } from './DriverCard';
-import type { DriverDTO } from '@/types';
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { DriverCard } from "./DriverCard";
+import type { DriverDTO } from "@/types";
 
 interface DriversCardListProps {
   drivers: DriverDTO[];
@@ -33,9 +33,7 @@ export function DriversCardList({
       {/* Grid kart */}
       <div className="grid gap-4">
         {drivers.length === 0 ? (
-          <div className="py-12 text-center text-muted-foreground">
-            Brak kierowców do wyświetlenia.
-          </div>
+          <div className="py-12 text-center text-muted-foreground">Brak kierowców do wyświetlenia.</div>
         ) : (
           drivers.map((driver) => (
             <DriverCard

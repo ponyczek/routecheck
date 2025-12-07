@@ -11,12 +11,12 @@ interface UseSignInOptions {
 
 /**
  * Hook for handling sign-in with Supabase Auth
- * 
+ *
  * Process:
  * 1. Sign in with Supabase Auth (session stored in localStorage)
  * 2. Sync session to cookies (required for server-side middleware)
  * 3. Handle success/error callbacks
- * 
+ *
  * Uses React Query for state management
  */
 export function useSignIn({ supabase, returnTo, onSuccess, onError }: UseSignInOptions) {
@@ -132,4 +132,3 @@ export function useSignIn({ supabase, returnTo, onSuccess, onError }: UseSignInO
     reset: mutation.reset,
   };
 }
-

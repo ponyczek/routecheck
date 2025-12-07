@@ -1,12 +1,12 @@
-import { openDB, type IDBPDatabase } from 'idb';
-import { useState, useEffect, useCallback } from 'react';
-import { toast } from 'sonner';
-import type { OfflineQueueItem } from '../validation';
-import type { PublicReportSubmitCommand } from '@/types';
+import { openDB, type IDBPDatabase } from "idb";
+import { useState, useEffect, useCallback } from "react";
+import { toast } from "sonner";
+import type { OfflineQueueItem } from "../validation";
+import type { PublicReportSubmitCommand } from "@/types";
 
-const DB_NAME = 'routelog-offline';
+const DB_NAME = "routelog-offline";
 const DB_VERSION = 1;
-const STORE_NAME = 'queue';
+const STORE_NAME = "queue";
 const MAX_RETRIES = 3;
 
 /**
@@ -16,9 +16,9 @@ async function initDB(): Promise<IDBPDatabase> {
   return openDB(DB_NAME, DB_VERSION, {
     upgrade(db) {
       if (!db.objectStoreNames.contains(STORE_NAME)) {
-        const store = db.createObjectStore(STORE_NAME, { keyPath: 'id' });
-        store.createIndex('token', 'token', { unique: false });
-        store.createIndex('createdAt', 'createdAt', { unique: false });
+        const store = db.createObjectStore(STORE_NAME, { keyPath: "id" });
+        store.createIndex("token", "token", { unique: false });
+        store.createIndex("createdAt", "createdAt", { unique: false });
       }
     },
   });
@@ -29,7 +29,7 @@ async function initDB(): Promise<IDBPDatabase> {
  */
 async function addToQueue(token: string, data: PublicReportSubmitCommand): Promise<string> {
   const db = await initDB();
-  
+
   const item: OfflineQueueItem = {
     id: crypto.randomUUID(),
     token,
@@ -37,7 +37,7 @@ async function addToQueue(token: string, data: PublicReportSubmitCommand): Promi
     createdAt: new Date().toISOString(),
     retries: 0,
   };
-  
+
   await db.add(STORE_NAME, item);
   return item.id;
 }
@@ -64,7 +64,7 @@ async function removeFromQueue(id: string): Promise<void> {
 async function updateRetryCount(id: string, retries: number): Promise<void> {
   const db = await initDB();
   const item = await db.get(STORE_NAME, id);
-  
+
   if (item) {
     item.retries = retries;
     await db.put(STORE_NAME, item);
@@ -90,20 +90,20 @@ interface UseOfflineQueueReturn {
 /**
  * Hook to manage offline queue for report submissions
  * Automatically processes queue when network comes back online
- * 
+ *
  * @param isOnline - Network status from useNetworkStatus
  * @param submitFn - Function to submit report (from api.ts)
  * @returns Queue management functions and state
- * 
+ *
  * @example
  * const { addToQueue, processQueue, queueSize } = useOfflineQueue(
  *   isOnline,
  *   (token, data) => submitReport(token, data)
  * );
- * 
+ *
  * // When offline
  * await addToQueue(token, reportData);
- * 
+ *
  * // Automatically processes when online
  */
 export function useOfflineQueue(
@@ -126,12 +126,12 @@ export function useOfflineQueue(
   // Process queue when coming back online
   const processQueue = useCallback(async () => {
     if (!isOnline || isProcessing) return;
-    
+
     setIsProcessing(true);
-    
+
     try {
       const items = await getQueueItems();
-      
+
       if (items.length === 0) {
         setIsProcessing(false);
         return;
@@ -141,23 +141,23 @@ export function useOfflineQueue(
         try {
           // Attempt to submit
           await submitFn(item.token, item.data);
-          
+
           // Success - remove from queue
           await removeFromQueue(item.id);
-          
-          toast.success('Raport wysłany po przywróceniu połączenia', {
+
+          toast.success("Raport wysłany po przywróceniu połączenia", {
             description: `Raport z ${new Date(item.createdAt).toLocaleTimeString()}`,
           });
         } catch (error) {
-          console.error('Failed to process queue item:', error);
-          
+          console.error("Failed to process queue item:", error);
+
           // Check retry limit
           if (item.retries >= MAX_RETRIES) {
             // Max retries reached - remove from queue
             await removeFromQueue(item.id);
-            
-            toast.error('Nie udało się wysłać raportu', {
-              description: 'Przekroczono limit prób. Skontaktuj się z dyspozytorem.',
+
+            toast.error("Nie udało się wysłać raportu", {
+              description: "Przekroczono limit prób. Skontaktuj się z dyspozytorem.",
               duration: 10000,
             });
           } else {
@@ -166,7 +166,7 @@ export function useOfflineQueue(
           }
         }
       }
-      
+
       await updateQueueSize();
     } finally {
       setIsProcessing(false);
@@ -181,16 +181,19 @@ export function useOfflineQueue(
   }, [isOnline, processQueue]);
 
   // Add to queue wrapper
-  const addToQueueWrapper = useCallback(async (token: string, data: PublicReportSubmitCommand) => {
-    const id = await addToQueue(token, data);
-    await updateQueueSize();
-    
-    toast.info('Raport zapisany offline', {
-      description: 'Zostanie wysłany automatycznie po przywróceniu połączenia.',
-    });
-    
-    return id;
-  }, [updateQueueSize]);
+  const addToQueueWrapper = useCallback(
+    async (token: string, data: PublicReportSubmitCommand) => {
+      const id = await addToQueue(token, data);
+      await updateQueueSize();
+
+      toast.info("Raport zapisany offline", {
+        description: "Zostanie wysłany automatycznie po przywróceniu połączenia.",
+      });
+
+      return id;
+    },
+    [updateQueueSize]
+  );
 
   // Clear queue wrapper
   const clearQueueWrapper = useCallback(async () => {
@@ -206,5 +209,3 @@ export function useOfflineQueue(
     isProcessing,
   };
 }
-
-

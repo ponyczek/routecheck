@@ -23,7 +23,7 @@ interface DeleteAssignmentDialogProps {
 
 /**
  * DeleteAssignmentDialog
- * 
+ *
  * Dialog potwierdzenia usunięcia przypisania kierowca-pojazd.
  * Wyświetla szczegóły przypisania i ostrzeżenie przed usunięciem.
  */
@@ -39,7 +39,7 @@ export function DeleteAssignmentDialog({
   const { driverName, vehicleRegistration, assignment: assignmentData } = assignment;
 
   const formatDate = (dateString: string) => {
-    return format(new Date(dateString), 'dd MMM yyyy', { locale: pl });
+    return format(new Date(dateString), "dd MMM yyyy", { locale: pl });
   };
 
   const handleConfirm = async () => {
@@ -74,15 +74,13 @@ export function DeleteAssignmentDialog({
           <div className="flex justify-between">
             <span className="text-muted-foreground">Data zakończenia:</span>
             <span className="font-medium">
-              {assignmentData.endDate ? formatDate(assignmentData.endDate) : 'Bezterminowe'}
+              {assignmentData.endDate ? formatDate(assignmentData.endDate) : "Bezterminowe"}
             </span>
           </div>
         </div>
 
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isDeleting}>
-            Anuluj
-          </AlertDialogCancel>
+          <AlertDialogCancel disabled={isDeleting}>Anuluj</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleConfirm}
             disabled={isDeleting}
@@ -96,5 +94,3 @@ export function DeleteAssignmentDialog({
     </AlertDialog>
   );
 }
-
-

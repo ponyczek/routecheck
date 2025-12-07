@@ -79,9 +79,7 @@ export function ReportCard({ report, onView }: ReportCardProps) {
 
         {/* AI Summary */}
         {report.ai && report.ai.aiSummary && (
-          <div className="text-sm text-muted-foreground line-clamp-2">
-            {report.ai.aiSummary}
-          </div>
+          <div className="text-sm text-muted-foreground line-clamp-2">{report.ai.aiSummary}</div>
         )}
 
         {/* View button */}
@@ -103,4 +101,3 @@ export function ReportCard({ report, onView }: ReportCardProps) {
     </Card>
   );
 }
-

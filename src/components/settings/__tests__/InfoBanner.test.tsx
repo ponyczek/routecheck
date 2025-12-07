@@ -33,9 +33,7 @@ describe("InfoBanner", () => {
     });
 
     it("renders with destructive variant", () => {
-      const { container } = render(
-        <InfoBanner description="Test" variant="destructive" />
-      );
+      const { container } = render(<InfoBanner description="Test" variant="destructive" />);
 
       const alert = container.querySelector('[role="alert"]');
       expect(alert).toBeInTheDocument();
@@ -93,5 +91,3 @@ describe("InfoBanner", () => {
     });
   });
 });
-
-

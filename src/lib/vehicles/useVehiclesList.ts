@@ -1,7 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
-import { vehiclesService } from '@/lib/services/vehiclesService';
-import { vehiclesKeys } from './queryKeys';
-import type { VehiclesQueryParams } from './types';
+import { useQuery } from "@tanstack/react-query";
+import { vehiclesService } from "@/lib/services/vehiclesService";
+import { vehiclesKeys } from "./queryKeys";
+import type { VehiclesQueryParams } from "./types";
 
 /**
  * Hook do pobierania listy pojazdów z filtrowaniem i paginacją
@@ -16,5 +16,3 @@ export function useVehiclesList(params: VehiclesQueryParams) {
     retry: 2, // Retry 2 razy w przypadku błędu
   });
 }
-
-

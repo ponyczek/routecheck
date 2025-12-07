@@ -3,6 +3,7 @@
 ## 1. Przegląd
 
 Widok Przypisań kierowca-pojazd (`/assignments`) umożliwia zarządzanie harmonogramem przypisań kierowców do pojazdów z walidacją zakresów dat. Jest to moduł opcjonalny (feature flag), rozszerzający funkcjonalność MVP o bardziej zaawansowane zarządzanie logistyką. Głównym celem jest zapewnienie, że:
+
 - Każdy kierowca może być przypisany tylko do jednego pojazdu w danym okresie
 - Każdy pojazd może być przypisany tylko do jednego kierowcy w danym okresie
 - System wykrywa i zapobiega nakładającym się przypisaniom
@@ -72,11 +73,13 @@ assignments.astro (Astro page)
 **Opis:** Główny kontener widoku, opakowuje całą funkcjonalność w QueryClientProvider i zarządza stanem globalnym widoku (otwarte modale, tryb formularza).
 
 **Główne elementy:**
+
 - `<QueryClientProvider>` z klientem TanStack Query
 - `<div>` główny kontener z układem flex column
 - Komponenty potomne: Header, FiltersBar, Content, modals
 
 **Obsługiwane interakcje:**
+
 - Otwieranie/zamykanie formularza dodawania
 - Otwieranie/zamykanie formularza edycji
 - Otwieranie/zamykanie dialogu usuwania
@@ -85,6 +88,7 @@ assignments.astro (Astro page)
 **Walidacja:** Brak (zarządza tylko stanem UI)
 
 **Typy:**
+
 - `AssignmentsListResponseDTO`
 - `AssignmentViewModel`
 - `AssignmentFilters`
@@ -96,12 +100,14 @@ assignments.astro (Astro page)
 **Opis:** Nagłówek strony zawierający tytuł, przycisk dodawania i opcjonalny toggle widoku.
 
 **Główne elementy:**
+
 - `<div>` z flexbox layout
 - `<h1>` tytuł "Przypisania kierowca-pojazd"
 - `<Button>` "Dodaj przypisanie" (Plus icon)
 - `<Tabs>` lub toggle dla przełączania widoku (opcjonalnie)
 
 **Obsługiwane interakcje:**
+
 - `onAddClick` - otwiera formularz w trybie tworzenia
 - `onViewChange` - przełącza tryb widoku
 
@@ -110,11 +116,12 @@ assignments.astro (Astro page)
 **Typy:** Brak specyficznych
 
 **Propsy:**
+
 ```typescript
 interface AssignmentsHeaderProps {
   onAddClick: () => void;
-  viewMode?: 'table' | 'timeline';
-  onViewModeChange?: (mode: 'table' | 'timeline') => void;
+  viewMode?: "table" | "timeline";
+  onViewModeChange?: (mode: "table" | "timeline") => void;
 }
 ```
 
@@ -123,6 +130,7 @@ interface AssignmentsHeaderProps {
 **Opis:** Pasek filtrów umożliwiający zawężenie listy przypisań według kierowcy, pojazdu lub daty aktywności.
 
 **Główne elementy:**
+
 - `<div>` kontener z grid layout
 - `<Select>` dla kierowcy (Shadcn Select z wyszukiwaniem)
 - `<Select>` dla pojazdu (Shadcn Select z wyszukiwaniem)
@@ -130,18 +138,22 @@ interface AssignmentsHeaderProps {
 - `<Button>` "Wyczyść filtry"
 
 **Obsługiwane interakcje:**
+
 - `onFilterChange` - aktualizuje stan filtrów
 - Debounce dla wyszukiwania w selectach
 
 **Walidacja:**
+
 - `activeOn` - jeśli podane, musi być poprawną datą w formacie YYYY-MM-DD
 
 **Typy:**
+
 - `AssignmentFilters`
 - `DriverDTO[]` (dla opcji)
 - `VehicleDTO[]` (dla opcji)
 
 **Propsy:**
+
 ```typescript
 interface AssignmentsFiltersBarProps {
   filters: AssignmentFilters;
@@ -157,12 +169,14 @@ interface AssignmentsFiltersBarProps {
 **Opis:** Tabela desktop wyświetlająca listę przypisań z sortowaniem i akcjami w wierszach.
 
 **Główne elementy:**
+
 - `<Table>` (Shadcn Table)
 - `<TableHeader>` z kolumnami: Kierowca, Pojazd, Data rozpoczęcia, Data zakończenia, Status, Akcje
 - `<TableBody>` z `<AssignmentRow>` dla każdego przypisania
 - Sortowanie w nagłówkach kolumn (chevron icons)
 
 **Obsługiwane interakcje:**
+
 - `onSort` - zmienia sortowanie
 - `onEdit` - otwiera formularz edycji
 - `onDelete` - otwiera dialog usuwania
@@ -170,15 +184,17 @@ interface AssignmentsFiltersBarProps {
 **Walidacja:** Brak
 
 **Typy:**
+
 - `AssignmentViewModel[]`
 
 **Propsy:**
+
 ```typescript
 interface AssignmentsTableProps {
   assignments: AssignmentViewModel[];
-  sortBy: 'startDate' | 'endDate' | 'createdAt';
-  sortDir: 'asc' | 'desc';
-  onSortChange: (sortBy: string, sortDir: 'asc' | 'desc') => void;
+  sortBy: "startDate" | "endDate" | "createdAt";
+  sortDir: "asc" | "desc";
+  onSortChange: (sortBy: string, sortDir: "asc" | "desc") => void;
   onEdit: (assignment: AssignmentDTO) => void;
   onDelete: (assignment: AssignmentDTO) => void;
   isLoading?: boolean;
@@ -190,21 +206,25 @@ interface AssignmentsTableProps {
 **Opis:** Pojedynczy wiersz tabeli reprezentujący jedno przypisanie.
 
 **Główne elementy:**
+
 - `<TableRow>`
 - `<TableCell>` dla każdej kolumny (driver name, vehicle registration, start date, end date)
 - `<Badge>` dla statusu (aktywne/zakończone/przyszłe)
 - `<DropdownMenu>` z akcjami (Edytuj, Usuń)
 
 **Obsługiwane interakcje:**
+
 - `onEdit` - przekazuje przypisanie do edycji
 - `onDelete` - przekazuje przypisanie do usunięcia
 
 **Walidacja:** Brak
 
 **Typy:**
+
 - `AssignmentViewModel`
 
 **Propsy:**
+
 ```typescript
 interface AssignmentRowProps {
   assignment: AssignmentViewModel;
@@ -218,18 +238,22 @@ interface AssignmentRowProps {
 **Opis:** Responsywna lista kart dla widoku mobilnego.
 
 **Główne elementy:**
+
 - `<div>` kontener z grid layout
 - `<AssignmentCard>` dla każdego przypisania
 
 **Obsługiwane interakcje:**
+
 - Przekazywane do kart potomnych
 
 **Walidacja:** Brak
 
 **Typy:**
+
 - `AssignmentViewModel[]`
 
 **Propsy:**
+
 ```typescript
 interface AssignmentCardsProps {
   assignments: AssignmentViewModel[];
@@ -244,21 +268,25 @@ interface AssignmentCardsProps {
 **Opis:** Pojedyncza karta przedstawiająca przypisanie w widoku mobilnym.
 
 **Główne elementy:**
+
 - `<Card>` (Shadcn Card)
 - `<CardHeader>` z nazwą kierowcy i badge statusu
 - `<CardContent>` z numerem pojazdu i zakresem dat
 - `<CardFooter>` z menu akcji
 
 **Obsługiwane interakcje:**
+
 - `onEdit`
 - `onDelete`
 
 **Walidacja:** Brak
 
 **Typy:**
+
 - `AssignmentViewModel`
 
 **Propsy:**
+
 ```typescript
 interface AssignmentCardProps {
   assignment: AssignmentViewModel;
@@ -272,6 +300,7 @@ interface AssignmentCardProps {
 **Opis:** Modal z formularzem dodawania lub edycji przypisania. Wykorzystuje React Hook Form + Zod do walidacji.
 
 **Główne elementy:**
+
 - `<Dialog>` lub `<Sheet>` (responsive)
 - `<DialogHeader>` z tytułem ("Dodaj przypisanie" / "Edytuj przypisanie")
 - `<Form>` z polami:
@@ -283,6 +312,7 @@ interface AssignmentCardProps {
 - `<DialogFooter>` z przyciskami Anuluj/Zapisz
 
 **Obsługiwane interakcje:**
+
 - `onSubmit` - waliduje i wysyła dane
 - `onCancel` - zamyka modal z potwierdzeniem jeśli formularz zmieniony
 - Wybór kierowcy z listy aktywnych
@@ -291,6 +321,7 @@ interface AssignmentCardProps {
 - Wyświetlanie błędów walidacji inline
 
 **Walidacja:**
+
 - `driverUuid` - wymagane, musi być UUID z listy aktywnych kierowców
 - `vehicleUuid` - wymagane, musi być UUID z listy aktywnych pojazdów
 - `startDate` - wymagane, format YYYY-MM-DD, nie może być puste
@@ -299,6 +330,7 @@ interface AssignmentCardProps {
 - Sprawdzenie konfliktów: obsługa 409 z serwera
 
 **Typy:**
+
 - `AssignmentFormData`
 - `CreateAssignmentCommand` | `UpdateAssignmentCommand`
 - `AssignmentDTO` (przy edycji)
@@ -306,11 +338,12 @@ interface AssignmentCardProps {
 - `VehicleDTO[]`
 
 **Propsy:**
+
 ```typescript
 interface AssignmentFormModalProps {
   isOpen: boolean;
   onClose: () => void;
-  mode: 'create' | 'edit';
+  mode: "create" | "edit";
   assignment?: AssignmentDTO; // dla trybu edycji
   drivers: DriverDTO[];
   vehicles: VehicleDTO[];
@@ -323,6 +356,7 @@ interface AssignmentFormModalProps {
 **Opis:** Dialog potwierdzenia usunięcia przypisania.
 
 **Główne elementy:**
+
 - `<AlertDialog>` (Shadcn AlertDialog)
 - `<AlertDialogHeader>` z tytułem "Usuń przypisanie"
 - `<AlertDialogDescription>` z ostrzeżeniem i szczegółami przypisania
@@ -331,16 +365,19 @@ interface AssignmentFormModalProps {
   - `<AlertDialogAction>` "Usuń" (destructive variant)
 
 **Obsługiwane interakcje:**
+
 - `onConfirm` - wykonuje usunięcie
 - `onCancel` - zamyka dialog
 
 **Walidacja:** Brak
 
 **Typy:**
+
 - `AssignmentDTO`
 - `AssignmentViewModel` (dla wyświetlenia nazw)
 
 **Propsy:**
+
 ```typescript
 interface DeleteAssignmentDialogProps {
   isOpen: boolean;
@@ -356,6 +393,7 @@ interface DeleteAssignmentDialogProps {
 **Opis:** Komponent wyświetlany gdy lista przypisań jest pusta.
 
 **Główne elementy:**
+
 - `<div>` kontener z centrowaniem
 - Ikona lub ilustracja (np. Calendar icon)
 - `<p>` komunikat "Brak przypisań"
@@ -363,6 +401,7 @@ interface DeleteAssignmentDialogProps {
 - `<Button>` "Dodaj przypisanie"
 
 **Obsługiwane interakcje:**
+
 - `onAddClick` - otwiera formularz dodawania
 
 **Walidacja:** Brak
@@ -370,6 +409,7 @@ interface DeleteAssignmentDialogProps {
 **Typy:** Brak
 
 **Propsy:**
+
 ```typescript
 interface EmptyStateProps {
   onAddClick: () => void;
@@ -399,6 +439,7 @@ export type AssignmentsListResponseDTO = Paginated<AssignmentDTO>;
 ```
 
 Po transformacji camelCase:
+
 ```typescript
 interface AssignmentDTO {
   uuid: Uuid;
@@ -442,19 +483,19 @@ import type { AssignmentDTO, DriverDTO, VehicleDTO, IsoDateOnlyString } from "@/
 export interface AssignmentViewModel {
   /** Oryginalne dane z API */
   assignment: AssignmentDTO;
-  
+
   /** Nazwa kierowcy (z join do drivers) */
   driverName: string;
-  
+
   /** Numer rejestracyjny pojazdu (z join do vehicles) */
   vehicleRegistration: string;
-  
+
   /** Czy przypisanie jest aktywne na dzisiejszą datę */
   isActive: boolean;
-  
+
   /** Status przypisania dla badge */
-  status: 'active' | 'completed' | 'upcoming';
-  
+  status: "active" | "completed" | "upcoming";
+
   /** Liczba dni do zakończenia (null jeśli endDate jest null lub przeszłe) */
   daysRemaining: number | null;
 }
@@ -465,22 +506,22 @@ export interface AssignmentViewModel {
 export interface AssignmentFilters {
   /** UUID kierowcy - filtrowanie po kierowcy */
   driverUuid?: string;
-  
+
   /** UUID pojazdu - filtrowanie po pojeździe */
   vehicleUuid?: string;
-  
+
   /** Data aktywności - pokaż tylko przypisania aktywne na tę datę */
   activeOn?: IsoDateOnlyString; // "YYYY-MM-DD"
-  
+
   /** Pole sortowania */
-  sortBy?: 'startDate' | 'endDate' | 'createdAt';
-  
+  sortBy?: "startDate" | "endDate" | "createdAt";
+
   /** Kierunek sortowania */
-  sortDir?: 'asc' | 'desc';
-  
+  sortDir?: "asc" | "desc";
+
   /** Limit wyników (dla paginacji) */
   limit?: number;
-  
+
   /** Kursor dla paginacji */
   cursor?: string;
 }
@@ -521,7 +562,7 @@ export interface AssignmentsSearchParams {
   activeOn?: string;
   sortBy?: string;
   sortDir?: string;
-  view?: 'table' | 'timeline';
+  view?: "table" | "timeline";
 }
 ```
 
@@ -530,29 +571,31 @@ export interface AssignmentsSearchParams {
 ### Stan lokalny komponentów
 
 **AssignmentsViewWithProvider:**
+
 ```typescript
 const [isFormOpen, setIsFormOpen] = useState(false);
 const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
+const [formMode, setFormMode] = useState<"create" | "edit">("create");
 const [selectedAssignment, setSelectedAssignment] = useState<AssignmentDTO | null>(null);
-const [viewMode, setViewMode] = useState<'table' | 'timeline'>('table');
+const [viewMode, setViewMode] = useState<"table" | "timeline">("table");
 const [filters, setFilters] = useState<AssignmentFilters>({
-  sortBy: 'startDate',
-  sortDir: 'asc',
+  sortBy: "startDate",
+  sortDir: "asc",
   limit: 50,
 });
 ```
 
 **AssignmentFormModal:**
+
 ```typescript
 // React Hook Form
 const form = useForm<AssignmentFormData>({
   resolver: zodResolver(assignmentFormSchema),
   defaultValues: {
-    driverUuid: '',
-    vehicleUuid: '',
-    startDate: '',
-    endDate: '',
+    driverUuid: "",
+    vehicleUuid: "",
+    startDate: "",
+    endDate: "",
   },
 });
 
@@ -565,60 +608,63 @@ const [conflictError, setConflictError] = useState<AssignmentConflictError | nul
 
 ```typescript
 // src/lib/assignments/useAssignments.ts
-import { useQuery } from '@tanstack/react-query';
-import type { AssignmentFilters, AssignmentViewModel } from './assignmentTypes';
-import type { AssignmentsListResponseDTO, DriverDTO, VehicleDTO } from '@/types';
+import { useQuery } from "@tanstack/react-query";
+import type { AssignmentFilters, AssignmentViewModel } from "./assignmentTypes";
+import type { AssignmentsListResponseDTO, DriverDTO, VehicleDTO } from "@/types";
 
 export function useAssignments(filters: AssignmentFilters) {
   return useQuery({
-    queryKey: ['assignments', filters],
+    queryKey: ["assignments", filters],
     queryFn: async (): Promise<AssignmentViewModel[]> => {
       // 1. Fetch assignments
       const params = new URLSearchParams();
-      if (filters.driverUuid) params.set('driverUuid', filters.driverUuid);
-      if (filters.vehicleUuid) params.set('vehicleUuid', filters.vehicleUuid);
-      if (filters.activeOn) params.set('activeOn', filters.activeOn);
-      if (filters.sortBy) params.set('sortBy', filters.sortBy);
-      if (filters.sortDir) params.set('sortDir', filters.sortDir);
-      if (filters.limit) params.set('limit', filters.limit.toString());
-      if (filters.cursor) params.set('cursor', filters.cursor);
+      if (filters.driverUuid) params.set("driverUuid", filters.driverUuid);
+      if (filters.vehicleUuid) params.set("vehicleUuid", filters.vehicleUuid);
+      if (filters.activeOn) params.set("activeOn", filters.activeOn);
+      if (filters.sortBy) params.set("sortBy", filters.sortBy);
+      if (filters.sortDir) params.set("sortDir", filters.sortDir);
+      if (filters.limit) params.set("limit", filters.limit.toString());
+      if (filters.cursor) params.set("cursor", filters.cursor);
 
       const response = await fetch(`/api/assignments?${params}`);
-      if (!response.ok) throw new Error('Failed to fetch assignments');
-      
+      if (!response.ok) throw new Error("Failed to fetch assignments");
+
       const data: AssignmentsListResponseDTO = await response.json();
-      
+
       // 2. Fetch drivers and vehicles (parallel, cached)
       const [driversRes, vehiclesRes] = await Promise.all([
-        fetch('/api/drivers?isActive=true'),
-        fetch('/api/vehicles?isActive=true'),
+        fetch("/api/drivers?isActive=true"),
+        fetch("/api/vehicles?isActive=true"),
       ]);
-      
+
       const drivers: DriverDTO[] = (await driversRes.json()).items || [];
       const vehicles: VehicleDTO[] = (await vehiclesRes.json()).items || [];
-      
+
       // 3. Transform to ViewModels
-      const today = new Date().toISOString().split('T')[0];
-      
+      const today = new Date().toISOString().split("T")[0];
+
       return data.items.map((assignment) => {
-        const driver = drivers.find(d => d.uuid === assignment.driverUuid);
-        const vehicle = vehicles.find(v => v.uuid === assignment.vehicleUuid);
-        
-        const isActive = assignment.startDate <= today && 
-                         (!assignment.endDate || assignment.endDate >= today);
-        
-        const status = assignment.startDate > today ? 'upcoming' :
-                       (!assignment.endDate || assignment.endDate >= today) ? 'active' :
-                       'completed';
-        
-        const daysRemaining = assignment.endDate && status === 'active' ?
-          Math.ceil((new Date(assignment.endDate).getTime() - new Date(today).getTime()) / (1000 * 60 * 60 * 24)) :
-          null;
-        
+        const driver = drivers.find((d) => d.uuid === assignment.driverUuid);
+        const vehicle = vehicles.find((v) => v.uuid === assignment.vehicleUuid);
+
+        const isActive = assignment.startDate <= today && (!assignment.endDate || assignment.endDate >= today);
+
+        const status =
+          assignment.startDate > today
+            ? "upcoming"
+            : !assignment.endDate || assignment.endDate >= today
+              ? "active"
+              : "completed";
+
+        const daysRemaining =
+          assignment.endDate && status === "active"
+            ? Math.ceil((new Date(assignment.endDate).getTime() - new Date(today).getTime()) / (1000 * 60 * 60 * 24))
+            : null;
+
         return {
           assignment,
-          driverName: driver?.name || 'Nieznany kierowca',
-          vehicleRegistration: vehicle?.registrationNumber || 'Nieznany pojazd',
+          driverName: driver?.name || "Nieznany kierowca",
+          vehicleRegistration: vehicle?.registrationNumber || "Nieznany pojazd",
           isActive,
           status,
           daysRemaining,
@@ -635,38 +681,38 @@ export function useAssignments(filters: AssignmentFilters) {
 
 ```typescript
 // src/lib/assignments/useCreateAssignment.ts
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { CreateAssignmentCommand, AssignmentDTO } from '@/types';
-import { toast } from 'sonner';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type { CreateAssignmentCommand, AssignmentDTO } from "@/types";
+import { toast } from "sonner";
 
 export function useCreateAssignment() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (data: CreateAssignmentCommand): Promise<AssignmentDTO> => {
-      const response = await fetch('/api/assignments', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/assignments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-      
+
       if (!response.ok) {
         const error = await response.json();
         throw error;
       }
-      
+
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['assignments'] });
-      toast.success('Przypisanie zostało dodane');
+      queryClient.invalidateQueries({ queryKey: ["assignments"] });
+      toast.success("Przypisanie zostało dodane");
     },
     onError: (error: any) => {
-      if (error.code === 'ASSIGNMENT_OVERLAP') {
+      if (error.code === "ASSIGNMENT_OVERLAP") {
         // Error handled in form component
         return;
       }
-      toast.error(error.message || 'Nie udało się dodać przypisania');
+      toast.error(error.message || "Nie udało się dodać przypisania");
     },
   });
 }
@@ -676,37 +722,37 @@ export function useCreateAssignment() {
 
 ```typescript
 // src/lib/assignments/useUpdateAssignment.ts
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { UpdateAssignmentCommand, AssignmentDTO, Uuid } from '@/types';
-import { toast } from 'sonner';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type { UpdateAssignmentCommand, AssignmentDTO, Uuid } from "@/types";
+import { toast } from "sonner";
 
 export function useUpdateAssignment() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async ({ uuid, data }: { uuid: Uuid; data: UpdateAssignmentCommand }): Promise<AssignmentDTO> => {
       const response = await fetch(`/api/assignments/${uuid}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-      
+
       if (!response.ok) {
         const error = await response.json();
         throw error;
       }
-      
+
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['assignments'] });
-      toast.success('Przypisanie zostało zaktualizowane');
+      queryClient.invalidateQueries({ queryKey: ["assignments"] });
+      toast.success("Przypisanie zostało zaktualizowane");
     },
     onError: (error: any) => {
-      if (error.code === 'ASSIGNMENT_OVERLAP') {
+      if (error.code === "ASSIGNMENT_OVERLAP") {
         return;
       }
-      toast.error(error.message || 'Nie udało się zaktualizować przypisania');
+      toast.error(error.message || "Nie udało się zaktualizować przypisania");
     },
   });
 }
@@ -716,30 +762,30 @@ export function useUpdateAssignment() {
 
 ```typescript
 // src/lib/assignments/useDeleteAssignment.ts
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import type { Uuid } from '@/types';
-import { toast } from 'sonner';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import type { Uuid } from "@/types";
+import { toast } from "sonner";
 
 export function useDeleteAssignment() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (uuid: Uuid): Promise<void> => {
       const response = await fetch(`/api/assignments/${uuid}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
-      
+
       if (!response.ok) {
         const error = await response.json();
         throw error;
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['assignments'] });
-      toast.success('Przypisanie zostało usunięte');
+      queryClient.invalidateQueries({ queryKey: ["assignments"] });
+      toast.success("Przypisanie zostało usunięte");
     },
     onError: (error: any) => {
-      toast.error(error.message || 'Nie udało się usunąć przypisania');
+      toast.error(error.message || "Nie udało się usunąć przypisania");
     },
   });
 }
@@ -749,15 +795,15 @@ export function useDeleteAssignment() {
 
 ```typescript
 // src/lib/assignments/useDrivers.ts
-import { useQuery } from '@tanstack/react-query';
-import type { DriverDTO } from '@/types';
+import { useQuery } from "@tanstack/react-query";
+import type { DriverDTO } from "@/types";
 
 export function useDrivers() {
   return useQuery({
-    queryKey: ['drivers', 'active'],
+    queryKey: ["drivers", "active"],
     queryFn: async (): Promise<DriverDTO[]> => {
-      const response = await fetch('/api/drivers?isActive=true');
-      if (!response.ok) throw new Error('Failed to fetch drivers');
+      const response = await fetch("/api/drivers?isActive=true");
+      if (!response.ok) throw new Error("Failed to fetch drivers");
       const data = await response.json();
       return data.items || [];
     },
@@ -766,15 +812,15 @@ export function useDrivers() {
 }
 
 // src/lib/assignments/useVehicles.ts
-import { useQuery } from '@tanstack/react-query';
-import type { VehicleDTO } from '@/types';
+import { useQuery } from "@tanstack/react-query";
+import type { VehicleDTO } from "@/types";
 
 export function useVehicles() {
   return useQuery({
-    queryKey: ['vehicles', 'active'],
+    queryKey: ["vehicles", "active"],
     queryFn: async (): Promise<VehicleDTO[]> => {
-      const response = await fetch('/api/vehicles?isActive=true');
-      if (!response.ok) throw new Error('Failed to fetch vehicles');
+      const response = await fetch("/api/vehicles?isActive=true");
+      if (!response.ok) throw new Error("Failed to fetch vehicles");
       const data = await response.json();
       return data.items || [];
     },
@@ -790,6 +836,7 @@ export function useVehicles() {
 #### GET /api/assignments
 
 **Parametry zapytania:**
+
 - `driverUuid?: string` - filtrowanie po UUID kierowcy
 - `vehicleUuid?: string` - filtrowanie po UUID pojazdu
 - `activeOn?: string` - filtrowanie po dacie aktywności (YYYY-MM-DD)
@@ -799,6 +846,7 @@ export function useVehicles() {
 - `sortDir?: 'asc' | 'desc'` - kierunek sortowania
 
 **Typ odpowiedzi:** `AssignmentsListResponseDTO`
+
 ```typescript
 {
   items: AssignmentDTO[];
@@ -807,6 +855,7 @@ export function useVehicles() {
 ```
 
 **Kody odpowiedzi:**
+
 - 200 - sukces
 - 401 - nieautoryzowany
 - 403 - brak uprawnień
@@ -814,6 +863,7 @@ export function useVehicles() {
 #### POST /api/assignments
 
 **Typ żądania:** `CreateAssignmentCommand`
+
 ```typescript
 {
   driverUuid: string;
@@ -826,6 +876,7 @@ export function useVehicles() {
 **Typ odpowiedzi:** `AssignmentDTO` (201 Created)
 
 **Kody odpowiedzi:**
+
 - 201 - utworzono
 - 400 - nieprawidłowy zakres dat (endDate < startDate)
 - 401 - nieautoryzowany
@@ -833,6 +884,7 @@ export function useVehicles() {
 - 409 - konflikt (nakładające się przypisanie)
 
 **Struktura błędu 409:**
+
 ```typescript
 {
   code: "ASSIGNMENT_OVERLAP",
@@ -850,6 +902,7 @@ export function useVehicles() {
 #### PATCH /api/assignments/{uuid}
 
 **Typ żądania:** `UpdateAssignmentCommand`
+
 ```typescript
 {
   driverUuid?: string;
@@ -862,6 +915,7 @@ export function useVehicles() {
 **Typ odpowiedzi:** `AssignmentDTO` (200 OK)
 
 **Kody odpowiedzi:**
+
 - 200 - zaktualizowano
 - 400 - nieprawidłowy zakres dat
 - 401 - nieautoryzowany
@@ -876,6 +930,7 @@ export function useVehicles() {
 **Typ odpowiedzi:** brak (204 No Content)
 
 **Kody odpowiedzi:**
+
 - 204 - usunięto
 - 401 - nieautoryzowany
 - 403 - brak uprawnień
@@ -888,6 +943,7 @@ export function useVehicles() {
 **Akcja:** Użytkownik wchodzi na `/assignments`
 
 **Przebieg:**
+
 1. Widok ładuje się z domyślnymi filtrami (sortBy: startDate, sortDir: asc)
 2. Hook `useAssignments` wykonuje zapytanie GET `/api/assignments`
 3. Podczas ładowania wyświetlane są skeletony
@@ -895,6 +951,7 @@ export function useVehicles() {
 5. Każde przypisanie pokazuje: kierowcę, pojazd, zakres dat, status (badge)
 
 **Stany:**
+
 - Loading - skeletony
 - Success - tabela/karty z danymi
 - Empty - EmptyState component
@@ -905,6 +962,7 @@ export function useVehicles() {
 **Akcja:** Użytkownik zmienia filtry (wybiera kierowcę/pojazd/datę)
 
 **Przebieg:**
+
 1. Zmiana wartości w AssignmentsFiltersBar
 2. Wywołanie `onFiltersChange` z nowymi filtrami
 3. Aktualizacja stanu `filters` w AssignmentsViewWithProvider
@@ -913,6 +971,7 @@ export function useVehicles() {
 6. Opcjonalnie: URL params są aktualizowane dla możliwości udostępniania linka
 
 **Zachowanie:**
+
 - Debounce dla date pickera (200ms)
 - Loading state podczas pobierania
 - Przycisk "Wyczyść filtry" resetuje wszystkie filtry
@@ -922,6 +981,7 @@ export function useVehicles() {
 **Akcja:** Użytkownik klika "Dodaj przypisanie"
 
 **Przebieg:**
+
 1. Otwiera się AssignmentFormModal w trybie 'create'
 2. Formularz jest pusty, focus na pierwszym polu (DriverSelect)
 3. Użytkownik wybiera kierowcę (wyszukiwanie w select)
@@ -943,19 +1003,29 @@ export function useVehicles() {
 11. Użytkownik może zamknąć modal (ESC, klik poza, przycisk Anuluj)
 
 **Walidacja Zod:**
+
 ```typescript
-const assignmentFormSchema = z.object({
-  driverUuid: z.string().uuid('Wybierz kierowcę'),
-  vehicleUuid: z.string().uuid('Wybierz pojazd'),
-  startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Nieprawidłowy format daty'),
-  endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Nieprawidłowy format daty').optional().or(z.literal('')),
-}).refine((data) => {
-  if (!data.endDate || data.endDate === '') return true;
-  return new Date(data.endDate) >= new Date(data.startDate);
-}, {
-  message: 'Data zakończenia musi być późniejsza lub równa dacie rozpoczęcia',
-  path: ['endDate'],
-});
+const assignmentFormSchema = z
+  .object({
+    driverUuid: z.string().uuid("Wybierz kierowcę"),
+    vehicleUuid: z.string().uuid("Wybierz pojazd"),
+    startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Nieprawidłowy format daty"),
+    endDate: z
+      .string()
+      .regex(/^\d{4}-\d{2}-\d{2}$/, "Nieprawidłowy format daty")
+      .optional()
+      .or(z.literal("")),
+  })
+  .refine(
+    (data) => {
+      if (!data.endDate || data.endDate === "") return true;
+      return new Date(data.endDate) >= new Date(data.startDate);
+    },
+    {
+      message: "Data zakończenia musi być późniejsza lub równa dacie rozpoczęcia",
+      path: ["endDate"],
+    }
+  );
 ```
 
 ### 4. Edycja przypisania
@@ -963,6 +1033,7 @@ const assignmentFormSchema = z.object({
 **Akcja:** Użytkownik klika "Edytuj" w menu akcji wiersza/karty
 
 **Przebieg:**
+
 1. Otwiera się AssignmentFormModal w trybie 'edit'
 2. Formularz jest wstępnie wypełniony danymi z `selectedAssignment`
 3. Użytkownik modyfikuje pola (np. zmienia daty)
@@ -971,11 +1042,12 @@ const assignmentFormSchema = z.object({
 6. Wywołanie `updateAssignment.mutate({ uuid, data })`
 7. PATCH `/api/assignments/{uuid}`
 8. Odpowiedzi:
-    - **200 OK:** Toast sukcesu, zamknięcie modala, odświeżenie listy
-    - **400/409:** Obsługa błędów jak przy tworzeniu
-    - **404 Not Found:** Toast "Nie znaleziono przypisania", zamknięcie modala, odświeżenie listy
+   - **200 OK:** Toast sukcesu, zamknięcie modala, odświeżenie listy
+   - **400/409:** Obsługa błędów jak przy tworzeniu
+   - **404 Not Found:** Toast "Nie znaleziono przypisania", zamknięcie modala, odświeżenie listy
 
 **Szczegóły:**
+
 - Można edytować wszystkie pola (driver, vehicle, dates)
 - Edycja historycznych przypisań powinna być możliwa (brak blokady)
 - Warning jeśli użytkownik próbuje edytować aktywne przypisanie?
@@ -985,6 +1057,7 @@ const assignmentFormSchema = z.object({
 **Akcja:** Użytkownik klika "Usuń" w menu akcji
 
 **Przebieg:**
+
 1. Otwiera się DeleteAssignmentDialog
 2. Dialog pokazuje szczegóły przypisania i komunikat:
    - "Czy na pewno chcesz usunąć to przypisanie?"
@@ -996,9 +1069,9 @@ const assignmentFormSchema = z.object({
 5. Wywołanie `deleteAssignment.mutate(uuid)`
 6. DELETE `/api/assignments/{uuid}`
 7. Odpowiedzi:
-    - **204 No Content:** Toast "Przypisanie zostało usunięte", zamknięcie dialogu, odświeżenie listy
-    - **404 Not Found:** Toast "Nie znaleziono przypisania", zamknięcie dialogu, odświeżenie listy
-    - **Błąd sieci:** Toast "Błąd połączenia", dialog pozostaje otwarty
+   - **204 No Content:** Toast "Przypisanie zostało usunięte", zamknięcie dialogu, odświeżenie listy
+   - **404 Not Found:** Toast "Nie znaleziono przypisania", zamknięcie dialogu, odświeżenie listy
+   - **Błąd sieci:** Toast "Błąd połączenia", dialog pozostaje otwarty
 
 **Uwaga:** Hard delete - przypisanie jest całkowicie usuwane z bazy.
 
@@ -1007,6 +1080,7 @@ const assignmentFormSchema = z.object({
 **Akcja:** Użytkownik klika nagłówek kolumny w tabeli
 
 **Przebieg:**
+
 1. Wywołanie `onSortChange(columnName, newDirection)`
 2. Aktualizacja stanu `filters` (sortBy, sortDir)
 3. Hook `useAssignments` refetchuje z nowymi parametrami
@@ -1014,6 +1088,7 @@ const assignmentFormSchema = z.object({
 5. Ikona sortowania (chevron) w nagłówku wskazuje aktualny kierunek
 
 **Kolumny z sortowaniem:**
+
 - Data rozpoczęcia (startDate)
 - Data zakończenia (endDate)
 - Domyślnie: startDate asc
@@ -1023,6 +1098,7 @@ const assignmentFormSchema = z.object({
 **Akcja:** Brak przypisań (lub wyniki filtrowania puste)
 
 **Przebieg:**
+
 1. Sprawdzenie `assignments.length === 0`
 2. Jeśli są aktywne filtry: "Brak wyników. Spróbuj zmienić filtry."
 3. Jeśli brak filtrów: EmptyState z przyciskiem "Dodaj pierwsze przypisanie"
@@ -1035,6 +1111,7 @@ const assignmentFormSchema = z.object({
 **Komponent:** AssignmentFormModal
 
 **Warunki dla driverUuid:**
+
 - Wymagane: `required: true`
 - Typ: UUID
 - Źródło: wybór z listy aktywnych kierowców (`useDrivers()`)
@@ -1042,6 +1119,7 @@ const assignmentFormSchema = z.object({
 - Walidacja: Zod `.string().uuid()`
 
 **Warunki dla vehicleUuid:**
+
 - Wymagane: `required: true`
 - Typ: UUID
 - Źródło: wybór z listy aktywnych pojazdów (`useVehicles()`)
@@ -1049,6 +1127,7 @@ const assignmentFormSchema = z.object({
 - Walidacja: Zod `.string().uuid()`
 
 **Warunki dla startDate:**
+
 - Wymagane: `required: true`
 - Format: YYYY-MM-DD
 - Walidacja: Zod `.string().regex(/^\d{4}-\d{2}-\d{2}$/)`
@@ -1056,6 +1135,7 @@ const assignmentFormSchema = z.object({
 - UI: DatePicker (Shadcn Calendar)
 
 **Warunki dla endDate:**
+
 - Wymagane: `optional: true`
 - Format: YYYY-MM-DD
 - Walidacja: Zod `.string().regex(...).optional().or(z.literal(''))`
@@ -1064,6 +1144,7 @@ const assignmentFormSchema = z.object({
 - UI: DatePicker (Shadcn Calendar)
 
 **Walidacja kompleksowa (Zod refine):**
+
 ```typescript
 .refine((data) => {
   if (!data.endDate || data.endDate === '') return true;
@@ -1079,49 +1160,58 @@ const assignmentFormSchema = z.object({
 **Komponent:** AssignmentsFiltersBar
 
 **Warunki dla activeOn:**
+
 - Wymagane: `optional: true`
 - Format: YYYY-MM-DD
 - Walidacja: Podstawowa walidacja daty (DatePicker zapewnia poprawny format)
 - UI: DatePicker
 
 **Pozostałe filtry:**
+
 - `driverUuid`, `vehicleUuid` - dropdown select, zawsze poprawne UUID
 - `sortBy`, `sortDir` - kontrolowane wartości z enum
 
 ### Walidacja po stronie serwera (obsługa błędów)
 
 **Kod 400 - Bad Request:**
+
 - Przyczyna: Nieprawidłowy zakres dat (endDate < startDate) lub nieprawidłowy format
 - Obsługa: Wyświetlenie komunikatu błędu w formularzu pod odpowiednim polem
 - Komponent: AssignmentFormModal
 - Metoda: `setError()` z react-hook-form
 
 **Kod 409 - Conflict:**
+
 - Przyczyna: Nakładające się przypisanie (overlap)
 - Obsługa: Wyświetlenie Alert component z szczegółami konfliktu
 - Komponent: AssignmentFormModal
-- Treść: 
+- Treść:
+
   ```
   To przypisanie koliduje z istniejącym:
   - Kierowca/Pojazd: [nazwa/numer]
   - Okres: [startDate] - [endDate]
-  
+
   Zmień daty lub wybierz innego kierowcę/pojazd.
   ```
+
 - Stan: `conflictError` w komponencie formularza
 
 **Kod 404 - Not Found:**
+
 - Przyczyna: Przypisanie, kierowca lub pojazd nie istnieje
 - Obsługa: Toast z komunikatem, zamknięcie modala, odświeżenie listy
 - Dotyczy: Edycja, usuwanie
 
 **Kod 403 - Forbidden:**
+
 - Przyczyna: Brak uprawnień do operacji
 - Obsługa: Toast "Brak uprawnień do wykonania tej operacji"
 
 ### Sprawdzanie warunków w UI
 
 **Wyświetlanie statusu przypisania:**
+
 - Komponent: AssignmentRow, AssignmentCard
 - Warunek `active`: `startDate <= today && (!endDate || endDate >= today)`
 - Warunek `upcoming`: `startDate > today`
@@ -1129,10 +1219,12 @@ const assignmentFormSchema = z.object({
 - Prezentacja: Badge z odpowiednim kolorem
 
 **Blokowanie niedostępnych opcji:**
+
 - Selecty kierowców/pojazdów pokazują tylko aktywnych (`isActive: true`)
 - Nieaktywni kierowcy/pojazdy nie są dostępne w formularzu
 
 **Ostrzeżenia:**
+
 - Opcjonalnie: Warning jeśli próba utworzenia przypisania z datą startDate w przeszłości
 - Opcjonalnie: Info jeśli endDate jest null ("Przypisanie bezterminowe")
 
@@ -1145,24 +1237,25 @@ const assignmentFormSchema = z.object({
 **Miejsce wystąpienia:** POST/PATCH `/api/assignments`
 
 **Obsługa w komponencie AssignmentFormModal:**
+
 ```typescript
 const createMutation = useCreateAssignment();
 
 const onSubmit = async (data: AssignmentFormData) => {
   try {
     setConflictError(null);
-    
+
     const command: CreateAssignmentCommand = {
       driverUuid: data.driverUuid,
       vehicleUuid: data.vehicleUuid,
       startDate: data.startDate,
       endDate: data.endDate || null,
     };
-    
+
     await createMutation.mutateAsync(command);
     onClose();
   } catch (error: any) {
-    if (error.code === 'ASSIGNMENT_OVERLAP') {
+    if (error.code === "ASSIGNMENT_OVERLAP") {
       setConflictError(error);
       // Error wyświetlany w Alert component w formularzu
     } else {
@@ -1173,25 +1266,30 @@ const onSubmit = async (data: AssignmentFormData) => {
 ```
 
 **Prezentacja błędu:**
+
 ```tsx
-{conflictError && (
-  <Alert variant="destructive">
-    <AlertCircle className="h-4 w-4" />
-    <AlertTitle>Konflikt przypisań</AlertTitle>
-    <AlertDescription>
-      {conflictError.message}
-      {conflictError.details?.conflictingAssignment && (
-        <div className="mt-2 text-sm">
-          <p>Istniejące przypisanie:</p>
-          <ul className="list-disc list-inside">
-            <li>Okres: {conflictError.details.conflictingAssignment.startDate} - 
-                {conflictError.details.conflictingAssignment.endDate || 'bezterminowo'}</li>
-          </ul>
-        </div>
-      )}
-    </AlertDescription>
-  </Alert>
-)}
+{
+  conflictError && (
+    <Alert variant="destructive">
+      <AlertCircle className="h-4 w-4" />
+      <AlertTitle>Konflikt przypisań</AlertTitle>
+      <AlertDescription>
+        {conflictError.message}
+        {conflictError.details?.conflictingAssignment && (
+          <div className="mt-2 text-sm">
+            <p>Istniejące przypisanie:</p>
+            <ul className="list-disc list-inside">
+              <li>
+                Okres: {conflictError.details.conflictingAssignment.startDate} -
+                {conflictError.details.conflictingAssignment.endDate || "bezterminowo"}
+              </li>
+            </ul>
+          </div>
+        )}
+      </AlertDescription>
+    </Alert>
+  );
+}
 ```
 
 #### 2. Błąd 400 - Nieprawidłowy zakres dat
@@ -1199,6 +1297,7 @@ const onSubmit = async (data: AssignmentFormData) => {
 **Miejsce wystąpienia:** POST/PATCH `/api/assignments`
 
 **Obsługa:**
+
 ```typescript
 catch (error: any) {
   if (error.code === 'INVALID_DATE_RANGE') {
@@ -1217,16 +1316,17 @@ catch (error: any) {
 **Miejsca wystąpienia:** PATCH/DELETE `/api/assignments/{uuid}`
 
 **Obsługa:**
+
 ```typescript
 // W hooku useUpdateAssignment / useDeleteAssignment
 onError: (error: any) => {
   if (error.status === 404) {
-    toast.error('Nie znaleziono przypisania. Mogło zostać już usunięte.');
-    queryClient.invalidateQueries({ queryKey: ['assignments'] });
+    toast.error("Nie znaleziono przypisania. Mogło zostać już usunięte.");
+    queryClient.invalidateQueries({ queryKey: ["assignments"] });
   } else {
-    toast.error(error.message || 'Wystąpił błąd');
+    toast.error(error.message || "Wystąpił błąd");
   }
-}
+};
 ```
 
 **Akcja:** Zamknięcie modala/dialogu, odświeżenie listy
@@ -1234,9 +1334,10 @@ onError: (error: any) => {
 #### 4. Błąd 403 - Brak uprawnień
 
 **Obsługa:**
+
 ```typescript
 if (error.status === 403) {
-  toast.error('Brak uprawnień do wykonania tej operacji');
+  toast.error("Brak uprawnień do wykonania tej operacji");
 }
 ```
 
@@ -1247,6 +1348,7 @@ if (error.status === 403) {
 **Hook:** `useAssignments`
 
 **Obsługa w komponencie:**
+
 ```tsx
 const { data: assignments, isLoading, isError, error, refetch } = useAssignments(filters);
 
@@ -1267,21 +1369,23 @@ if (isError) {
 **Hook:** `useDrivers`, `useVehicles`
 
 **Obsługa:**
+
 ```tsx
 const { data: drivers, isLoading: driversLoading, isError: driversError } = useDrivers();
 const { data: vehicles, isLoading: vehiclesLoading, isError: vehiclesError } = useVehicles();
 
 // W formularzu
-{driversError && (
-  <p className="text-sm text-destructive">Nie udało się załadować listy kierowców</p>
-)}
+{
+  driversError && <p className="text-sm text-destructive">Nie udało się załadować listy kierowców</p>;
+}
 
-{vehiclesError && (
-  <p className="text-sm text-destructive">Nie udało się załadować listy pojazdów</p>
-)}
+{
+  vehiclesError && <p className="text-sm text-destructive">Nie udało się załadować listy pojazdów</p>;
+}
 ```
 
 **Alternatywa:** Wyłączenie formularza jeśli dane nie zostały załadowane:
+
 ```tsx
 const canSubmit = !driversLoading && !vehiclesLoading && !driversError && !vehiclesError;
 ```
@@ -1289,11 +1393,13 @@ const canSubmit = !driversLoading && !vehiclesLoading && !driversError && !vehic
 ### Błędy walidacji formularza
 
 **Obsługa przez react-hook-form + Zod:**
+
 - Błędy wyświetlane inline pod polami
 - Komponent FormField z shadcn/ui automatycznie renderuje FormMessage
 - Przycisk Submit disabled jeśli formularz nieważny
 
 **Przykład:**
+
 ```tsx
 <FormField
   control={form.control}
@@ -1321,15 +1427,15 @@ const queryClient = new QueryClient({
     queries: {
       retry: 1,
       onError: (error: any) => {
-        if (error.message === 'Failed to fetch') {
-          toast.error('Błąd połączenia. Sprawdź połączenie z internetem.');
+        if (error.message === "Failed to fetch") {
+          toast.error("Błąd połączenia. Sprawdź połączenie z internetem.");
         }
       },
     },
     mutations: {
       onError: (error: any) => {
-        if (error.message === 'Failed to fetch') {
-          toast.error('Błąd połączenia. Sprawdź połączenie z internetem.');
+        if (error.message === "Failed to fetch") {
+          toast.error("Błąd połączenia. Sprawdź połączenie z internetem.");
         }
       },
     },
@@ -1348,19 +1454,22 @@ if (!isLoading && assignments.length === 0) {
 ```
 
 **EmptyState powinien różnicować:**
+
 - Brak wyników filtrowania: "Brak wyników. Spróbuj zmienić filtry."
 - Całkowicie pusta lista: "Brak przypisań. Dodaj pierwsze przypisanie, aby rozpocząć."
 
 ### Obsługa timeout i retry
 
 **TanStack Query automatycznie:**
+
 - Retry failed queries (1x dla queries, 0x dla mutations)
 - Timeout po braku odpowiedzi (domyślnie brak, można dodać)
 
 **Opcjonalne ustawienie:**
+
 ```typescript
 useQuery({
-  queryKey: ['assignments', filters],
+  queryKey: ["assignments", filters],
   queryFn: fetchAssignments,
   retry: 1,
   retryDelay: 1000,
@@ -1373,6 +1482,7 @@ useQuery({
 ### Etap 1: Struktura podstawowa i typy
 
 1. **Utworzenie katalogu i plików struktury:**
+
    ```
    src/components/assignments/
    src/lib/assignments/
@@ -1387,12 +1497,13 @@ useQuery({
    - `AssignmentsSearchParams`
 
 3. **Utworzenie strony Astro (src/pages/assignments.astro):**
+
    ```astro
    ---
    import AuthenticatedLayout from "@/layouts/AuthenticatedLayout.astro";
    import AssignmentsViewWithProvider from "@/components/assignments/AssignmentsViewWithProvider";
    ---
-   
+
    <AuthenticatedLayout title="Przypisania">
      <AssignmentsViewWithProvider client:only="react" />
    </AuthenticatedLayout>
@@ -1477,6 +1588,7 @@ useQuery({
 ### Etap 5: Formularz dodawania/edycji
 
 18. **Utworzenie schematu walidacji Zod (src/lib/assignments/assignmentFormSchema.ts):**
+
     ```typescript
     export const assignmentFormSchema = z.object({
       driverUuid: z.string().uuid('Wybierz kierowcę'),
@@ -1598,6 +1710,7 @@ useQuery({
 Ten plan implementacji dostarcza szczegółowy przewodnik do stworzenia widoku Przypisań kierowca-pojazd w aplikacji RouteLog. Widok jest zgodny z architekturą aplikacji (Astro + React islands, TanStack Query, Shadcn/ui) i realizuje wszystkie wymagania opisane w dokumentacji API oraz UI.
 
 Kluczowe aspekty implementacji:
+
 - **Walidacja** na poziomie klienta (Zod) i obsługa błędów serwera (409, 400)
 - **Responsywność** (desktop: tabela, mobile: karty)
 - **Accessibility** (ARIA, focus management, keyboard navigation)
@@ -1605,5 +1718,3 @@ Kluczowe aspekty implementacji:
 - **Bezpieczeństwo** (authenticated layout, guard, RLS przez Supabase)
 
 Czas implementacji: około 2-3 dni roboczych dla doświadczonego frontend developera.
-
-

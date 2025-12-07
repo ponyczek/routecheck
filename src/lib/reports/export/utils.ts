@@ -42,4 +42,3 @@ export function extractFilenameFromHeader(contentDisposition: string | null): st
   const filenameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
   return filenameMatch ? filenameMatch[1] : null;
 }
-

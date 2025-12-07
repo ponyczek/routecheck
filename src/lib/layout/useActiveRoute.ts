@@ -24,10 +24,7 @@ const ROUTE_MAP: Record<string, { title: string; parent?: string }> = {
  * @param routeMap - Route mapping configuration
  * @returns Array of Crumb items
  */
-function generateBreadcrumbs(
-  pathname: string,
-  routeMap: Record<string, { title: string; parent?: string }>,
-): Crumb[] {
+function generateBreadcrumbs(pathname: string, routeMap: Record<string, { title: string; parent?: string }>): Crumb[] {
   const crumbs: Crumb[] = [];
 
   // Always start with Dashboard (unless we're on home page)
@@ -133,4 +130,3 @@ export function useActiveRoute(): RouteInfo {
 
   return routeInfo;
 }
-

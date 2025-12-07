@@ -5,6 +5,7 @@
 Widok "Ustawienia – konto i sesja" umożliwia spedytorowi zarządzanie swoją sesją Supabase oraz bezpieczeństwem konta. Jest to prosta strona informacyjna z funkcją wylogowania, która wyświetla dane użytkownika, status sesji oraz ostrzeżenia bezpieczeństwa. Widok jest częścią sekcji ustawień aplikacji RouteLog i spełnia wymagania US-002 dotyczące zarządzania sesją użytkownika.
 
 Główne cele widoku:
+
 - Wyświetlenie informacji o aktualnie zalogowanym użytkowniku (e-mail z Supabase Auth)
 - Pokazanie statusu sesji i informacji o automatycznym wygasaniu po 24h braku aktywności
 - Umożliwienie bezpiecznego wylogowania z aplikacji
@@ -17,6 +18,7 @@ Widok dostępny pod ścieżką: `/settings/account`
 Widok jest chroniony przez middleware Astro (zdefiniowane w `src/middleware/index.ts`), które weryfikuje sesję Supabase. Użytkownicy niezalogowani są przekierowywani na `/signin?returnTo=/settings/account&expired=true`.
 
 Widok jest częścią sekcji ustawień wraz z:
+
 - `/settings/profile` - Profil firmy (domyślny widok ustawień)
 - `/settings/alerts` - Alerty i telemetria
 - `/settings/account` - Konto i sesja (ten widok)
@@ -334,19 +336,19 @@ export type IsoDateString = string;
 export interface SessionViewModel {
   /** Status sesji */
   status: SessionStatus;
-  
+
   /** Data wygaśnięcia sesji (ISO 8601) */
   expiresAt: IsoDateString;
-  
+
   /** Data ostatniej aktywności użytkownika (ISO 8601) */
   lastActivityAt: IsoDateString;
-  
+
   /** Pozostały czas do wygaśnięcia w godzinach */
   remainingHours: number;
-  
+
   /** Adres e-mail powiązany z sesją (z Supabase Auth) */
   email: string;
-  
+
   /** UUID użytkownika Supabase Auth */
   authUserId: string;
 }
@@ -354,7 +356,7 @@ export interface SessionViewModel {
 /**
  * Status sesji użytkownika
  */
-export type SessionStatus = 'active' | 'expiring_soon' | 'expired';
+export type SessionStatus = "active" | "expiring_soon" | "expired";
 
 /**
  * Props dla AccountSettingsView
@@ -362,7 +364,7 @@ export type SessionStatus = 'active' | 'expiring_soon' | 'expired';
 export interface AccountSettingsViewProps {
   /** Opcjonalne początkowe dane użytkownika (server-side) */
   initialUser?: UserDTO;
-  
+
   /** Opcjonalne początkowe dane sesji (server-side) */
   initialSession?: SessionViewModel;
 }
@@ -373,7 +375,7 @@ export interface AccountSettingsViewProps {
 export interface SessionInfoCardProps {
   /** Dane sesji do wyświetlenia */
   session: SessionViewModel;
-  
+
   /** Flaga ładowania */
   isLoading?: boolean;
 }
@@ -384,7 +386,7 @@ export interface SessionInfoCardProps {
 export interface SessionStatusIndicatorProps {
   /** Status sesji */
   status: SessionStatus;
-  
+
   /** Dodatkowe klasy CSS */
   className?: string;
 }
@@ -395,7 +397,7 @@ export interface SessionStatusIndicatorProps {
 export interface SessionExpiryWarningProps {
   /** Data wygaśnięcia sesji */
   expiresAt: IsoDateString;
-  
+
   /** Pozostałe godziny do wygaśnięcia */
   remainingHours?: number;
 }
@@ -406,13 +408,13 @@ export interface SessionExpiryWarningProps {
 export interface UserInfoCardProps {
   /** Dane użytkownika */
   user: UserDTO;
-  
+
   /** Dane firmy */
   company: CompanyDTO;
-  
+
   /** Adres e-mail z Supabase Auth */
   email: string;
-  
+
   /** Flaga ładowania */
   isLoading?: boolean;
 }
@@ -431,7 +433,7 @@ export interface UserEmailDisplayProps {
 export interface SecurityTipsCardProps {
   /** Nazwa firmy dla kontekstu */
   companyName: string;
-  
+
   /** Dodatkowe klasy CSS */
   className?: string;
 }
@@ -449,7 +451,7 @@ export interface SecurityTipsListProps {
 export interface AccountActionsCardProps {
   /** Callback wylogowania */
   onSignOut: () => Promise<void>;
-  
+
   /** Flaga procesu wylogowania */
   isSigningOut: boolean;
 }
@@ -460,12 +462,12 @@ export interface AccountActionsCardProps {
 export interface LogoutButtonProps {
   /** Funkcja wylogowania */
   onSignOut: () => Promise<void>;
-  
+
   /** Flaga stanu wylogowania */
   isLoading: boolean;
-  
+
   /** Wariant wizualny przycisku */
-  variant?: 'default' | 'destructive';
+  variant?: "default" | "destructive";
 }
 ```
 
@@ -480,6 +482,7 @@ const { user, company, isLoading, error, signOut, refresh } = useAuthContext();
 ```
 
 Hook `useAuthContext`:
+
 - Pobiera dane użytkownika z `/api/users/me` (wykorzystuje `fetchCurrentUser`)
 - Pobiera dane firmy z `/api/companies/me` (wykorzystuje `fetchCurrentCompany`)
 - Wykorzystuje TanStack Query z strategią stale-while-revalidate
@@ -522,7 +525,7 @@ Należy utworzyć dedykowany hook `useSessionData` w `src/lib/settings/useSessio
 ```typescript
 /**
  * Hook do pobierania i transformacji danych sesji użytkownika
- * 
+ *
  * @returns SessionViewModel z danymi sesji lub null jeśli brak sesji
  */
 export function useSessionData(initialSession?: SessionViewModel): {
@@ -539,24 +542,26 @@ export function useSessionData(initialSession?: SessionViewModel): {
     try {
       setIsLoading(true);
       setError(null);
-      
-      const { data: { session: supabaseSession }, error: sessionError } = 
-        await supabaseBrowserClient.auth.getSession();
-      
+
+      const {
+        data: { session: supabaseSession },
+        error: sessionError,
+      } = await supabaseBrowserClient.auth.getSession();
+
       if (sessionError) {
         throw sessionError;
       }
-      
+
       if (!supabaseSession) {
         setSession(null);
         return;
       }
-      
+
       // Transform Supabase session to SessionViewModel
       const viewModel = transformSupabaseSession(supabaseSession);
       setSession(viewModel);
     } catch (err) {
-      setError(err instanceof Error ? err : new Error('Unknown error'));
+      setError(err instanceof Error ? err : new Error("Unknown error"));
       setSession(null);
     } finally {
       setIsLoading(false);
@@ -584,8 +589,8 @@ export function useSessionData(initialSession?: SessionViewModel): {
 W pliku `src/lib/settings/sessionTransformers.ts`:
 
 ```typescript
-import type { Session } from '@supabase/supabase-js';
-import type { SessionViewModel, SessionStatus } from './types';
+import type { Session } from "@supabase/supabase-js";
+import type { SessionViewModel, SessionStatus } from "./types";
 
 /**
  * Transformuje sesję Supabase do SessionViewModel
@@ -596,15 +601,15 @@ export function transformSupabaseSession(session: Session): SessionViewModel {
   const expiresDate = new Date(expiresAt);
   const remainingMs = expiresDate.getTime() - now.getTime();
   const remainingHours = Math.max(0, Math.floor(remainingMs / (1000 * 60 * 60)));
-  
+
   // Określ status sesji
-  let status: SessionStatus = 'active';
+  let status: SessionStatus = "active";
   if (remainingHours === 0) {
-    status = 'expired';
+    status = "expired";
   } else if (remainingHours < 2) {
-    status = 'expiring_soon';
+    status = "expiring_soon";
   }
-  
+
   return {
     status,
     expiresAt,
@@ -619,12 +624,12 @@ export function transformSupabaseSession(session: Session): SessionViewModel {
  * Formatuje datę ISO do czytelnego formatu dla użytkownika polskiego
  */
 export function formatSessionDate(isoDate: string): string {
-  return new Date(isoDate).toLocaleString('pl-PL', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
+  return new Date(isoDate).toLocaleString("pl-PL", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 }
 
@@ -633,9 +638,9 @@ export function formatSessionDate(isoDate: string): string {
  */
 export function getSessionStatusText(status: SessionStatus): string {
   const statusMap: Record<SessionStatus, string> = {
-    active: 'Aktywna',
-    expiring_soon: 'Wygasa wkrótce',
-    expired: 'Wygasła',
+    active: "Aktywna",
+    expiring_soon: "Wygasa wkrótce",
+    expired: "Wygasła",
   };
   return statusMap[status];
 }
@@ -643,11 +648,11 @@ export function getSessionStatusText(status: SessionStatus): string {
 /**
  * Zwraca wariant koloru dla badge statusu sesji
  */
-export function getSessionStatusVariant(status: SessionStatus): 'default' | 'destructive' | 'secondary' {
-  const variantMap: Record<SessionStatus, 'default' | 'destructive' | 'secondary'> = {
-    active: 'default',
-    expiring_soon: 'secondary',
-    expired: 'destructive',
+export function getSessionStatusVariant(status: SessionStatus): "default" | "destructive" | "secondary" {
+  const variantMap: Record<SessionStatus, "default" | "destructive" | "secondary"> = {
+    active: "default",
+    expiring_soon: "secondary",
+    expired: "destructive",
   };
   return variantMap[status];
 }
@@ -664,16 +669,18 @@ Widok nie wymaga nowych endpointów API. Wykorzystuje istniejące:
 **Cel**: Pobranie danych aktualnie zalogowanego użytkownika.
 
 **Request**:
+
 - Method: GET
 - Headers: Cookie (sesja Supabase)
 
 **Response**:
+
 - Status 200: `UserDTO`
   ```typescript
   {
-    uuid: string;        // UUID użytkownika w bazie
+    uuid: string; // UUID użytkownika w bazie
     companyUuid: string; // UUID firmy użytkownika
-    createdAt: string;   // Data utworzenia konta (ISO 8601)
+    createdAt: string; // Data utworzenia konta (ISO 8601)
   }
   ```
 - Status 401: `ProblemDetail` - brak autoryzacji
@@ -687,15 +694,17 @@ Widok nie wymaga nowych endpointów API. Wykorzystuje istniejące:
 **Cel**: Pobranie danych firmy aktualnie zalogowanego użytkownika.
 
 **Request**:
+
 - Method: GET
 - Headers: Cookie (sesja Supabase)
 
 **Response**:
+
 - Status 200: `CompanyDTO`
   ```typescript
   {
-    uuid: string;      // UUID firmy
-    name: string;      // Nazwa firmy
+    uuid: string; // UUID firmy
+    name: string; // Nazwa firmy
     createdAt: string; // Data utworzenia firmy (ISO 8601)
   }
   ```
@@ -710,16 +719,21 @@ Widok nie wymaga nowych endpointów API. Wykorzystuje istniejące:
 **Cel**: Pobranie aktualnej sesji użytkownika z Supabase Auth (client-side).
 
 **Request**: Wywołanie metody SDK
+
 ```typescript
-const { data: { session }, error } = await supabaseBrowserClient.auth.getSession();
+const {
+  data: { session },
+  error,
+} = await supabaseBrowserClient.auth.getSession();
 ```
 
 **Response**:
+
 ```typescript
 {
   data: {
-    session: Session | null
-  };
+    session: Session | null;
+  }
   error: AuthError | null;
 }
 
@@ -741,24 +755,28 @@ interface Session {
 **Cel**: Wylogowanie użytkownika i wyczyszczenie sesji.
 
 **Request**: Wywołanie metody SDK
+
 ```typescript
 const { error } = await supabaseBrowserClient.auth.signOut();
 ```
 
 **Response**:
+
 ```typescript
 {
   error: AuthError | null;
 }
 ```
 
-**Wykorzystanie**: 
+**Wykorzystanie**:
+
 - Hook `useAuthContext` dostarcza funkcję `signOut()`, która wywołuje `auth.signOut()` i przekierowuje na `/signin`
 - `LogoutButton` wywołuje tę funkcję po potwierdzeniu przez użytkownika
 
 ### Strategie cache i refetch
 
 **TanStack Query (dla `/api/users/me` i `/api/companies/me`)**:
+
 - `staleTime: 5 * 60 * 1000` (5 minut) - dane uznawane za świeże przez 5 minut
 - `refetchInterval: 5 * 60 * 1000` (5 minut) - automatyczne odświeżanie w tle
 - `refetchOnWindowFocus: true` - odświeżenie przy powrocie do zakładki
@@ -766,6 +784,7 @@ const { error } = await supabaseBrowserClient.auth.signOut();
 - `retry: 1` - jedna próba ponowienia przy błędzie
 
 **Supabase Session (local state)**:
+
 - Brak automatycznego odświeżania w widoku ustawień
 - Odświeżanie tylko przez manualny refresh lub reload strony
 - Supabase automatycznie odświeża tokeny w tle (autoRefreshToken: true)
@@ -773,15 +792,18 @@ const { error } = await supabaseBrowserClient.auth.signOut();
 ### Obsługa błędów API
 
 **401 Unauthorized**:
+
 - Hook `useAuthContext` automatycznie przekierowuje na `/signin?returnTo=/settings/account&expired=true&reason=timeout`
 - Użytkownik jest informowany o wygaśnięciu sesji
 
 **404 Not Found**:
+
 - Wyświetlenie komunikatu błędu w UI
 - Możliwość odświeżenia strony
 - Nie powoduje przekierowania (może być przejściowy błąd)
 
 **500 Internal Server Error**:
+
 - Wyświetlenie komunikatu błędu w UI
 - Możliwość ponownego pobrania danych
 - Logowanie błędu do konsoli
@@ -791,6 +813,7 @@ const { error } = await supabaseBrowserClient.auth.signOut();
 ### 1. Przeglądanie informacji o sesji
 
 **Flow**:
+
 1. Użytkownik nawiguje do `/settings/account`
 2. Strona ładuje się z danymi server-side (jeśli dostępne)
 3. `AccountSettingsView` montuje się i uruchamia hooki
@@ -799,6 +822,7 @@ const { error } = await supabaseBrowserClient.auth.signOut();
 6. Komponenty wyświetlają dane w kartach
 
 **Rezultat**:
+
 - Użytkownik widzi swój adres e-mail
 - Użytkownik widzi status sesji (aktywna/wygasająca/wygasła)
 - Użytkownik widzi pozostały czas do wygaśnięcia sesji
@@ -807,40 +831,47 @@ const { error } = await supabaseBrowserClient.auth.signOut();
 ### 2. Przeglądanie informacji o koncie
 
 **Flow**:
+
 1. Użytkownik przegląda kartę `UserInfoCard`
 2. Widzi swój UUID, UUID firmy, datę utworzenia konta
 3. Może skopiować adres e-mail do schowka klikając przycisk kopiowania
 
 **Rezultat**:
+
 - Użytkownik ma dostęp do swoich danych identyfikacyjnych
 - Użytkownik może łatwo skopiować e-mail (np. do zgłoszenia wsparcia)
 
 ### 3. Kopiowanie adresu e-mail
 
 **Flow**:
+
 1. Użytkownik klika przycisk kopiowania przy adresie e-mail
 2. `navigator.clipboard.writeText(email)` kopiuje e-mail
 3. Toast notification pokazuje potwierdzenie "E-mail skopiowany do schowka"
 4. Ikona przycisku zmienia się na `Check` na 2 sekundy
 
 **Rezultat**:
+
 - E-mail jest w schowku użytkownika
 - Użytkownik otrzymuje wizualne potwierdzenie akcji
 
 ### 4. Czytanie porad bezpieczeństwa
 
 **Flow**:
+
 1. Użytkownik przegląda kartę `SecurityTipsCard`
 2. Czyta listę porad dotyczących bezpieczeństwa sesji
 3. Może kliknąć link do dokumentacji (jeśli dostępny)
 
 **Rezultat**:
+
 - Użytkownik jest edukowany o bezpieczeństwie
 - Użytkownik rozumie konsekwencje wygaśnięcia sesji
 
 ### 5. Wylogowanie z aplikacji
 
 **Flow**:
+
 1. Użytkownik klika przycisk "Wyloguj" w karcie `AccountActionsCard`
 2. Otwiera się `AlertDialog` z pytaniem potwierdzającym
 3. Dialog wyświetla:
@@ -856,6 +887,7 @@ const { error } = await supabaseBrowserClient.auth.signOut();
    - Użytkownik jest przekierowywany na `/signin?reason=signed-out`
 
 **Rezultat**:
+
 - Użytkownik jest bezpiecznie wylogowany
 - Sesja jest zakończona
 - Użytkownik jest przekierowany na stronę logowania z informacją o powodzie
@@ -863,6 +895,7 @@ const { error } = await supabaseBrowserClient.auth.signOut();
 ### 6. Automatyczne przekierowanie przy wygaśnięciu sesji
 
 **Flow**:
+
 1. Sesja użytkownika wygasa (po 24h braku aktywności)
 2. `useAuthContext` wykonuje zapytanie do `/api/users/me`
 3. API zwraca 401 Unauthorized
@@ -870,28 +903,33 @@ const { error } = await supabaseBrowserClient.auth.signOut();
 5. Użytkownik jest przekierowywany na `/signin?returnTo=/settings/account&expired=true&reason=timeout`
 
 **Rezultat**:
+
 - Użytkownik jest poinformowany o wygaśnięciu sesji
 - Po ponownym zalogowaniu wraca na stronę ustawień
 
 ### 7. Odświeżanie danych
 
 **Flow automatyczny**:
+
 1. Co 5 minut `useAuthContext` automatycznie odświeża dane w tle
 2. Dane są aktualizowane bez zakłócania UI (stale-while-revalidate)
 3. Użytkownik nie zauważa odświeżania (jeśli nie ma zmian)
 
 **Flow manualny**:
+
 1. Użytkownik może odświeżyć całą stronę (F5)
 2. Server-side rendering zapewnia świeże dane przy każdym załadowaniu strony
 3. React islands montują się z aktualnymi danymi
 
 **Rezultat**:
+
 - Dane są zawsze aktualne
 - Użytkownik nie musi ręcznie odświeżać strony
 
 ### 8. Obsługa stanu offline
 
 **Flow**:
+
 1. Użytkownik traci połączenie z internetem
 2. TanStack Query wykrywa brak połączenia
 3. Wyświetlane są ostatnie dane z cache (jeśli dostępne)
@@ -899,6 +937,7 @@ const { error } = await supabaseBrowserClient.auth.signOut();
 5. Toast pokazuje komunikat "Brak połączenia z internetem"
 
 **Rezultat**:
+
 - Użytkownik może przeglądać dane (cache)
 - Użytkownik jest informowany o braku możliwości wylogowania offline
 - Po przywróceniu połączenia dane są automatycznie odświeżane
@@ -910,8 +949,12 @@ const { error } = await supabaseBrowserClient.auth.signOut();
 **Warunek**: Użytkownik musi być zalogowany (posiadać aktywną sesję Supabase).
 
 **Weryfikacja**: Middleware Astro (`src/middleware/index.ts`) weryfikuje sesję przed renderowaniem strony:
+
 ```typescript
-const { data: { session }, error: sessionError } = await context.locals.supabase.auth.getSession();
+const {
+  data: { session },
+  error: sessionError,
+} = await context.locals.supabase.auth.getSession();
 
 if (sessionError || !session?.user) {
   const returnTo = encodeURIComponent(context.url.pathname);
@@ -919,7 +962,8 @@ if (sessionError || !session?.user) {
 }
 ```
 
-**Wpływ na UI**: 
+**Wpływ na UI**:
+
 - Niezalogowani użytkownicy nie mają dostępu do widoku
 - Są automatycznie przekierowywani na stronę logowania
 - Po zalogowaniu wracają na stronę ustawień (parametr `returnTo`)
@@ -928,15 +972,15 @@ if (sessionError || !session?.user) {
 
 **Warunek 1**: Sesja aktywna (pozostało > 2 godziny).
 
-**Weryfikacja**: 
+**Weryfikacja**:
+
 ```typescript
-const remainingHours = Math.floor(
-  (new Date(session.expiresAt).getTime() - Date.now()) / (1000 * 60 * 60)
-);
-const status = remainingHours > 2 ? 'active' : remainingHours > 0 ? 'expiring_soon' : 'expired';
+const remainingHours = Math.floor((new Date(session.expiresAt).getTime() - Date.now()) / (1000 * 60 * 60));
+const status = remainingHours > 2 ? "active" : remainingHours > 0 ? "expiring_soon" : "expired";
 ```
 
 **Wpływ na UI**:
+
 - Badge z zielonym kolorem i tekstem "Aktywna"
 - Brak ostrzeżenia o wygaśnięciu
 - Normalny stan interfejsu
@@ -946,6 +990,7 @@ const status = remainingHours > 2 ? 'active' : remainingHours > 0 ? 'expiring_so
 **Weryfikacja**: `status === 'expiring_soon'`
 
 **Wpływ na UI**:
+
 - Badge z żółtym/pomarańczowym kolorem i tekstem "Wygasa wkrótce"
 - Wyświetlenie ostrzeżenia w `SessionExpiryWarning` z dokładnym czasem
 - Alert z ikoną ostrzeżenia i kolorystyką warning
@@ -955,6 +1000,7 @@ const status = remainingHours > 2 ? 'active' : remainingHours > 0 ? 'expiring_so
 **Weryfikacja**: `status === 'expired'`
 
 **Wpływ na UI**:
+
 - Badge z czerwonym kolorem i tekstem "Wygasła"
 - Komunikat o konieczności ponownego zalogowania
 - Użytkownik prawdopodobnie zostanie przekierowany przez `useAuthContext` przy następnym zapytaniu API
@@ -964,6 +1010,7 @@ const status = remainingHours > 2 ? 'active' : remainingHours > 0 ? 'expiring_so
 **Warunek**: Przeglądarka obsługuje Clipboard API.
 
 **Weryfikacja**:
+
 ```typescript
 if (!navigator.clipboard) {
   toast.error("Kopiowanie nie jest obsługiwane w tej przeglądarce");
@@ -972,6 +1019,7 @@ if (!navigator.clipboard) {
 ```
 
 **Wpływ na UI**:
+
 - Jeśli API jest dostępne: przycisk kopiowania jest aktywny
 - Jeśli API nie jest dostępne: pokazuje się toast z błędem
 - Alternatywnie: przycisk może być ukryty lub wyłączony
@@ -983,6 +1031,7 @@ if (!navigator.clipboard) {
 **Weryfikacja**: AlertDialog wymaga kliknięcia przycisku "Wyloguj" w dialogu.
 
 **Wpływ na UI**:
+
 - Pierwszy klik otwiera dialog potwierdzenia
 - Dopiero drugi klik w dialogu wykonuje akcję
 - Kliknięcie "Anuluj" lub poza dialogiem zamyka dialog bez akcji
@@ -995,6 +1044,7 @@ if (!navigator.clipboard) {
 **Weryfikacja**: `isSigningOut === true`
 
 **Wpływ na UI**:
+
 - Przycisk "Wyloguj" jest wyłączony (`disabled`)
 - Tekst przycisku zmienia się na "Wylogowywanie..."
 - Pokazywany jest spinner/ikona ładowania
@@ -1005,6 +1055,7 @@ if (!navigator.clipboard) {
 **Weryfikacja**: `isLoading === true` (z `useAuthContext`)
 
 **Wpływ na UI**:
+
 - Szkielety (skeletons) zamiast rzeczywistych danych
 - Przyciski mogą być wyłączone lub pokazywać stan ładowania
 - Użytkownik wie, że dane są pobierane
@@ -1013,7 +1064,8 @@ if (!navigator.clipboard) {
 
 **Warunek**: Błąd podczas pobierania danych użytkownika lub sesji.
 
-**Weryfikacja**: 
+**Weryfikacja**:
+
 ```typescript
 if (error && !user) {
   // Wyświetl komunikat błędu
@@ -1021,6 +1073,7 @@ if (error && !user) {
 ```
 
 **Wpływ na UI**:
+
 - Wyświetlenie karty błędu z komunikatem
 - Przycisk "Spróbuj ponownie" do odświeżenia danych
 - Możliwość odświeżenia całej strony
@@ -1031,13 +1084,15 @@ if (error && !user) {
 **Warunek**: Dane sesji muszą być kompletne i poprawne.
 
 **Weryfikacja**: W `transformSupabaseSession`:
+
 ```typescript
 if (!session.expires_at || !session.user.email) {
-  throw new Error('Niepełne dane sesji');
+  throw new Error("Niepełne dane sesji");
 }
 ```
 
 **Wpływ na UI**:
+
 - Jeśli walidacja przechodzi: normalne wyświetlanie danych
 - Jeśli walidacja nie przechodzi: wyświetlenie stanu błędu
 - Fallback na bezpieczne wartości domyślne
@@ -1051,16 +1106,16 @@ if (!session.expires_at || !session.user.email) {
 **Scenariusz**: Sesja wygasła lub jest nieprawidłowa podczas pobierania `/api/users/me` lub `/api/companies/me`.
 
 **Obsługa**:
+
 1. Hook `useAuthContext` wykrywa błąd UNAUTHORIZED
 2. Automatyczne przekierowanie na `/signin?returnTo=/settings/account&expired=true&reason=timeout`
 3. Użytkownik zostaje poinformowany o wygaśnięciu sesji na stronie logowania
 
 **Kod**:
+
 ```typescript
 useEffect(() => {
-  const isUnauthorized =
-    userQuery.error?.message === "UNAUTHORIZED" || 
-    companyQuery.error?.message === "UNAUTHORIZED";
+  const isUnauthorized = userQuery.error?.message === "UNAUTHORIZED" || companyQuery.error?.message === "UNAUTHORIZED";
 
   if (isUnauthorized) {
     const currentPath = window.location.pathname;
@@ -1076,12 +1131,14 @@ useEffect(() => {
 **Scenariusz**: Wywołanie `supabaseBrowserClient.auth.signOut()` kończy się błędem (np. brak połączenia).
 
 **Obsługa**:
+
 1. Złapanie błędu w try-catch w funkcji `signOut`
 2. Logowanie błędu do konsoli
 3. Mimo błędu, wymuszenie przekierowania na `/signin` (sesja lokalnie jest uznawana za zakończoną)
 4. Wyświetlenie toast notification z informacją o błędzie
 
 **Kod**:
+
 ```typescript
 const signOut = useCallback(async () => {
   try {
@@ -1105,12 +1162,14 @@ const signOut = useCallback(async () => {
 **Scenariusz**: Użytkownik ma aktywną sesję Supabase Auth, ale nie istnieje w tabeli `users` w bazie danych.
 
 **Obsługa**:
+
 1. Funkcja `fetchCurrentUser` rzuca błąd NOT_FOUND
 2. `useAuthContext` ustawia error state
 3. Wyświetlenie komunikatu błędu w UI
 4. Możliwość odświeżenia danych lub wylogowania
 
 **Kod**:
+
 ```typescript
 if (error && error.message === 'NOT_FOUND') {
   return (
@@ -1140,12 +1199,14 @@ if (error && error.message === 'NOT_FOUND') {
 **Scenariusz**: Błąd serwera podczas pobierania danych użytkownika lub firmy.
 
 **Obsługa**:
+
 1. React Query retry mechanizm (1 próba ponowna)
 2. Jeśli nadal błąd: wyświetlenie komunikatu w UI
 3. Możliwość ręcznego odświeżenia
 4. Logowanie szczegółów do konsoli
 
 **Kod**:
+
 ```typescript
 if (error && error.message !== 'UNAUTHORIZED' && error.message !== 'NOT_FOUND') {
   return (
@@ -1174,11 +1235,13 @@ if (error && error.message !== 'UNAUTHORIZED' && error.message !== 'NOT_FOUND') 
 **Scenariusz**: `supabaseBrowserClient.auth.getSession()` zwraca `session: null`.
 
 **Obsługa**:
+
 1. Hook `useSessionData` ustawia `session` na null
 2. Komponent `SessionInfoCard` wyświetla placeholder
 3. Informacja o braku dostępnych danych sesji
 
 **Kod**:
+
 ```typescript
 if (!session) {
   return (
@@ -1203,11 +1266,13 @@ if (!session) {
 **Scenariusz**: `supabaseBrowserClient.auth.getSession()` zwraca błąd.
 
 **Obsługa**:
+
 1. Hook `useSessionData` ustawia error state
 2. Wyświetlenie komunikatu błędu
 3. Możliwość ponowienia próby
 
 **Kod**:
+
 ```typescript
 if (sessionError) {
   return (
@@ -1236,23 +1301,25 @@ if (sessionError) {
 **Scenariusz**: `navigator.clipboard.writeText()` kończy się błędem (np. brak uprawnień).
 
 **Obsługa**:
+
 1. Złapanie błędu w try-catch
 2. Wyświetlenie toast notification z informacją o błędzie
 3. Logowanie błędu do konsoli
 
 **Kod**:
+
 ```typescript
 const handleCopyEmail = async () => {
   try {
     if (!navigator.clipboard) {
-      throw new Error('Clipboard API not supported');
+      throw new Error("Clipboard API not supported");
     }
     await navigator.clipboard.writeText(email);
     setIsCopied(true);
     toast.success("E-mail skopiowany do schowka");
     setTimeout(() => setIsCopied(false), 2000);
   } catch (error) {
-    console.error('Copy error:', error);
+    console.error("Copy error:", error);
     toast.error("Nie udało się skopiować e-mail. Spróbuj ręcznie.");
   }
 };
@@ -1267,11 +1334,13 @@ const handleCopyEmail = async () => {
 **Scenariusz**: Zapytania do API trwają zbyt długo (>30s).
 
 **Obsługa**:
+
 1. React Query nie ma built-in timeout, ale możemy dodać własny
 2. Po przekroczeniu czasu: wyświetlenie komunikatu
 3. Możliwość anulowania i ponowienia
 
 **Kod**:
+
 ```typescript
 const userQuery = useQuery({
   queryKey: ["user", "me"],
@@ -1304,12 +1373,14 @@ if (userQuery.isError && userQuery.failureCount > 0) {
 **Scenariusz**: Użytkownik traci połączenie podczas korzystania z widoku.
 
 **Obsługa**:
+
 1. TanStack Query wykrywa brak połączenia (przez `navigator.onLine` i failed requests)
 2. Wyświetlenie danych z cache (jeśli dostępne)
 3. Banner informujący o braku połączenia
 4. Automatyczne odświeżenie po przywróceniu połączenia
 
 **Kod**:
+
 ```typescript
 // W AccountSettingsView
 const [isOnline, setIsOnline] = useState(navigator.onLine);
@@ -1317,10 +1388,10 @@ const [isOnline, setIsOnline] = useState(navigator.onLine);
 useEffect(() => {
   const handleOnline = () => setIsOnline(true);
   const handleOffline = () => setIsOnline(false);
-  
+
   window.addEventListener('online', handleOnline);
   window.addEventListener('offline', handleOffline);
-  
+
   return () => {
     window.removeEventListener('online', handleOnline);
     window.removeEventListener('offline', handleOffline);
@@ -1346,18 +1417,20 @@ useEffect(() => {
 **Scenariusz**: Użytkownik próbuje się wylogować bez połączenia z internetem.
 
 **Obsługa**:
+
 1. Wywołanie `signOut()` kończy się błędem
 2. Złapanie błędu i wyświetlenie komunikatu
 3. Informacja o konieczności połączenia do wylogowania
 
 **Kod**:
+
 ```typescript
 const handleSignOut = async () => {
   if (!navigator.onLine) {
     toast.error("Wylogowanie wymaga połączenia z internetem");
     return;
   }
-  
+
   setIsSigningOut(true);
   try {
     await signOut();
@@ -1380,6 +1453,7 @@ const handleSignOut = async () => {
 **Plik**: `src/lib/settings/types.ts`
 
 **Zadanie**: Zdefiniować wszystkie typy TypeScript potrzebne dla widoku ustawień konta:
+
 - `SessionViewModel` - model widoku dla danych sesji
 - `SessionStatus` - typ union dla statusów sesji
 - Props interfaces dla wszystkich komponentów
@@ -1391,6 +1465,7 @@ const handleSignOut = async () => {
 **Plik**: `src/lib/settings/sessionTransformers.ts`
 
 **Zadanie**: Zaimplementować funkcje pomocnicze:
+
 - `transformSupabaseSession()` - transformacja Supabase Session do SessionViewModel
 - `formatSessionDate()` - formatowanie daty dla użytkownika polskiego
 - `getSessionStatusText()` - tłumaczenie statusu na polski
@@ -1403,6 +1478,7 @@ const handleSignOut = async () => {
 **Plik**: `src/lib/settings/useSessionData.ts`
 
 **Zadanie**: Zaimplementować hook do pobierania i zarządzania danymi sesji:
+
 - Pobieranie sesji z `supabaseBrowserClient.auth.getSession()`
 - Transformacja do `SessionViewModel`
 - Zarządzanie stanem ładowania i błędów
@@ -1417,6 +1493,7 @@ const handleSignOut = async () => {
 **Plik**: `src/components/settings/SessionStatusIndicator.tsx`
 
 **Zadanie**: Utworzyć komponent Badge wyświetlający status sesji:
+
 - Wykorzystać komponent `Badge` z Shadcn/ui
 - Mapowanie statusu na odpowiedni wariant i ikonę
 - Responsywny styling z Tailwind
@@ -1428,6 +1505,7 @@ const handleSignOut = async () => {
 **Plik**: `src/components/settings/SessionExpiryWarning.tsx`
 
 **Zadanie**: Utworzyć komponent Alert z ostrzeżeniem o wygasającej sesji:
+
 - Wykorzystać `Alert` z Shadcn/ui
 - Formatowanie czasu wygaśnięcia
 - Warunkowe wyświetlanie w zależności od statusu
@@ -1439,6 +1517,7 @@ const handleSignOut = async () => {
 **Plik**: `src/components/settings/UserEmailDisplay.tsx`
 
 **Zadanie**: Utworzyć komponent wyświetlający e-mail z przyciskiem kopiowania:
+
 - Ikona `Copy` zamieniająca się na `Check` po skopiowaniu
 - Obsługa Clipboard API
 - Toast notification z Sonner
@@ -1451,6 +1530,7 @@ const handleSignOut = async () => {
 **Plik**: `src/components/settings/SecurityTipsList.tsx`
 
 **Zadanie**: Utworzyć komponent z listą porad bezpieczeństwa:
+
 - Statyczna lista wskazówek w języku polskim
 - Ikony przy każdej wskazówce
 - Responsive styling
@@ -1464,6 +1544,7 @@ const handleSignOut = async () => {
 **Plik**: `src/components/settings/SessionInfoCard.tsx`
 
 **Zadanie**: Utworzyć kartę z informacjami o sesji:
+
 - Wykorzystać komponenty `Card`, `CardHeader`, `CardContent` z Shadcn/ui
 - Zintegrować `SessionStatusIndicator` i `SessionExpiryWarning`
 - Wyświetlić sformatowane daty
@@ -1476,6 +1557,7 @@ const handleSignOut = async () => {
 **Plik**: `src/components/settings/UserInfoCard.tsx`
 
 **Zadanie**: Utworzyć kartę z danymi użytkownika:
+
 - Struktura Card z Shadcn/ui
 - Zintegrować `UserEmailDisplay`
 - Wyświetlić UUID użytkownika i firmy
@@ -1489,6 +1571,7 @@ const handleSignOut = async () => {
 **Plik**: `src/components/settings/SecurityTipsCard.tsx`
 
 **Zadanie**: Utworzyć kartę z poradami bezpieczeństwa:
+
 - Struktura Card
 - Zintegrować `SecurityTipsList`
 - Dodać informacje o logach audytowych
@@ -1501,6 +1584,7 @@ const handleSignOut = async () => {
 **Plik**: `src/components/settings/LogoutButton.tsx`
 
 **Zadanie**: Utworzyć przycisk wylogowania z potwierdzeniem:
+
 - Wykorzystać `AlertDialog` z Shadcn/ui
 - Stan ładowania podczas wylogowania
 - Obsługa błędów
@@ -1513,6 +1597,7 @@ const handleSignOut = async () => {
 **Plik**: `src/components/settings/AccountActionsCard.tsx`
 
 **Zadanie**: Utworzyć kartę z akcjami konta:
+
 - Struktura Card
 - Zintegrować `LogoutButton`
 - Obsłużyć prop `onSignOut` i `isSigningOut`
@@ -1526,6 +1611,7 @@ const handleSignOut = async () => {
 **Plik**: `src/components/settings/AccountSettingsView.tsx`
 
 **Zadanie**: Utworzyć główny komponent widoku:
+
 - Zintegrować `useAuthContext` dla danych użytkownika
 - Zintegrować `useSessionData` dla danych sesji
 - Zintegrować wszystkie komponenty kart
@@ -1540,6 +1626,7 @@ const handleSignOut = async () => {
 **Plik**: `src/components/settings/AccountSettingsViewWithProvider.tsx`
 
 **Zadanie**: Utworzyć wrapper z QueryProvider:
+
 - Owinąć `AccountSettingsView` w `QueryProvider`
 - Przekazać wszystkie propsy
 - Eksportować dla użycia w Astro islands
@@ -1553,6 +1640,7 @@ const handleSignOut = async () => {
 **Plik**: `src/pages/settings/account.astro`
 
 **Zadanie**: Zaktualizować stronę Astro:
+
 - Usunąć placeholder "coming soon"
 - Dodać import `AccountSettingsViewWithProvider`
 - Opcjonalnie: server-side fetch danych użytkownika dla optymalizacji
@@ -1566,6 +1654,7 @@ const handleSignOut = async () => {
 **Plik**: `src/layouts/AuthenticatedLayout.astro`
 
 **Zadanie**: Zweryfikować integrację:
+
 - Upewnić się, że layout poprawnie chroni stronę
 - Sprawdzić, czy breadcrumbs działają poprawnie
 - Zweryfikować nawigację między zakładkami ustawień
@@ -1577,6 +1666,7 @@ const handleSignOut = async () => {
 #### Krok 6.1: Responsive design dla mobile
 
 **Zadanie**: Dostosować wszystkie komponenty do widoku mobilnego:
+
 - Karty w układzie single column na małych ekranach
 - Odpowiednie padding i margins
 - Testowanie na różnych rozmiarach ekranów
@@ -1586,6 +1676,7 @@ const handleSignOut = async () => {
 #### Krok 6.2: Dark mode
 
 **Zadanie**: Zweryfikować wsparcie dla dark mode:
+
 - Wszystkie kolory używają zmiennych CSS Tailwind
 - Badge i alerty mają odpowiednie warianty
 - Kontrasty są zgodne z WCAG
@@ -1597,6 +1688,7 @@ const handleSignOut = async () => {
 #### Krok 7.1: Testowanie nawigacji klawiaturą
 
 **Zadanie**: Zweryfikować dostępność klawiatury:
+
 - Tab order jest logiczny
 - Focus indicators są widoczne
 - AlertDialog ma focus trap
@@ -1607,6 +1699,7 @@ const handleSignOut = async () => {
 #### Krok 7.2: Screen reader testing
 
 **Zadanie**: Zweryfikować dostępność dla czytników ekranu:
+
 - Wszystkie interaktywne elementy mają odpowiednie labele
 - ARIA attributes są poprawnie ustawione
 - Alerts mają `aria-live` (jeśli dynamiczne)
@@ -1617,6 +1710,7 @@ const handleSignOut = async () => {
 #### Krok 7.3: Semantic HTML
 
 **Zadanie**: Zweryfikować semantykę:
+
 - Użycie odpowiednich tagów HTML5
 - Headings (`h1`, `h2`, `h3`) w logicznej hierarchii
 - Lists używają `ul`/`ol` i `li`
@@ -1629,6 +1723,7 @@ const handleSignOut = async () => {
 #### Krok 8.1: Implementacja obsługi błędów API
 
 **Zadanie**: Dodać comprehensive error handling:
+
 - Obsługa 401, 404, 500 z odpowiednimi komunikatami
 - Retry logic tam, gdzie sensowne
 - Fallback UI dla błędów
@@ -1639,6 +1734,7 @@ const handleSignOut = async () => {
 #### Krok 8.2: Testowanie offline behavior
 
 **Zadanie**: Zweryfikować zachowanie offline:
+
 - Wyświetlanie danych z cache
 - Blokowanie akcji wymagających połączenia
 - Automatyczne odświeżenie po powrocie online
@@ -1649,6 +1745,7 @@ const handleSignOut = async () => {
 #### Krok 8.3: Testowanie edge cases
 
 **Zadanie**: Przetestować nietypowe scenariusze:
+
 - Użytkownik bez danych firmy
 - Sesja wygasająca podczas korzystania z widoku
 - Bardzo długie nazwy/emaile (overflow)
@@ -1661,6 +1758,7 @@ const handleSignOut = async () => {
 #### Krok 9.1: Unit testy (opcjonalne, ale zalecane)
 
 **Zadanie**: Napisać testy jednostkowe dla:
+
 - Funkcje transformacji sesji
 - Custom hooks (useSessionData)
 - Pure functions (formatowanie, walidacja)
@@ -1672,6 +1770,7 @@ const handleSignOut = async () => {
 #### Krok 9.2: Integration testing (opcjonalne)
 
 **Zadanie**: Napisać testy integracyjne dla:
+
 - Flow wylogowania
 - Flow kopiowania email
 - Interaction z AlertDialog
@@ -1683,6 +1782,7 @@ const handleSignOut = async () => {
 #### Krok 9.3: Manual testing checklist
 
 **Zadanie**: Przeprowadzić manualne testy:
+
 - [ ] Strona ładuje się poprawnie
 - [ ] Wszystkie dane użytkownika są wyświetlane
 - [ ] Status sesji jest poprawny
@@ -1702,6 +1802,7 @@ const handleSignOut = async () => {
 #### Krok 10.1: Dodanie komentarzy JSDoc
 
 **Zadanie**: Uzupełnić dokumentację kodu:
+
 - JSDoc dla wszystkich komponentów
 - JSDoc dla funkcji pomocniczych
 - Przykłady użycia w komentarzach
@@ -1711,6 +1812,7 @@ const handleSignOut = async () => {
 #### Krok 10.2: Aktualizacja README (jeśli istnieje)
 
 **Zadanie**: Zaktualizować dokumentację projektu:
+
 - Dodać opis widoku ustawień konta
 - Zaktualizować listę zaimplementowanych widoków
 
@@ -1719,6 +1821,7 @@ const handleSignOut = async () => {
 #### Krok 10.3: Code review i refactoring
 
 **Zadanie**: Przejrzeć kod i zoptymalizować:
+
 - Usunąć nieużywany kod
 - Sprawdzić czy nie ma duplikacji
 - Zoptymalizować performance (React.memo gdzie sensowne)
@@ -1731,6 +1834,7 @@ const handleSignOut = async () => {
 #### Krok 11.1: Build testing
 
 **Zadanie**: Zweryfikować build production:
+
 - Uruchomić `npm run build`
 - Sprawdzić czy nie ma błędów TypeScript
 - Sprawdzić rozmiar bundle'a
@@ -1741,6 +1845,7 @@ const handleSignOut = async () => {
 #### Krok 11.2: Performance check
 
 **Zadanie**: Zweryfikować performance:
+
 - Sprawdzić Lighthouse score
 - Sprawdzić Core Web Vitals
 - Zoptymalizować lazy loading jeśli potrzebne
@@ -1750,6 +1855,7 @@ const handleSignOut = async () => {
 #### Krok 11.3: Security review
 
 **Zadanie**: Przejrzeć bezpieczeństwo:
+
 - Upewnić się, że nie ma exposed secrets
 - Zweryfikować, że RLS policies chronią dane
 - Sprawdzić, że sesje są bezpiecznie zarządzane
@@ -1763,10 +1869,9 @@ const handleSignOut = async () => {
 Po wykonaniu wszystkich kroków widok "Ustawienia – konto i sesja" będzie w pełni funkcjonalny, dostępny, responsywny i bezpieczny. Będzie spełniał wszystkie wymagania z PRD (US-002) oraz guidelines z UI plan.
 
 Kluczowe punkty do zapamiętania:
+
 - Wykorzystać istniejący `useAuthContext` dla danych użytkownika
 - Utworzyć dedykowany `useSessionData` dla danych sesji
 - Wszystkie komponenty prezentacyjne powinny być reusable
 - Accessibility i obsługa błędów są priorytetem
 - Testowanie na każdym etapie zapewnia jakość
-
-

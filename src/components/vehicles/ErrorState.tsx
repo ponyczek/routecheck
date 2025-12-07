@@ -1,6 +1,6 @@
-import { AlertCircle, RefreshCw } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertCircle, RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface ErrorStateProps {
   error: Error | { message?: string };
@@ -18,7 +18,7 @@ export function ErrorState({ error, onRetry }: ErrorStateProps) {
         <AlertCircle className="h-4 w-4" />
         <AlertTitle>Nie udało się załadować pojazdów</AlertTitle>
         <AlertDescription>
-          {error.message || 'Wystąpił nieoczekiwany błąd. Spróbuj ponownie za chwilę.'}
+          {error.message || "Wystąpił nieoczekiwany błąd. Spróbuj ponownie za chwilę."}
         </AlertDescription>
       </Alert>
       <Button onClick={onRetry} variant="outline" size="lg">
@@ -28,5 +28,3 @@ export function ErrorState({ error, onRetry }: ErrorStateProps) {
     </div>
   );
 }
-
-

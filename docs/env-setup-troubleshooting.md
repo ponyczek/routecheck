@@ -101,6 +101,7 @@ npx tsx scripts/generate-test-token.ts
 **NIGDY** nie commituj pliku `.env` do git!
 
 Sprawdź `.gitignore`:
+
 ```bash
 cat .gitignore | grep ".env"
 # Powinno być:
@@ -118,6 +119,7 @@ cat .gitignore | grep ".env"
 **Przyczyna:** Node.js nie ładuje automatycznie `.env`
 
 **Rozwiązanie 1:** Użyj `dotenv`
+
 ```bash
 # Zainstaluj dotenv jeśli nie ma
 npm install dotenv
@@ -127,15 +129,17 @@ node -r dotenv/config scripts/generate-test-token.ts
 ```
 
 **Rozwiązanie 2:** Dodaj do skryptu
+
 ```typescript
 // Na początku scripts/generate-test-token.ts
-import 'dotenv/config';
+import "dotenv/config";
 // lub
-import { config } from 'dotenv';
+import { config } from "dotenv";
 config();
 ```
 
 **Rozwiązanie 3:** Export ręcznie
+
 ```bash
 export $(cat .env | grep -v '^#' | xargs)
 npx tsx scripts/generate-test-token.ts
@@ -164,5 +168,3 @@ npx tsx scripts/generate-test-token.ts
 ---
 
 **Po rozwiązaniu problemu, wróć do:** `docs/testing-public-reports-quickstart.md`
-
-

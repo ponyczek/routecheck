@@ -39,6 +39,3 @@ export function InfoRow({ label, value, copyable }: InfoRowProps) {
     </div>
   );
 }
-
-
-

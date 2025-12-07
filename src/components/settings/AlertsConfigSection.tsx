@@ -3,18 +3,18 @@ import { useAlertsConfig, useUpdateAlertsConfig } from "@/lib/settings";
 
 /**
  * Sekcja zarządzania konfiguracją alertów 24h
- * 
+ *
  * @description
  * Komponent odpowiedzialny za wyświetlanie i zarządzanie konfiguracją alertów e-mail.
  * Wykorzystuje TanStack Query hooks do pobierania i aktualizacji stanu alertów
  * z optimistic updates dla lepszego UX.
- * 
+ *
  * @features
  * - Pobiera konfigurację alertów z API (GET /api/settings/alerts)
  * - Aktualizuje konfigurację z optimistic update (PATCH /api/settings/alerts)
  * - Wyświetla loading skeleton podczas ładowania
  * - Deleguje rendering do AlertToggleCard
- * 
+ *
  * @example
  * ```tsx
  * <AlertsConfigSection />
@@ -45,4 +45,3 @@ export function AlertsConfigSection() {
     />
   );
 }
-

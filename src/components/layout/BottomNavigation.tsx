@@ -66,7 +66,7 @@ export function BottomNavigation({ activeRoute, onMoreClick }: BottomNavigationP
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                   isActive
                     ? "text-primary font-medium"
-                    : "text-muted-foreground hover:text-foreground active:text-foreground",
+                    : "text-muted-foreground hover:text-foreground active:text-foreground"
                 )}
                 aria-current={isActive ? "page" : undefined}
               >
@@ -84,7 +84,7 @@ export function BottomNavigation({ activeRoute, onMoreClick }: BottomNavigationP
             className={cn(
               "flex w-full flex-col items-center gap-1 py-3 transition-colors",
               "text-muted-foreground hover:text-foreground active:text-foreground",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             )}
             aria-label="Więcej opcji"
           >
@@ -107,4 +107,3 @@ export function BottomNavigation({ activeRoute, onMoreClick }: BottomNavigationP
 function computeIsActive(itemHref: string, activeRoute: string): boolean {
   return itemHref === activeRoute;
 }
-

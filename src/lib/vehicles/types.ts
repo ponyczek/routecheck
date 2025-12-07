@@ -1,4 +1,4 @@
-import type { VehicleDTO } from '@/types';
+import type { VehicleDTO } from "@/types";
 
 /**
  * Stan filtrów w widoku listy pojazdów
@@ -11,9 +11,9 @@ export interface VehiclesFiltersState {
   /** Czy pokazywać usunięte pojazdy (soft delete) */
   includeDeleted: boolean;
   /** Pole sortowania */
-  sortBy: 'registrationNumber' | 'createdAt';
+  sortBy: "registrationNumber" | "createdAt";
   /** Kierunek sortowania */
-  sortDir: 'asc' | 'desc';
+  sortDir: "asc" | "desc";
   /** Cursor paginacji (opaque string z API) */
   cursor?: string;
 }
@@ -22,11 +22,11 @@ export interface VehiclesFiltersState {
  * Domyślne wartości filtrów
  */
 export const defaultFilters: VehiclesFiltersState = {
-  q: '',
+  q: "",
   isActive: undefined,
   includeDeleted: false,
-  sortBy: 'registrationNumber',
-  sortDir: 'asc',
+  sortBy: "registrationNumber",
+  sortDir: "asc",
 };
 
 /**
@@ -34,9 +34,9 @@ export const defaultFilters: VehiclesFiltersState = {
  */
 export type ModalState =
   | { type: null }
-  | { type: 'add' }
-  | { type: 'edit'; vehicle: VehicleDTO }
-  | { type: 'delete'; vehicle: VehicleDTO };
+  | { type: "add" }
+  | { type: "edit"; vehicle: VehicleDTO }
+  | { type: "delete"; vehicle: VehicleDTO };
 
 /**
  * Dane formularza dodawania/edycji pojazdu
@@ -78,9 +78,7 @@ export interface VehiclesQueryParams {
   /** Cursor paginacji */
   cursor?: string;
   /** Pole sortowania */
-  sortBy?: 'registrationNumber' | 'createdAt';
+  sortBy?: "registrationNumber" | "createdAt";
   /** Kierunek sortowania */
-  sortDir?: 'asc' | 'desc';
+  sortDir?: "asc" | "desc";
 }
-
-

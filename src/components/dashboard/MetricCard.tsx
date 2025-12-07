@@ -62,11 +62,7 @@ export function MetricCard({
       aria-label={onClick ? `${title}: ${value}. Kliknij aby zobaczyć szczegóły` : undefined}
     >
       <Card
-        className={cn(
-          "h-full transition-colors",
-          variant === "accent" && "border-primary/20 bg-primary/5",
-          className
-        )}
+        className={cn("h-full transition-colors", variant === "accent" && "border-primary/20 bg-primary/5", className)}
       >
         <CardHeader className="pb-2">
           <div className="flex items-center gap-3">
@@ -74,9 +70,7 @@ export function MetricCard({
               <div
                 className={cn(
                   "flex items-center justify-center size-10 rounded-lg",
-                  variant === "accent"
-                    ? "bg-primary/10 text-primary"
-                    : "bg-muted text-muted-foreground"
+                  variant === "accent" ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
                 )}
                 aria-hidden="true"
               >
@@ -90,14 +84,9 @@ export function MetricCard({
           <div className="text-3xl font-bold tracking-tight" aria-live="polite">
             {value.toLocaleString("pl-PL")}
           </div>
-          {description && (
-            <CardDescription className="text-xs">
-              {description}
-            </CardDescription>
-          )}
+          {description && <CardDescription className="text-xs">{description}</CardDescription>}
         </CardContent>
       </Card>
     </CardWrapper>
   );
 }
-

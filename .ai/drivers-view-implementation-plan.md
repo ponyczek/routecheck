@@ -13,6 +13,7 @@ Widok Listy Kierowców (`/drivers`) to główny interfejs do zarządzania bazą 
 **Layout**: `AuthenticatedLayout` – wymaga autoryzacji, automatyczne przekierowanie na `/signin` dla niezalogowanych użytkowników.
 
 **Parametry URL** (synchronizacja stanu filtrów):
+
 - `?q=<text>` – wyszukiwarka (debounced)
 - `?isActive=true|false` – filtr statusu aktywności
 - `?includeDeleted=true|false` – przełącznik wyświetlania usuniętych
@@ -73,6 +74,7 @@ DriversPage (Astro)
 **Opis**: Główny komponent odpowiedzialny za orkiestrację widoku, zarządzanie stanem filtrów, synchronizację z URL i renderowanie odpowiednich podkomponentów w zależności od stanu danych (loading, error, empty, success).
 
 **Główne elementy**:
+
 - `<div className="container mx-auto px-4 py-6">` – kontener główny
 - `<DriversHeader />` – nagłówek z tytułem i przyciskiem dodawania
 - `<DriversFiltersBar />` – pasek filtrów i wyszukiwania
@@ -83,6 +85,7 @@ DriversPage (Astro)
 - Modals: `<AddEditDriverModal />`, `<DeleteConfirmationDialog />`
 
 **Obsługiwane interakcje**:
+
 - Synchronizacja filtrów z URL (useSearchParams)
 - Otwarcie modalu dodawania kierowcy
 - Otwarcie modalu edycji kierowcy (przekazanie danych)
@@ -93,11 +96,13 @@ DriversPage (Astro)
 **Walidacja**: Brak bezpośredniej walidacji (delegowana do formularzy).
 
 **Typy**:
+
 - `DriversViewProps` (pusty lub z opcjonalnym initialFilters)
 - `DriversFiltersState` (q, isActive, includeDeleted, sortBy, sortDir, cursor)
 - `ModalState` (type: 'add' | 'edit' | 'delete' | null, data?: DriverDTO)
 
 **Propsy**:
+
 ```typescript
 interface DriversViewProps {
   // Opcjonalnie można przekazać initial data z Astro SSR
@@ -111,10 +116,12 @@ interface DriversViewProps {
 **Opis**: Nagłówek strony z tytułem widoku i głównym call-to-action przyciskiem dodawania nowego kierowcy.
 
 **Główne elementy**:
+
 - `<h1 className="text-2xl font-bold">Kierowcy</h1>`
 - `<AddDriverButton />` – przycisk "+ Dodaj kierowcę"
 
 **Obsługiwane interakcje**:
+
 - Kliknięcie przycisku "Dodaj" wywołuje callback `onAddClick`
 
 **Walidacja**: Brak.
@@ -122,6 +129,7 @@ interface DriversViewProps {
 **Typy**: Brak specjalnych typów.
 
 **Propsy**:
+
 ```typescript
 interface DriversHeaderProps {
   onAddClick: () => void;
@@ -135,25 +143,30 @@ interface DriversHeaderProps {
 **Opis**: Pasek narzędzi zawierający kontrolki do filtrowania, wyszukiwania i sortowania listy kierowców. Wszystkie zmiany są synchronizowane z URL i wywołują refetch danych.
 
 **Główne elementy**:
+
 - `<SearchInput />` – pole tekstowe z ikoną lupy, debounce 300ms
 - `<ActiveFilterToggle />` – radio group lub select: "Wszyscy" / "Aktywni" / "Nieaktywni"
 - `<ShowDeletedToggle />` – checkbox "Pokaż usuniętych"
 - `<SortControls />` – dropdown z opcjami sortowania (Nazwa A-Z, Nazwa Z-A, Najnowsi, Najstarsi)
 
 **Obsługiwane interakcje**:
+
 - Zmiana wartości w wyszukiwarce (debounced) → update URL param `q`
 - Zmiana filtra aktywności → update URL param `isActive`
 - Toggle "Pokaż usuniętych" → update URL param `includeDeleted`
 - Zmiana sortowania → update URL params `sortBy` i `sortDir`
 
 **Walidacja**:
+
 - Wyszukiwarka: min. 2 znaki aby uruchomić filtrowanie (opcjonalnie)
 
 **Typy**:
+
 - `DriversFiltersState`
 - `SortOption` (value, label)
 
 **Propsy**:
+
 ```typescript
 interface DriversFiltersBarProps {
   filters: DriversFiltersState;
@@ -169,12 +182,14 @@ interface DriversFiltersBarProps {
 **Opis**: Tabela prezentująca listę kierowców z sortowalnymi kolumnami, widoczna tylko na urządzeniach desktop (≥768px). Wykorzystuje komponent `<Table>` z shadcn/ui.
 
 **Główne elementy**:
+
 - `<Table>` z shadcn/ui
 - `<TableHeader>` z kolumnami: Imię, E-mail, Strefa czasowa, Status, Data dodania, Akcje
 - `<TableBody>` z wierszami `<DriverRow />`
 - `<TablePagination />` – przyciski Poprzednia/Następna strona
 
 **Obsługiwane interakcje**:
+
 - Kliknięcie nagłówka kolumny → zmiana sortowania
 - Hover na wierszu → highlight
 - Kliknięcie wiersza → otwarcie szczegółów (opcjonalnie)
@@ -182,15 +197,17 @@ interface DriversFiltersBarProps {
 **Walidacja**: Brak.
 
 **Typy**:
+
 - `DriverDTO[]`
 - `PaginationState` (hasNext, hasPrev, cursor)
 
 **Propsy**:
+
 ```typescript
 interface DriversTableProps {
   drivers: DriverDTO[];
-  sortBy: 'name' | 'createdAt';
-  sortDir: 'asc' | 'desc';
+  sortBy: "name" | "createdAt";
+  sortDir: "asc" | "desc";
   onSortChange: (sortBy: string, sortDir: string) => void;
   onEditClick: (driver: DriverDTO) => void;
   onToggleActiveClick: (driver: DriverDTO) => void;
@@ -211,6 +228,7 @@ interface DriversTableProps {
 **Opis**: Pojedynczy wiersz tabeli reprezentujący kierowcę. Zawiera podstawowe informacje oraz menu akcji.
 
 **Główne elementy**:
+
 - `<TableCell>` dla nazwy kierowcy
 - `<TableCell>` dla e-maila
 - `<TableCell>` dla strefy czasowej
@@ -219,15 +237,18 @@ interface DriversTableProps {
 - `<TableCell>` z `<RowActionsMenu />`
 
 **Obsługiwane interakcje**:
+
 - Hover → highlight
 - Kliknięcie całego wiersza → opcjonalnie otwarcie szczegółów
 
 **Walidacja**: Brak.
 
 **Typy**:
+
 - `DriverDTO`
 
 **Propsy**:
+
 ```typescript
 interface DriverRowProps {
   driver: DriverDTO;
@@ -244,6 +265,7 @@ interface DriverRowProps {
 **Opis**: Dropdown menu (z shadcn/ui `DropdownMenu`) z akcjami dla pojedynczego kierowcy. Ikona trzech kropek (⋮) otwiera menu z opcjami: Edytuj, Zmień status (Aktywuj/Dezaktywuj), Usuń.
 
 **Główne elementy**:
+
 - `<DropdownMenu>` z shadcn/ui
 - `<DropdownMenuTrigger>` – przycisk z ikoną `MoreVertical`
 - `<DropdownMenuContent>`:
@@ -253,6 +275,7 @@ interface DriverRowProps {
   - `<DropdownMenuItem>` Usuń (ikona: Trash, kolor czerwony)
 
 **Obsługiwane interakcje**:
+
 - Kliknięcie "Edytuj" → callback onEdit
 - Kliknięcie "Aktywuj/Dezaktywuj" → callback onToggleActive
 - Kliknięcie "Usuń" → callback onDelete
@@ -262,6 +285,7 @@ interface DriverRowProps {
 **Typy**: Brak specjalnych typów.
 
 **Propsy**:
+
 ```typescript
 interface RowActionsMenuProps {
   driver: DriverDTO;
@@ -278,21 +302,25 @@ interface RowActionsMenuProps {
 **Opis**: Lista kart prezentująca kierowców na urządzeniach mobilnych (<768px). Każda karta zawiera kluczowe informacje i akcje.
 
 **Główne elementy**:
+
 - `<div className="grid gap-4">` – kontener kart
 - Wiele komponentów `<DriverCard />`
 - `<CardsPagination />` – przyciski paginacji
 
 **Obsługiwane interakcje**:
+
 - Kliknięcie karty → opcjonalnie otwarcie szczegółów
 - Paginacja
 
 **Walidacja**: Brak.
 
 **Typy**:
+
 - `DriverDTO[]`
 - `PaginationState`
 
 **Propsy**:
+
 ```typescript
 interface DriversCardListProps {
   drivers: DriverDTO[];
@@ -315,6 +343,7 @@ interface DriversCardListProps {
 **Opis**: Karta przedstawiająca pojedynczego kierowcę na urządzeniach mobilnych. Zawiera avatar (inicjały), nazwę, email, strefę czasową, status i akcje.
 
 **Główne elementy**:
+
 - `<Card>` z shadcn/ui
 - `<CardHeader>`:
   - `<Avatar>` z inicjałami
@@ -328,6 +357,7 @@ interface DriversCardListProps {
   - Przyciski akcji: Edytuj, Aktywuj/Dezaktywuj, Usuń
 
 **Obsługiwane interakcje**:
+
 - Kliknięcie "Edytuj" → callback onEdit
 - Kliknięcie "Aktywuj/Dezaktywuj" → callback onToggleActive
 - Kliknięcie "Usuń" → callback onDelete
@@ -335,9 +365,11 @@ interface DriversCardListProps {
 **Walidacja**: Brak.
 
 **Typy**:
+
 - `DriverDTO`
 
 **Propsy**:
+
 ```typescript
 interface DriverCardProps {
   driver: DriverDTO;
@@ -354,6 +386,7 @@ interface DriverCardProps {
 **Opis**: Komponent badge wyświetlający status aktywności kierowcy (Aktywny/Nieaktywny) z odpowiednim kolorem i ikoną.
 
 **Główne elementy**:
+
 - `<Badge>` z shadcn/ui
 - Ikona statusu (Check dla aktywnego, X dla nieaktywnego)
 - Tekst: "Aktywny" lub "Nieaktywny"
@@ -365,10 +398,11 @@ interface DriverCardProps {
 **Typy**: `isActive: boolean`
 
 **Propsy**:
+
 ```typescript
 interface StatusBadgeProps {
   isActive: boolean;
-  variant?: 'default' | 'compact'; // opcjonalnie różne rozmiary
+  variant?: "default" | "compact"; // opcjonalnie różne rozmiary
 }
 ```
 
@@ -379,6 +413,7 @@ interface StatusBadgeProps {
 **Opis**: Modal (Dialog z shadcn/ui) służący zarówno do dodawania nowego kierowcy, jak i edycji istniejącego. Zawiera formularz z walidacją zbudowany z React Hook Form + Zod. W trybie edycji pola są wstępnie wypełnione danymi kierowcy.
 
 **Główne elementy**:
+
 - `<Dialog>` z shadcn/ui
 - `<DialogContent>`:
   - `<DialogHeader>`:
@@ -390,12 +425,14 @@ interface StatusBadgeProps {
     - `<Button type="submit">Zapisz</Button>` (loading spinner gdy mutation w toku)
 
 **Obsługiwane interakcje**:
+
 - Otwarcie/zamknięcie modalu
 - Wypełnienie formularza
 - Submit formularza → wywołanie mutation (POST lub PATCH)
 - Anulowanie → zamknięcie modalu z potwierdzeniem jeśli formularz zmieniony (unsaved changes guard)
 
 **Walidacja**:
+
 - Wszystkie pola wymagane
 - Email: format emaila, unikalne w ramach firmy (błąd 409 z API)
 - Nazwa: min. 2 znaki, max. 100 znaków
@@ -403,15 +440,17 @@ interface StatusBadgeProps {
 - Walidacja inline (onBlur) i przy submit
 
 **Typy**:
+
 - `DriverFormData` (model formularza)
 - `CreateDriverCommand` | `UpdateDriverCommand`
 - `DriverDTO` (w trybie edycji)
 
 **Propsy**:
+
 ```typescript
 interface AddEditDriverModalProps {
   isOpen: boolean;
-  mode: 'add' | 'edit';
+  mode: "add" | "edit";
   driver?: DriverDTO; // required when mode='edit'
   onClose: () => void;
   onSuccess: () => void; // callback po udanym zapisie
@@ -425,6 +464,7 @@ interface AddEditDriverModalProps {
 **Opis**: Formularz dodawania/edycji kierowcy zbudowany z React Hook Form i Zod schema. Zawiera pola: nazwa, email, strefa czasowa, status aktywności.
 
 **Główne elementy**:
+
 - `<Form>` provider z React Hook Form
 - `<FormField name="name">`:
   - `<Label>Imię i nazwisko *</Label>`
@@ -444,37 +484,37 @@ interface AddEditDriverModalProps {
   - `<FormDescription>` – opis wpływu statusu
 
 **Obsługiwane interakcje**:
+
 - Wprowadzanie danych w pola
 - Walidacja inline (onBlur)
 - Submit formularza
 - Obsługa błędów z API (setError)
 
 **Walidacja** (Zod schema):
+
 ```typescript
 const driverFormSchema = z.object({
-  name: z.string()
-    .min(2, "Imię musi mieć minimum 2 znaki")
-    .max(100, "Imię może mieć maksymalnie 100 znaków"),
-  email: z.string()
-    .email("Nieprawidłowy format adresu e-mail")
-    .max(255),
-  timezone: z.string()
-    .refine(val => isValidTimezone(val), "Nieprawidłowa strefa czasowa"),
-  isActive: z.boolean().default(true)
+  name: z.string().min(2, "Imię musi mieć minimum 2 znaki").max(100, "Imię może mieć maksymalnie 100 znaków"),
+  email: z.string().email("Nieprawidłowy format adresu e-mail").max(255),
+  timezone: z.string().refine((val) => isValidTimezone(val), "Nieprawidłowa strefa czasowa"),
+  isActive: z.boolean().default(true),
 });
 ```
 
 **Warunki szczegółowe**:
+
 - `name`: wymagane, 2-100 znaków
 - `email`: wymagane, format email, unikalne (sprawdzane przez API, błąd 409)
 - `timezone`: wymagane, musi być prawidłową strefą IANA (np. "Europe/Warsaw")
 - `isActive`: boolean, domyślnie `true`
 
 **Typy**:
+
 - `DriverFormData` = `z.infer<typeof driverFormSchema>`
 - `CreateDriverCommand` | `UpdateDriverCommand`
 
 **Propsy**:
+
 ```typescript
 interface DriverFormProps {
   defaultValues?: Partial<DriverFormData>;
@@ -490,6 +530,7 @@ interface DriverFormProps {
 **Opis**: Searchable combobox (Combobox z shadcn/ui) do wyboru strefy czasowej z listy IANA timezones. Wspiera wyszukiwanie i filtrowanie.
 
 **Główne elementy**:
+
 - `<Popover>` + `<Command>` z shadcn/ui
 - `<CommandInput>` – pole wyszukiwania
 - `<CommandList>`:
@@ -498,6 +539,7 @@ interface DriverFormProps {
     - Multiple `<CommandItem>` dla każdej strefy czasowej
 
 **Obsługiwane interakcje**:
+
 - Wpisywanie w pole wyszukiwania → filtrowanie listy
 - Wybór opcji → zamknięcie popover i ustawienie wartości
 - Obsługa klawiatury (Arrow Up/Down, Enter, Escape)
@@ -505,10 +547,12 @@ interface DriverFormProps {
 **Walidacja**: Wartość musi być z listy dostępnych stref czasowych.
 
 **Typy**:
+
 - `TimezoneOption` (value, label, offset)
 - Lista stref można wygenerować z biblioteki np. `date-fns-tz` lub `Intl.supportedValuesOf('timeZone')`
 
 **Propsy**:
+
 ```typescript
 interface TimezoneComboboxProps {
   value: string;
@@ -524,6 +568,7 @@ interface TimezoneComboboxProps {
 **Opis**: Dialog potwierdzenia przed usunięciem kierowcy (soft delete). Wyświetla ostrzeżenie, że kierowca zostanie dezaktywowany i ukryty, ale historyczne raporty pozostaną.
 
 **Główne elementy**:
+
 - `<AlertDialog>` z shadcn/ui
 - `<AlertDialogContent>`:
   - `<AlertDialogHeader>`:
@@ -535,6 +580,7 @@ interface TimezoneComboboxProps {
     - `<AlertDialogAction variant="destructive">Usuń</AlertDialogAction>` (loading spinner gdy mutation w toku)
 
 **Obsługiwane interakcje**:
+
 - Kliknięcie "Usuń" → wywołanie mutation DELETE
 - Kliknięcie "Anuluj" → zamknięcie dialogu
 - Focus trap – focus na przycisku Anuluj po otwarciu (bezpieczniejsze)
@@ -542,9 +588,11 @@ interface TimezoneComboboxProps {
 **Walidacja**: Brak (potwierdzenie użytkownika).
 
 **Typy**:
+
 - `DriverDTO` (kierowca do usunięcia)
 
 **Propsy**:
+
 ```typescript
 interface DeleteConfirmationDialogProps {
   isOpen: boolean;
@@ -562,6 +610,7 @@ interface DeleteConfirmationDialogProps {
 **Opis**: Komunikat wyświetlany gdy lista kierowców jest pusta. Różne warianty w zależności od kontekstu: brak kierowców w systemie, brak wyników po filtrowaniu.
 
 **Główne elementy**:
+
 - Ikona (Users lub Search)
 - Nagłówek: "Brak kierowców" lub "Brak wyników"
 - Opis: odpowiedni komunikat
@@ -569,18 +618,21 @@ interface DeleteConfirmationDialogProps {
 - Opcjonalnie przycisk "Wyczyść filtry" (gdy brak wyników po filtrowaniu)
 
 **Obsługiwane interakcje**:
+
 - Kliknięcie "Dodaj kierowcę" → otwarcie modalu dodawania
 - Kliknięcie "Wyczyść filtry" → reset filtrów
 
 **Walidacja**: Brak.
 
 **Typy**:
+
 - `EmptyStateVariant` ('no-drivers' | 'no-results')
 
 **Propsy**:
+
 ```typescript
 interface EmptyStateProps {
-  variant: 'no-drivers' | 'no-results';
+  variant: "no-drivers" | "no-results";
   onAddClick?: () => void;
   onClearFilters?: () => void;
 }
@@ -593,6 +645,7 @@ interface EmptyStateProps {
 **Opis**: Komponenty skeleton (Skeleton z shadcn/ui) wyświetlane podczas ładowania danych. Imitują strukturę tabeli lub kart.
 
 **Główne elementy**:
+
 - Desktop: skeleton tabeli (wiersze z komórkami)
 - Mobile: skeleton kart
 
@@ -603,6 +656,7 @@ interface EmptyStateProps {
 **Typy**: Brak.
 
 **Propsy**:
+
 ```typescript
 interface LoadingSkeletonsProps {
   count?: number; // liczba skeletonów do wyświetlenia, domyślnie 5
@@ -616,20 +670,24 @@ interface LoadingSkeletonsProps {
 **Opis**: Komunikat błędu wyświetlany gdy nie udało się załadować danych. Zawiera przycisk ponownego próbowania.
 
 **Główne elementy**:
+
 - Ikona błędu (AlertCircle)
 - Nagłówek: "Nie udało się załadować kierowców"
 - Opis błędu (jeśli dostępny)
 - Przycisk "Spróbuj ponownie"
 
 **Obsługiwane interakcje**:
+
 - Kliknięcie "Spróbuj ponownie" → refetch danych
 
 **Walidacja**: Brak.
 
 **Typy**:
+
 - `Error` (obiekt błędu)
 
 **Propsy**:
+
 ```typescript
 interface ErrorStateProps {
   error: Error;
@@ -681,26 +739,26 @@ export interface DriversFiltersState {
   q: string; // wyszukiwarka
   isActive?: boolean; // filtr aktywności: undefined = wszystkie, true = aktywni, false = nieaktywni
   includeDeleted: boolean; // czy pokazywać usuniętych
-  sortBy: 'name' | 'createdAt'; // pole sortowania
-  sortDir: 'asc' | 'desc'; // kierunek sortowania
+  sortBy: "name" | "createdAt"; // pole sortowania
+  sortDir: "asc" | "desc"; // kierunek sortowania
   cursor?: string; // cursor paginacji
 }
 
 // Domyślne wartości filtrów
 export const defaultFilters: DriversFiltersState = {
-  q: '',
+  q: "",
   isActive: undefined,
   includeDeleted: false,
-  sortBy: 'name',
-  sortDir: 'asc',
+  sortBy: "name",
+  sortDir: "asc",
 };
 
 // Stan modalu
-export type ModalState = 
+export type ModalState =
   | { type: null }
-  | { type: 'add' }
-  | { type: 'edit'; driver: DriverDTO }
-  | { type: 'delete'; driver: DriverDTO };
+  | { type: "add" }
+  | { type: "edit"; driver: DriverDTO }
+  | { type: "delete"; driver: DriverDTO };
 
 // Dane formularza (React Hook Form)
 export interface DriverFormData {
@@ -733,40 +791,36 @@ export interface DriversQueryParams {
   includeDeleted?: boolean;
   limit?: number;
   cursor?: string;
-  sortBy?: 'name' | 'createdAt';
-  sortDir?: 'asc' | 'desc';
+  sortBy?: "name" | "createdAt";
+  sortDir?: "asc" | "desc";
 }
 ```
 
 ### Schema walidacji Zod:
 
 ```typescript
-import { z } from 'zod';
+import { z } from "zod";
 
 export const driverFormSchema = z.object({
-  name: z.string()
-    .min(2, "Imię musi mieć minimum 2 znaki")
-    .max(100, "Imię może mieć maksymalnie 100 znaków")
-    .trim(),
-  email: z.string()
+  name: z.string().min(2, "Imię musi mieć minimum 2 znaki").max(100, "Imię może mieć maksymalnie 100 znaków").trim(),
+  email: z
+    .string()
     .email("Nieprawidłowy format adresu e-mail")
     .max(255, "Email może mieć maksymalnie 255 znaków")
     .trim()
     .toLowerCase(),
-  timezone: z.string()
+  timezone: z
+    .string()
     .min(1, "Strefa czasowa jest wymagana")
-    .refine(
-      (val) => {
-        try {
-          // Walidacja czy strefa czasowa jest prawidłowa
-          Intl.DateTimeFormat(undefined, { timeZone: val });
-          return true;
-        } catch {
-          return false;
-        }
-      },
-      "Nieprawidłowa strefa czasowa"
-    ),
+    .refine((val) => {
+      try {
+        // Walidacja czy strefa czasowa jest prawidłowa
+        Intl.DateTimeFormat(undefined, { timeZone: val });
+        return true;
+      } catch {
+        return false;
+      }
+    }, "Nieprawidłowa strefa czasowa"),
   isActive: z.boolean().default(true),
 });
 
@@ -789,41 +843,39 @@ Wykorzystanie custom hook `useDriversFilters`:
 ```typescript
 function useDriversFilters() {
   const [searchParams, setSearchParams] = useSearchParams();
-  
+
   const filters: DriversFiltersState = {
-    q: searchParams.get('q') || '',
-    isActive: searchParams.get('isActive') 
-      ? searchParams.get('isActive') === 'true' 
-      : undefined,
-    includeDeleted: searchParams.get('includeDeleted') === 'true',
-    sortBy: (searchParams.get('sortBy') as 'name' | 'createdAt') || 'name',
-    sortDir: (searchParams.get('sortDir') as 'asc' | 'desc') || 'asc',
-    cursor: searchParams.get('cursor') || undefined,
+    q: searchParams.get("q") || "",
+    isActive: searchParams.get("isActive") ? searchParams.get("isActive") === "true" : undefined,
+    includeDeleted: searchParams.get("includeDeleted") === "true",
+    sortBy: (searchParams.get("sortBy") as "name" | "createdAt") || "name",
+    sortDir: (searchParams.get("sortDir") as "asc" | "desc") || "asc",
+    cursor: searchParams.get("cursor") || undefined,
   };
-  
+
   const updateFilters = (updates: Partial<DriversFiltersState>) => {
     const newParams = new URLSearchParams(searchParams);
-    
+
     Object.entries(updates).forEach(([key, value]) => {
-      if (value === undefined || value === '' || value === null) {
+      if (value === undefined || value === "" || value === null) {
         newParams.delete(key);
       } else {
         newParams.set(key, String(value));
       }
     });
-    
+
     // Reset cursor przy zmianie filtrów (oprócz samej zmiany cursor)
-    if (!('cursor' in updates)) {
-      newParams.delete('cursor');
+    if (!("cursor" in updates)) {
+      newParams.delete("cursor");
     }
-    
+
     setSearchParams(newParams, { replace: true });
   };
-  
+
   const resetFilters = () => {
     setSearchParams({}, { replace: true });
   };
-  
+
   return { filters, updateFilters, resetFilters };
 }
 ```
@@ -835,17 +887,17 @@ Custom hook `useDebouncedValue` dla wyszukiwarki:
 ```typescript
 function useDebouncedValue<T>(value: T, delay: number = 300): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
-  
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedValue(value);
     }, delay);
-    
+
     return () => {
       clearTimeout(timer);
     };
   }, [value, delay]);
-  
+
   return debouncedValue;
 }
 ```
@@ -855,13 +907,13 @@ function useDebouncedValue<T>(value: T, delay: number = 300): T {
 #### Hook `useDriversList`:
 
 ```typescript
-import { useQuery } from '@tanstack/react-query';
-import { driversService } from '@/lib/services/driversService';
-import type { DriversQueryParams } from './types';
+import { useQuery } from "@tanstack/react-query";
+import { driversService } from "@/lib/services/driversService";
+import type { DriversQueryParams } from "./types";
 
 export function useDriversList(params: DriversQueryParams) {
   return useQuery({
-    queryKey: ['drivers', params],
+    queryKey: ["drivers", params],
     queryFn: () => driversService.list(params),
     staleTime: 30_000, // 30s
     refetchInterval: 60_000, // auto-refetch co 60s
@@ -874,25 +926,25 @@ export function useDriversList(params: DriversQueryParams) {
 #### Hook `useCreateDriver`:
 
 ```typescript
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { driversService } from '@/lib/services/driversService';
-import { toast } from 'sonner';
-import type { CreateDriverCommand } from '@/types';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { driversService } from "@/lib/services/driversService";
+import { toast } from "sonner";
+import type { CreateDriverCommand } from "@/types";
 
 export function useCreateDriver() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (data: CreateDriverCommand) => driversService.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['drivers'] });
-      toast.success('Kierowca został dodany pomyślnie');
+      queryClient.invalidateQueries({ queryKey: ["drivers"] });
+      toast.success("Kierowca został dodany pomyślnie");
     },
     onError: (error: any) => {
       if (error.response?.status === 409) {
-        toast.error('Kierowca z tym adresem e-mail już istnieje');
+        toast.error("Kierowca z tym adresem e-mail już istnieje");
       } else {
-        toast.error('Nie udało się dodać kierowcy');
+        toast.error("Nie udało się dodać kierowcy");
       }
     },
   });
@@ -904,41 +956,35 @@ export function useCreateDriver() {
 ```typescript
 export function useUpdateDriver() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: ({ uuid, data }: { uuid: string; data: UpdateDriverCommand }) => 
-      driversService.update(uuid, data),
+    mutationFn: ({ uuid, data }: { uuid: string; data: UpdateDriverCommand }) => driversService.update(uuid, data),
     onMutate: async ({ uuid, data }) => {
       // Optimistic update
-      await queryClient.cancelQueries({ queryKey: ['drivers'] });
-      
-      const previousData = queryClient.getQueryData(['drivers']);
-      
-      queryClient.setQueriesData(
-        { queryKey: ['drivers'] },
-        (old: any) => {
-          if (!old) return old;
-          return {
-            ...old,
-            items: old.items.map((driver: DriverDTO) =>
-              driver.uuid === uuid ? { ...driver, ...data } : driver
-            ),
-          };
-        }
-      );
-      
+      await queryClient.cancelQueries({ queryKey: ["drivers"] });
+
+      const previousData = queryClient.getQueryData(["drivers"]);
+
+      queryClient.setQueriesData({ queryKey: ["drivers"] }, (old: any) => {
+        if (!old) return old;
+        return {
+          ...old,
+          items: old.items.map((driver: DriverDTO) => (driver.uuid === uuid ? { ...driver, ...data } : driver)),
+        };
+      });
+
       return { previousData };
     },
     onError: (error, variables, context) => {
       // Rollback na błąd
       if (context?.previousData) {
-        queryClient.setQueryData(['drivers'], context.previousData);
+        queryClient.setQueryData(["drivers"], context.previousData);
       }
-      toast.error('Nie udało się zaktualizować kierowcy');
+      toast.error("Nie udało się zaktualizować kierowcy");
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['drivers'] });
-      toast.success('Kierowca został zaktualizowany');
+      queryClient.invalidateQueries({ queryKey: ["drivers"] });
+      toast.success("Kierowca został zaktualizowany");
     },
   });
 }
@@ -949,15 +995,15 @@ export function useUpdateDriver() {
 ```typescript
 export function useDeleteDriver() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (uuid: string) => driversService.delete(uuid),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['drivers'] });
-      toast.success('Kierowca został usunięty');
+      queryClient.invalidateQueries({ queryKey: ["drivers"] });
+      toast.success("Kierowca został usunięty");
     },
     onError: () => {
-      toast.error('Nie udało się usunąć kierowcy');
+      toast.error("Nie udało się usunąć kierowcy");
     },
   });
 }
@@ -971,24 +1017,24 @@ Custom hook `usePagination`:
 function usePagination() {
   const [prevCursors, setPrevCursors] = useState<string[]>([]);
   const [currentCursor, setCurrentCursor] = useState<string | undefined>();
-  
+
   const goToNext = (nextCursor: string) => {
     if (currentCursor) {
-      setPrevCursors(prev => [...prev, currentCursor]);
+      setPrevCursors((prev) => [...prev, currentCursor]);
     }
     setCurrentCursor(nextCursor);
   };
-  
+
   const goToPrev = () => {
     const newPrevCursors = [...prevCursors];
     const prevCursor = newPrevCursors.pop();
     setPrevCursors(newPrevCursors);
     setCurrentCursor(prevCursor);
   };
-  
+
   const hasNext = (nextCursor: string | null) => nextCursor !== null;
   const hasPrev = prevCursors.length > 0;
-  
+
   return {
     currentCursor,
     goToNext,
@@ -1012,14 +1058,9 @@ function usePagination() {
 Utworzenie serwisu `driversService` w `src/lib/services/driversService.ts`:
 
 ```typescript
-import { supabaseClient } from '@/db/supabase.client';
-import type {
-  DriverDTO,
-  CreateDriverCommand,
-  UpdateDriverCommand,
-  DriversListResponseDTO,
-} from '@/types';
-import type { DriversQueryParams } from './types';
+import { supabaseClient } from "@/db/supabase.client";
+import type { DriverDTO, CreateDriverCommand, UpdateDriverCommand, DriversListResponseDTO } from "@/types";
+import type { DriversQueryParams } from "./types";
 
 export const driversService = {
   /**
@@ -1028,93 +1069,93 @@ export const driversService = {
    */
   async list(params: DriversQueryParams): Promise<DriversListResponseDTO> {
     const queryParams = new URLSearchParams();
-    
-    if (params.q) queryParams.set('q', params.q);
-    if (params.isActive !== undefined) queryParams.set('isActive', String(params.isActive));
-    if (params.includeDeleted) queryParams.set('includeDeleted', 'true');
-    if (params.limit) queryParams.set('limit', String(params.limit));
-    if (params.cursor) queryParams.set('cursor', params.cursor);
-    if (params.sortBy) queryParams.set('sortBy', params.sortBy);
-    if (params.sortDir) queryParams.set('sortDir', params.sortDir);
-    
+
+    if (params.q) queryParams.set("q", params.q);
+    if (params.isActive !== undefined) queryParams.set("isActive", String(params.isActive));
+    if (params.includeDeleted) queryParams.set("includeDeleted", "true");
+    if (params.limit) queryParams.set("limit", String(params.limit));
+    if (params.cursor) queryParams.set("cursor", params.cursor);
+    if (params.sortBy) queryParams.set("sortBy", params.sortBy);
+    if (params.sortDir) queryParams.set("sortDir", params.sortDir);
+
     const response = await fetch(`/api/drivers?${queryParams.toString()}`, {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
-    
+
     if (!response.ok) {
       throw new Error(`Failed to fetch drivers: ${response.statusText}`);
     }
-    
+
     return response.json();
   },
-  
+
   /**
    * POST /api/drivers
    * Utworzenie nowego kierowcy
    */
   async create(data: CreateDriverCommand): Promise<DriverDTO> {
-    const response = await fetch('/api/drivers', {
-      method: 'POST',
+    const response = await fetch("/api/drivers", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     });
-    
+
     if (!response.ok) {
       const error = await response.json();
       throw { response: { status: response.status, data: error } };
     }
-    
+
     return response.json();
   },
-  
+
   /**
    * GET /api/drivers/{uuid}
    * Szczegóły pojedynczego kierowcy
    */
   async get(uuid: string): Promise<DriverDTO> {
     const response = await fetch(`/api/drivers/${uuid}`);
-    
+
     if (!response.ok) {
       throw new Error(`Failed to fetch driver: ${response.statusText}`);
     }
-    
+
     return response.json();
   },
-  
+
   /**
    * PATCH /api/drivers/{uuid}
    * Aktualizacja kierowcy
    */
   async update(uuid: string, data: UpdateDriverCommand): Promise<DriverDTO> {
     const response = await fetch(`/api/drivers/${uuid}`, {
-      method: 'PATCH',
+      method: "PATCH",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     });
-    
+
     if (!response.ok) {
       const error = await response.json();
       throw { response: { status: response.status, data: error } };
     }
-    
+
     return response.json();
   },
-  
+
   /**
    * DELETE /api/drivers/{uuid}
    * Soft delete kierowcy
    */
   async delete(uuid: string): Promise<void> {
     const response = await fetch(`/api/drivers/${uuid}`, {
-      method: 'DELETE',
+      method: "DELETE",
     });
-    
+
     if (!response.ok) {
       throw new Error(`Failed to delete driver: ${response.statusText}`);
     }
@@ -1125,6 +1166,7 @@ export const driversService = {
 ### 7.2 Mapowanie Request/Response
 
 **Request (Create)**:
+
 ```typescript
 // Frontend → API
 const createDriverData: CreateDriverCommand = {
@@ -1136,6 +1178,7 @@ const createDriverData: CreateDriverCommand = {
 ```
 
 **Request (Update)**:
+
 ```typescript
 // Frontend → API (tylko zmienione pola)
 const updateDriverData: UpdateDriverCommand = {
@@ -1147,6 +1190,7 @@ const updateDriverData: UpdateDriverCommand = {
 ```
 
 **Response (List)**:
+
 ```typescript
 // API → Frontend
 interface DriversListResponse {
@@ -1156,6 +1200,7 @@ interface DriversListResponse {
 ```
 
 **Response (Single)**:
+
 ```typescript
 // API → Frontend
 const driver: DriverDTO = {
@@ -1171,19 +1216,19 @@ const driver: DriverDTO = {
 
 ### 7.3 Obsługa błędów API
 
-| Status | Znaczenie | Akcja frontendu |
-|--------|-----------|-----------------|
-| 200 | OK | Przetworzenie odpowiedzi |
-| 201 | Created | Toast sukcesu, zamknięcie modalu, invalidate queries |
-| 204 | No Content | Toast sukcesu (usunięcie), invalidate queries |
-| 400 | Bad Request | Toast błędu z komunikatem, podświetlenie pól formularza |
-| 401 | Unauthorized | Redirect na `/signin` |
-| 403 | Forbidden | Toast "Brak uprawnień" |
-| 404 | Not Found | Toast "Kierowca nie został znaleziony" |
-| 409 | Conflict | Toast "Kierowca z tym emailem już istnieje", setError na polu email |
-| 422 | Unprocessable Entity | Toast błędu walidacji, podświetlenie pól |
-| 429 | Too Many Requests | Toast "Zbyt wiele żądań, spróbuj ponownie za chwilę" |
-| 500 | Internal Server Error | Toast "Wystąpił błąd serwera", ErrorState |
+| Status | Znaczenie             | Akcja frontendu                                                     |
+| ------ | --------------------- | ------------------------------------------------------------------- |
+| 200    | OK                    | Przetworzenie odpowiedzi                                            |
+| 201    | Created               | Toast sukcesu, zamknięcie modalu, invalidate queries                |
+| 204    | No Content            | Toast sukcesu (usunięcie), invalidate queries                       |
+| 400    | Bad Request           | Toast błędu z komunikatem, podświetlenie pól formularza             |
+| 401    | Unauthorized          | Redirect na `/signin`                                               |
+| 403    | Forbidden             | Toast "Brak uprawnień"                                              |
+| 404    | Not Found             | Toast "Kierowca nie został znaleziony"                              |
+| 409    | Conflict              | Toast "Kierowca z tym emailem już istnieje", setError na polu email |
+| 422    | Unprocessable Entity  | Toast błędu walidacji, podświetlenie pól                            |
+| 429    | Too Many Requests     | Toast "Zbyt wiele żądań, spróbuj ponownie za chwilę"                |
+| 500    | Internal Server Error | Toast "Wystąpił błąd serwera", ErrorState                           |
 
 ---
 
@@ -1292,6 +1337,7 @@ const driver: DriverDTO = {
 ### 9.1 Walidacja formularza (dodawanie/edycja kierowcy)
 
 **Pole: Imię i nazwisko (name)**
+
 - Wymagane: ✅
 - Min. długość: 2 znaki
 - Max. długość: 100 znaków
@@ -1300,6 +1346,7 @@ const driver: DriverDTO = {
 - Komponent: `<Input />` z `<FormMessage />`
 
 **Pole: Adres e-mail (email)**
+
 - Wymagane: ✅
 - Format: valid email address
 - Max. długość: 255 znaków
@@ -1309,6 +1356,7 @@ const driver: DriverDTO = {
 - Komponent: `<Input type="email" />` z `<FormMessage />`
 
 **Pole: Strefa czasowa (timezone)**
+
 - Wymagane: ✅
 - Wartość: musi być prawidłową strefą IANA (np. "Europe/Warsaw")
 - Walidacja: w combobox (tylko dostępne opcje), dodatkowa walidacja przez API (błąd 400)
@@ -1316,6 +1364,7 @@ const driver: DriverDTO = {
 - Komponent: `<TimezoneCombobox />` z `<FormMessage />`
 
 **Pole: Status aktywności (isActive)**
+
 - Wymagane: ✅ (domyślnie `true`)
 - Wartość: boolean
 - Komponent: `<Switch />` z etykietą "Aktywny"
@@ -1387,29 +1436,34 @@ const driver: DriverDTO = {
 ### 10.1 Błędy API
 
 **401 Unauthorized**:
+
 - Przyczyna: Brak ważnej sesji, token wygasł
 - Akcja: Automatyczne przekierowanie na `/signin` z zapytaniem `?redirect=/drivers`
 - Implementacja: w interceptorze fetch lub w middleware Astro
 
 **403 Forbidden**:
+
 - Przyczyna: Użytkownik nie ma uprawnień do zarządzania kierowcami
 - Akcja: Toast "Brak uprawnień do wykonania tej akcji"
 - Opcjonalnie: wyświetlenie banneru z informacją o ograniczonych uprawnieniach
 
 **404 Not Found** (GET /api/drivers/{uuid}):
+
 - Przyczyna: Kierowca nie istnieje lub został usunięty
 - Akcja: Toast "Kierowca nie został znaleziony", zamknięcie modalu edycji
 - Invalidate queries
 
 **409 Conflict** (POST/PATCH /api/drivers):
+
 - Przyczyna: Email już istnieje dla innego aktywnego kierowcy w firmie
-- Akcja: 
+- Akcja:
   - Toast "Kierowca z tym adresem e-mail już istnieje"
   - setError na pole email w formularzu
   - Focus na polu email
   - Podświetlenie pola (czerwona ramka)
 
 **422 Unprocessable Entity**:
+
 - Przyczyna: Błędy walidacji schematu (niezgodność z API)
 - Akcja:
   - Parsowanie błędów z response body
@@ -1417,6 +1471,7 @@ const driver: DriverDTO = {
   - Toast z ogólnym komunikatem "Sprawdź poprawność formularza"
 
 **429 Too Many Requests**:
+
 - Przyczyna: Przekroczony limit żądań (rate limiting)
 - Akcja:
   - Toast "Zbyt wiele żądań. Spróbuj ponownie za chwilę"
@@ -1424,6 +1479,7 @@ const driver: DriverDTO = {
   - Opcjonalnie: countdown w toaście
 
 **500 Internal Server Error**:
+
 - Przyczyna: Błąd serwera
 - Akcja:
   - Toast "Wystąpił błąd serwera. Spróbuj ponownie"
@@ -1431,6 +1487,7 @@ const driver: DriverDTO = {
   - Logowanie błędu do telemetrii
 
 **Błąd sieci (Network Error)**:
+
 - Przyczyna: Brak połączenia z internetem
 - Akcja:
   - Toast "Brak połączenia z internetem"
@@ -1440,6 +1497,7 @@ const driver: DriverDTO = {
 ### 10.2 Błędy walidacji formularza (klient)
 
 **Walidacja nie powiodła się (Zod errors)**:
+
 - Akcja:
   - Automatyczne ustawienie błędów na polach (React Hook Form)
   - Wyświetlenie komunikatów pod polami (`<FormMessage />`)
@@ -1448,21 +1506,26 @@ const driver: DriverDTO = {
   - Disable przycisku submit do czasu poprawienia błędów
 
 **Pole wymagane pozostało puste**:
+
 - Komunikat: "To pole jest wymagane"
 - Kolor: czerwony tekst i ramka
 
 **Nieprawidłowy format email**:
+
 - Komunikat: "Nieprawidłowy format adresu e-mail"
 
 **Nazwa za krótka (<2 znaki)**:
+
 - Komunikat: "Imię musi mieć minimum 2 znaki"
 
 **Nazwa za długa (>100 znaków)**:
+
 - Komunikat: "Imię może mieć maksymalnie 100 znaków"
 
 ### 10.3 Błędy stanu aplikacji
 
 **Optimistic update nie powiódł się**:
+
 - Przyczyna: PATCH/DELETE zwróciło błąd po optimistic update
 - Akcja:
   - Rollback do poprzedniego stanu (context.previousData)
@@ -1470,12 +1533,14 @@ const driver: DriverDTO = {
   - Optymistycznie zmienione dane wracają do oryginalnych wartości
 
 **Query failed (błąd ładowania listy)**:
+
 - Akcja:
   - Wyświetlenie `<ErrorState />` z przyciskiem "Spróbuj ponownie"
   - Retry automatyczny (TanStack Query: retry: 2)
   - Po wyczerpaniu prób: ręczny retry przez użytkownika
 
 **Modal nie może się otworzyć (brak danych)**:
+
 - Przyczyna: Próba edycji kierowcy, którego dane nie są dostępne
 - Akcja:
   - Toast "Nie można załadować danych kierowcy"
@@ -1484,6 +1549,7 @@ const driver: DriverDTO = {
 ### 10.4 Edge cases
 
 **Użytkownik zmienia URL ręcznie (nieprawidłowy cursor)**:
+
 - Akcja:
   - API zwróci 400 Bad Request
   - Reset cursor do undefined
@@ -1491,18 +1557,21 @@ const driver: DriverDTO = {
   - Ładowanie pierwszej strony
 
 **Użytkownik próbuje edytować usuniętego kierowcę**:
+
 - Akcja:
   - API może zwrócić 404 lub 403
   - Toast "Nie można edytować usuniętego kierowcy"
   - Opcjonalnie: disable akcji edycji dla usuniętych w UI
 
 **Dane się zmieniły podczas edycji (concurrent modification)**:
+
 - Akcja:
   - API może zwrócić 409 Conflict
   - Toast "Dane kierowcy zostały zmienione przez innego użytkownika. Odśwież stronę"
   - Opcjonalnie: merge lub force refresh
 
 **Session wygasła podczas wypełniania formularza**:
+
 - Akcja:
   - API zwróci 401
   - Toast "Sesja wygasła. Zaloguj się ponownie"
@@ -1512,11 +1581,13 @@ const driver: DriverDTO = {
 ### 10.5 Logowanie błędów
 
 **Telemetria**:
+
 - Wszystkie błędy API (4xx, 5xx) logowane do telemetrii
 - Błędy renderowania (ErrorBoundary) logowane
 - Parametry: error code, message, endpoint, timestamp, user context
 
 **Console logs (dev mode)**:
+
 - Szczegółowe logi błędów w konsoli przeglądarki (tylko dev)
 - Stack traces dla debugowania
 
@@ -1527,29 +1598,34 @@ const driver: DriverDTO = {
 ### Krok 1: Przygotowanie struktury plików i typów
 
 1.1. Utworzyć plik typów dla widoku:
+
 - `src/lib/drivers/types.ts` – typy ViewModel (DriversFiltersState, ModalState, DriverFormData, TimezoneOption, PaginationState, DriversQueryParams)
 
-1.2. Utworzyć schema walidacji Zod:
+  1.2. Utworzyć schema walidacji Zod:
+
 - `src/lib/drivers/validation.ts` – driverFormSchema
 
-1.3. Przygotować listę stref czasowych:
+  1.3. Przygotować listę stref czasowych:
+
 - `src/lib/drivers/timezones.ts` – funkcja `getTimezoneOptions()` zwracająca `TimezoneOption[]`
 - Wykorzystać `Intl.supportedValuesOf('timeZone')` lub bibliotekę `date-fns-tz`
 
 ### Krok 2: Implementacja Service Layer
 
 2.1. Utworzyć serwis API:
+
 - `src/lib/services/driversService.ts` – implementacja metod: list, create, get, update, delete
 - Obsługa query params, błędów, transformacja danych
 
-2.2. Utworzyć query keys:
+  2.2. Utworzyć query keys:
+
 - `src/lib/drivers/queryKeys.ts` – funkcje generujące klucze dla TanStack Query:
   ```typescript
   export const driversKeys = {
-    all: ['drivers'] as const,
-    lists: () => [...driversKeys.all, 'list'] as const,
+    all: ["drivers"] as const,
+    lists: () => [...driversKeys.all, "list"] as const,
     list: (filters: DriversQueryParams) => [...driversKeys.lists(), filters] as const,
-    details: () => [...driversKeys.all, 'detail'] as const,
+    details: () => [...driversKeys.all, "detail"] as const,
     detail: (uuid: string) => [...driversKeys.details(), uuid] as const,
   };
   ```
@@ -1557,12 +1633,14 @@ const driver: DriverDTO = {
 ### Krok 3: Implementacja Custom Hooks
 
 3.1. Utworzyć hooki zarządzania danymi:
+
 - `src/lib/drivers/useDriversList.ts` – hook useQuery dla listy
 - `src/lib/drivers/useCreateDriver.ts` – hook useMutation dla tworzenia
 - `src/lib/drivers/useUpdateDriver.ts` – hook useMutation dla aktualizacji z optimistic update
 - `src/lib/drivers/useDeleteDriver.ts` – hook useMutation dla usuwania
 
-3.2. Utworzyć hooki pomocnicze:
+  3.2. Utworzyć hooki pomocnicze:
+
 - `src/lib/drivers/useDriversFilters.ts` – synchronizacja filtrów z URL
 - `src/lib/drivers/useDebouncedValue.ts` – debounce dla wyszukiwarki
 - `src/lib/drivers/usePagination.ts` – zarządzanie cursorami paginacji
@@ -1572,42 +1650,49 @@ const driver: DriverDTO = {
 4.1. **Komponenty atomowe**:
 
 Utworzyć `src/components/drivers/StatusBadge.tsx`:
+
 - Props: `{ isActive: boolean, variant?: 'default' | 'compact' }`
 - Wykorzystać `<Badge>` z shadcn/ui
 - Wariantowe style: zielony dla aktywny, szary dla nieaktywny
 
 Utworzyć `src/components/drivers/EmptyState.tsx`:
+
 - Props: `{ variant: 'no-drivers' | 'no-results', onAddClick?, onClearFilters? }`
 - Ikony z `lucide-react`
 - Warunkowe przyciski CTA
 
 Utworzyć `src/components/drivers/LoadingSkeletons.tsx`:
+
 - Props: `{ count?: number }`
 - Wykorzystać `<Skeleton>` z shadcn/ui
 - Osobne komponenty dla desktop (tabela) i mobile (karty)
 
 Utworzyć `src/components/drivers/ErrorState.tsx`:
+
 - Props: `{ error: Error, onRetry: () => void }`
 - Ikona `AlertCircle`
 - Przycisk "Spróbuj ponownie"
 
-4.2. **Komponenty formularza**:
+  4.2. **Komponenty formularza**:
 
 Utworzyć `src/components/drivers/TimezoneCombobox.tsx`:
+
 - Props: `{ value: string, onChange: (value: string) => void, disabled?: boolean }`
 - Wykorzystać `<Popover>` + `<Command>` z shadcn/ui
 - Wyszukiwanie i filtrowanie stref czasowych
 - Wyświetlanie offsetu UTC
 
 Utworzyć `src/components/drivers/DriverForm.tsx`:
+
 - Props: `{ defaultValues?: Partial<DriverFormData>, onSubmit: (data: DriverFormData) => Promise<void>, isSubmitting: boolean }`
 - Użyć React Hook Form + Zod resolver
 - Pola: name (Input), email (Input), timezone (TimezoneCombobox), isActive (Switch)
 - Obsługa błędów z API (setError)
 
-4.3. **Modals**:
+  4.3. **Modals**:
 
 Utworzyć `src/components/drivers/AddEditDriverModal.tsx`:
+
 - Props: `{ isOpen: boolean, mode: 'add' | 'edit', driver?: DriverDTO, onClose: () => void, onSuccess: () => void }`
 - Wykorzystać `<Dialog>` z shadcn/ui
 - Osadzić `<DriverForm />`
@@ -1615,58 +1700,67 @@ Utworzyć `src/components/drivers/AddEditDriverModal.tsx`:
 - Obsługa mutation hooks
 
 Utworzyć `src/components/drivers/DeleteConfirmationDialog.tsx`:
+
 - Props: `{ isOpen: boolean, driver: DriverDTO | null, onClose: () => void, onConfirm: () => Promise<void>, isDeleting: boolean }`
 - Wykorzystać `<AlertDialog>` z shadcn/ui
 - Focus na przycisku "Anuluj"
 - Tekst ostrzeżenia o skutkach
 
-4.4. **Komponenty listy (desktop)**:
+  4.4. **Komponenty listy (desktop)**:
 
 Utworzyć `src/components/drivers/RowActionsMenu.tsx`:
+
 - Props: `{ driver: DriverDTO, onEdit, onToggleActive, onDelete }`
 - Wykorzystać `<DropdownMenu>` z shadcn/ui
 - Menu items z ikonami
 
 Utworzyć `src/components/drivers/DriverRow.tsx`:
+
 - Props: `{ driver: DriverDTO, onEdit, onToggleActive, onDelete }`
 - Wykorzystać `<TableRow>`, `<TableCell>` z shadcn/ui
 - Osadzić `<StatusBadge />` i `<RowActionsMenu />`
 
 Utworzyć `src/components/drivers/DriversTable.tsx`:
+
 - Props: `{ drivers: DriverDTO[], sortBy, sortDir, onSortChange, onEditClick, onToggleActiveClick, onDeleteClick, pagination }`
 - Wykorzystać `<Table>` z shadcn/ui
 - Sortowalne nagłówki kolumn
 - Mapowanie `drivers` na `<DriverRow />`
 - Przyciski paginacji
 
-4.5. **Komponenty listy (mobile)**:
+  4.5. **Komponenty listy (mobile)**:
 
 Utworzyć `src/components/drivers/DriverCard.tsx`:
+
 - Props: `{ driver: DriverDTO, onEdit, onToggleActive, onDelete }`
 - Wykorzystać `<Card>` z shadcn/ui
 - Avatar z inicjałami (użyć `<Avatar>` z shadcn/ui)
 - Przyciski akcji w CardFooter
 
 Utworzyć `src/components/drivers/DriversCardList.tsx`:
+
 - Props: `{ drivers: DriverDTO[], onEditClick, onToggleActiveClick, onDeleteClick, pagination }`
 - Grid layout kart
 - Mapowanie `drivers` na `<DriverCard />`
 - Przyciski paginacji
 
-4.6. **Komponenty filtrów i nagłówka**:
+  4.6. **Komponenty filtrów i nagłówka**:
 
 Utworzyć `src/components/drivers/DriversFiltersBar.tsx`:
+
 - Props: `{ filters: DriversFiltersState, onFiltersChange, resultsCount? }`
 - Pola: SearchInput (debounced), ActiveFilterToggle, ShowDeletedToggle, SortControls
 - Synchronizacja z URL przez callback `onFiltersChange`
 
 Utworzyć `src/components/drivers/DriversHeader.tsx`:
+
 - Props: `{ onAddClick: () => void }`
 - Nagłówek h1 + przycisk "Dodaj kierowcę"
 
-4.7. **Główny komponent widoku**:
+  4.7. **Główny komponent widoku**:
 
 Utworzyć `src/components/drivers/DriversView.tsx`:
+
 - Główny kontener React
 - Użycie hooków: useDriversFilters, useDriversList, usePagination, useCreateDriver, useUpdateDriver, useDeleteDriver
 - Stan modalów: useState<ModalState>
@@ -1677,10 +1771,11 @@ Utworzyć `src/components/drivers/DriversView.tsx`:
 ### Krok 5: Utworzenie strony Astro
 
 5.1. Utworzyć `src/pages/drivers.astro`:
+
 ```astro
 ---
-import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.astro';
-import { DriversViewWithProvider } from '@/components/drivers';
+import AuthenticatedLayout from "@/layouts/AuthenticatedLayout.astro";
+import { DriversViewWithProvider } from "@/components/drivers";
 ---
 
 <AuthenticatedLayout title="Kierowcy">
@@ -1689,21 +1784,26 @@ import { DriversViewWithProvider } from '@/components/drivers';
 ```
 
 5.2. Utworzyć wrapper z QueryClientProvider (jeśli nie globalny):
+
 - `src/components/drivers/DriversViewWithProvider.tsx` – opakowuje `<DriversView />` w provider
 
-5.3. Utworzyć barrel export:
+  5.3. Utworzyć barrel export:
+
 - `src/components/drivers/index.ts` – eksport wszystkich komponentów
 
 ### Krok 6: Stylowanie i responsywność
 
 6.1. Dostosować breakpointy w Tailwind config (jeśli potrzebne):
+
 - Desktop: `≥768px` (md)
 - Mobile: `<768px`
 
-6.2. Dodać responsive classes do głównych komponentów:
+  6.2. Dodać responsive classes do głównych komponentów:
+
 - DriversView: toggle między `<DriversTable />` (hidden md:block) i `<DriversCardList />` (block md:hidden)
 
-6.3. Sprawdzić kontrast i ARIA:
+  6.3. Sprawdzić kontrast i ARIA:
+
 - Przyciski: min. contrast ratio 4.5:1
 - Focus indicators: widoczne dla keyboard navigation
 - ARIA labels dla icon buttons
@@ -1711,36 +1811,44 @@ import { DriversViewWithProvider } from '@/components/drivers';
 ### Krok 7: Testy
 
 7.1. Utworzyć testy jednostkowe dla hooków:
+
 - `src/lib/drivers/__tests__/useDriversFilters.test.ts`
 - `src/lib/drivers/__tests__/usePagination.test.ts`
 
-7.2. Utworzyć testy komponentów:
+  7.2. Utworzyć testy komponentów:
+
 - `src/components/drivers/__tests__/StatusBadge.test.tsx`
 - `src/components/drivers/__tests__/DriverForm.test.tsx`
 - `src/components/drivers/__tests__/DriversTable.test.tsx`
 - Wykorzystać @testing-library/react, vitest
 
-7.3. Utworzyć testy integracyjne:
+  7.3. Utworzyć testy integracyjne:
+
 - Mock API responses
 - Testowanie flow: dodawanie, edycja, usuwanie kierowcy
 - Testowanie filtrowania, sortowania, paginacji
 
-7.4. Testy E2E (opcjonalnie):
+  7.4. Testy E2E (opcjonalnie):
+
 - Wykorzystać Playwright lub Cypress
 - Scenariusze: pełny flow CRUD, walidacja, obsługa błędów
 
 ### Krok 8: Dokumentacja i finalizacja
 
 8.1. Dodać komentarze JSDoc do komponentów i hooków:
+
 - Opisać props, zwracane wartości, przykłady użycia
 
-8.2. Utworzyć stories dla Storybook (opcjonalnie):
+  8.2. Utworzyć stories dla Storybook (opcjonalnie):
+
 - Stories dla głównych komponentów (DriverCard, DriverForm, itp.)
 
-8.3. Aktualizować README:
+  8.3. Aktualizować README:
+
 - Sekcja "Widoki" z opisem `/drivers`
 
-8.4. Code review i refactoring:
+  8.4. Code review i refactoring:
+
 - Sprawdzić duplicates (DRY)
 - Sprawdzić performance (React.memo gdzie potrzebne)
 - Sprawdzić accessibility (ARIA, keyboard navigation)
@@ -1750,11 +1858,13 @@ import { DriversViewWithProvider } from '@/components/drivers';
 9.1. Merge do main branch
 
 9.2. CI/CD pipeline:
+
 - Linting, testy, build
 - Deploy na staging → QA
 - Deploy na production
 
-9.3. Monitorowanie:
+  9.3. Monitorowanie:
+
 - Telemetria: czas ładowania, błędy API, konwersja dodawania kierowców
 - Logi błędów: Sentry lub podobne narzędzie
 
@@ -1763,6 +1873,7 @@ import { DriversViewWithProvider } from '@/components/drivers';
 ## Podsumowanie
 
 Plan implementacji widoku Listy Kierowców jest kompleksowy i obejmuje:
+
 - **Routing**: `/drivers` w AuthenticatedLayout
 - **23 komponenty**: od atomowych (StatusBadge) po złożone (DriversView)
 - **8 custom hooków**: zarządzanie danymi (TanStack Query), filtrami, paginacją
@@ -1776,4 +1887,3 @@ Plan implementacji widoku Listy Kierowców jest kompleksowy i obejmuje:
 - **Testowanie**: jednostkowe, komponentowe, integracyjne
 
 Implementacja powinna zająć około **3-5 dni** dla doświadczonego programisty frontendowego, z kolejnymi 1-2 dniami na testy i dopracowanie szczegółów.
-

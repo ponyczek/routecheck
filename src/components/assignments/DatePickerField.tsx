@@ -5,11 +5,7 @@ import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface DatePickerFieldProps {
   value?: string; // YYYY-MM-DD format
@@ -20,7 +16,7 @@ interface DatePickerFieldProps {
 
 /**
  * DatePickerField
- * 
+ *
  * Komponent do wyboru daty z kalendarza.
  * Integruje się z react-hook-form przez value/onChange.
  * Format wewnętrzny: YYYY-MM-DD (IsoDateOnlyString)
@@ -34,10 +30,10 @@ export const DatePickerField = React.forwardRef<HTMLButtonElement, DatePickerFie
     const handleSelect = (date: Date | undefined) => {
       if (date) {
         // Convert Date to YYYY-MM-DD string
-        const isoString = format(date, 'yyyy-MM-dd');
+        const isoString = format(date, "yyyy-MM-dd");
         onChange(isoString);
       } else {
-        onChange('');
+        onChange("");
       }
     };
 
@@ -47,28 +43,15 @@ export const DatePickerField = React.forwardRef<HTMLButtonElement, DatePickerFie
           <Button
             ref={ref}
             variant="outline"
-            className={cn(
-              "w-full justify-start text-left font-normal",
-              !dateValue && "text-muted-foreground"
-            )}
+            className={cn("w-full justify-start text-left font-normal", !dateValue && "text-muted-foreground")}
             disabled={disabled}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
-            {dateValue ? (
-              format(dateValue, "PPP", { locale: pl })
-            ) : (
-              <span>{placeholder}</span>
-            )}
+            {dateValue ? format(dateValue, "PPP", { locale: pl }) : <span>{placeholder}</span>}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
-          <Calendar
-            mode="single"
-            selected={dateValue}
-            onSelect={handleSelect}
-            initialFocus
-            locale={pl}
-          />
+          <Calendar mode="single" selected={dateValue} onSelect={handleSelect} initialFocus locale={pl} />
         </PopoverContent>
       </Popover>
     );
@@ -76,5 +59,3 @@ export const DatePickerField = React.forwardRef<HTMLButtonElement, DatePickerFie
 );
 
 DatePickerField.displayName = "DatePickerField";
-
-

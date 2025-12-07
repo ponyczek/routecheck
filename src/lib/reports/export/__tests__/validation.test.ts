@@ -38,9 +38,7 @@ describe("validateDateRange", () => {
         to: new Date("2025-01-15"),
       };
       const result = validateDateRange(range);
-      expect(result).toBe(
-        "Data początkowa musi być wcześniejsza lub równa dacie końcowej"
-      );
+      expect(result).toBe("Data początkowa musi być wcześniejsza lub równa dacie końcowej");
     });
 
     it("allows equal dates (same day)", () => {
@@ -210,9 +208,6 @@ describe("validateForm", () => {
     };
     const result = validateForm(range);
     expect(result).toHaveProperty("dateRange");
-    expect(result.dateRange).toBe(
-      "Data początkowa musi być wcześniejsza lub równa dacie końcowej"
-    );
+    expect(result.dateRange).toBe("Data początkowa musi być wcześniejsza lub równa dacie końcowej");
   });
 });
-

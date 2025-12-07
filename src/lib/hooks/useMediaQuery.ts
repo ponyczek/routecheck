@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 
 /**
  * useMediaQuery
- * 
+ *
  * Hook do sprawdzania media queries w React.
  * Używany do responsywnego renderowania komponentów (Dialog vs Sheet).
- * 
+ *
  * @param query - Media query string (np. "(min-width: 768px)")
  * @returns boolean - true jeśli query pasuje
  */
@@ -14,7 +14,7 @@ export function useMediaQuery(query: string): boolean {
 
   useEffect(() => {
     const media = window.matchMedia(query);
-    
+
     // Set initial value
     setMatches(media.matches);
 
@@ -25,9 +25,9 @@ export function useMediaQuery(query: string): boolean {
 
     // Modern browsers
     if (media.addEventListener) {
-      media.addEventListener('change', listener);
-      return () => media.removeEventListener('change', listener);
-    } 
+      media.addEventListener("change", listener);
+      return () => media.removeEventListener("change", listener);
+    }
     // Legacy browsers (fallback)
     else {
       media.addListener(listener);
@@ -37,5 +37,3 @@ export function useMediaQuery(query: string): boolean {
 
   return matches;
 }
-
-

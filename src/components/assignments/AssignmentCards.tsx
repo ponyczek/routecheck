@@ -11,28 +11,16 @@ interface AssignmentCardsProps {
 
 /**
  * AssignmentCards
- * 
+ *
  * Responsywna lista kart dla widoku mobilnego.
  * Wyświetlana tylko na mobile (ukryta na desktop: md:hidden).
  */
-export function AssignmentCards({
-  assignments,
-  onEdit,
-  onDelete,
-  isLoading = false,
-}: AssignmentCardsProps) {
+export function AssignmentCards({ assignments, onEdit, onDelete }: AssignmentCardsProps) {
   return (
     <div className="md:hidden grid grid-cols-1 gap-4">
       {assignments.map((viewModel) => (
-        <AssignmentCard
-          key={viewModel.assignment.uuid}
-          assignment={viewModel}
-          onEdit={onEdit}
-          onDelete={onDelete}
-        />
+        <AssignmentCard key={viewModel.assignment.uuid} assignment={viewModel} onEdit={onEdit} onDelete={onDelete} />
       ))}
     </div>
   );
 }
-
-

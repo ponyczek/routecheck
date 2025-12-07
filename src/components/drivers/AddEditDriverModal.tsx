@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 import {
   Dialog,
   DialogContent,
@@ -6,18 +6,18 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
-import { DriverForm } from './DriverForm';
-import { useCreateDriver } from '@/lib/drivers/useCreateDriver';
-import { useUpdateDriver } from '@/lib/drivers/useUpdateDriver';
-import type { DriverDTO } from '@/types';
-import type { DriverFormData } from '@/lib/drivers/validation';
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
+import { DriverForm } from "./DriverForm";
+import { useCreateDriver } from "@/lib/drivers/useCreateDriver";
+import { useUpdateDriver } from "@/lib/drivers/useUpdateDriver";
+import type { DriverDTO } from "@/types";
+import type { DriverFormData } from "@/lib/drivers/validation";
 
 interface AddEditDriverModalProps {
   isOpen: boolean;
-  mode: 'add' | 'edit';
+  mode: "add" | "edit";
   driver?: DriverDTO;
   onClose: () => void;
   onSuccess: () => void;
@@ -31,13 +31,7 @@ interface AddEditDriverModalProps {
  * - Optimistic updates przy edycji
  * - Unsaved changes guard (TODO)
  */
-export function AddEditDriverModal({
-  isOpen,
-  mode,
-  driver,
-  onClose,
-  onSuccess,
-}: AddEditDriverModalProps) {
+export function AddEditDriverModal({ isOpen, mode, driver, onClose, onSuccess }: AddEditDriverModalProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const createMutation = useCreateDriver();
   const updateMutation = useUpdateDriver();
@@ -53,7 +47,7 @@ export function AddEditDriverModal({
   }, [isOpen]);
 
   const handleSubmit = async (data: DriverFormData) => {
-    if (mode === 'add') {
+    if (mode === "add") {
       await createMutation.mutateAsync({
         name: data.name,
         email: data.email,
@@ -62,7 +56,7 @@ export function AddEditDriverModal({
       });
       onSuccess();
       onClose();
-    } else if (mode === 'edit' && driver) {
+    } else if (mode === "edit" && driver) {
       await updateMutation.mutateAsync({
         uuid: driver.uuid,
         data: {
@@ -79,7 +73,7 @@ export function AddEditDriverModal({
 
   const handleFormSubmit = () => {
     // Trigger submit na formularzu wewnątrz (form jest w DriverForm)
-    const form = formRef.current?.querySelector('form');
+    const form = formRef.current?.querySelector("form");
     if (form) {
       form.requestSubmit();
     }
@@ -98,20 +92,16 @@ export function AddEditDriverModal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>{mode === 'add' ? 'Dodaj kierowcę' : 'Edytuj kierowcę'}</DialogTitle>
+          <DialogTitle>{mode === "add" ? "Dodaj kierowcę" : "Edytuj kierowcę"}</DialogTitle>
           <DialogDescription>
-            {mode === 'add'
-              ? 'Dodaj nowego kierowcę do systemu. Kierowca będzie otrzymywać codzienne linki do raportów.'
-              : 'Edytuj dane kierowcy. Zmiany zostaną zapisane natychmiast.'}
+            {mode === "add"
+              ? "Dodaj nowego kierowcę do systemu. Kierowca będzie otrzymywać codzienne linki do raportów."
+              : "Edytuj dane kierowcy. Zmiany zostaną zapisane natychmiast."}
           </DialogDescription>
         </DialogHeader>
 
         <div ref={formRef}>
-          <DriverForm
-            defaultValues={defaultValues}
-            onSubmit={handleSubmit}
-            isSubmitting={isSubmitting}
-          />
+          <DriverForm defaultValues={defaultValues} onSubmit={handleSubmit} isSubmitting={isSubmitting} />
         </div>
 
         <DialogFooter>
@@ -127,6 +117,3 @@ export function AddEditDriverModal({
     </Dialog>
   );
 }
-
-
-

@@ -98,4 +98,3 @@ export function RiskBadge({ level, showIcon = true, onClick, size = "md", classN
     </Badge>
   );
 }
-

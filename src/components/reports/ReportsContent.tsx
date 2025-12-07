@@ -38,12 +38,7 @@ export function ReportsContent({
 }: ReportsContentProps) {
   // Error state
   if (isError) {
-    return (
-      <ReportsErrorState
-        message={errorMessage || "Wystąpił nieoczekiwany błąd."}
-        onRetry={onRetry}
-      />
-    );
+    return <ReportsErrorState message={errorMessage || "Wystąpił nieoczekiwany błąd."} onRetry={onRetry} />;
   }
 
   // Initial loading state
@@ -81,12 +76,7 @@ export function ReportsContent({
       {/* Load more button */}
       {hasNextPage && (
         <div className="flex justify-center pt-4">
-          <Button
-            variant="outline"
-            onClick={onLoadMore}
-            disabled={isFetchingNextPage}
-            className="gap-2"
-          >
+          <Button variant="outline" onClick={onLoadMore} disabled={isFetchingNextPage} className="gap-2">
             {isFetchingNextPage && <Loader2 className="h-4 w-4 animate-spin" />}
             {isFetchingNextPage ? "Ładowanie..." : "Załaduj więcej"}
           </Button>
@@ -95,6 +85,3 @@ export function ReportsContent({
     </div>
   );
 }
-
-
-

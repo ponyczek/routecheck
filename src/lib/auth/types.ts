@@ -66,4 +66,3 @@ export type PasswordStrength = "weak" | "medium" | "strong";
 export interface RedirectMetadata {
   returnTo?: string;
 }
-

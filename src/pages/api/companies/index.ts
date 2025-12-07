@@ -44,37 +44,28 @@ export const POST: APIRoute = async (context) => {
   try {
     // Step 1: Extract and verify JWT from Authorization header
     const authHeader = context.request.headers.get("Authorization");
-    
+
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return errorResponse(
-        "unauthorized",
-        "Missing or invalid authorization token",
-        401
-      );
+      return errorResponse("unauthorized", "Missing or invalid authorization token", 401);
     }
 
     const token = authHeader.substring(7);
 
     // Verify user token using service client (bypasses RLS for verification)
-    const { data: { user }, error: authError } = await supabaseServiceClient.auth.getUser(token);
+    const {
+      data: { user },
+      error: authError,
+    } = await supabaseServiceClient.auth.getUser(token);
 
     if (authError || !user) {
-      return errorResponse(
-        "unauthorized",
-        "Invalid authentication token",
-        401
-      );
+      return errorResponse("unauthorized", "Invalid authentication token", 401);
     }
 
     // Step 2: Parse and validate request body
     const body = await context.request.json().catch(() => null);
 
     if (!body) {
-      return errorResponse(
-        "validation_error",
-        "Invalid JSON in request body",
-        400
-      );
+      return errorResponse("validation_error", "Invalid JSON in request body", 400);
     }
 
     const validation = createCompanySchema.safeParse(body);
@@ -87,11 +78,7 @@ export const POST: APIRoute = async (context) => {
 
     // Step 3: Verify user is creating company for themselves
     if (userUuid !== user.id) {
-      return errorResponse(
-        "forbidden",
-        "Cannot create company for another user",
-        403
-      );
+      return errorResponse("forbidden", "Cannot create company for another user", 403);
     }
 
     // Step 4: Check if user already has a company
@@ -103,19 +90,11 @@ export const POST: APIRoute = async (context) => {
 
     if (userCheckError) {
       console.error("Error checking existing user:", userCheckError);
-      return errorResponse(
-        "internal_error",
-        "Failed to verify user status",
-        500
-      );
+      return errorResponse("internal_error", "Failed to verify user status", 500);
     }
 
     if (existingUser) {
-      return errorResponse(
-        "company_already_exists",
-        "User already has a company",
-        409
-      );
+      return errorResponse("company_already_exists", "User already has a company", 409);
     }
 
     // Step 5: Create company record using service client (bypasses RLS)
@@ -129,39 +108,26 @@ export const POST: APIRoute = async (context) => {
 
     if (companyError || !company) {
       console.error("Error creating company:", companyError);
-      return errorResponse(
-        "internal_error",
-        "Failed to create company",
-        500
-      );
+      return errorResponse("internal_error", "Failed to create company", 500);
     }
 
     // Step 6: Create user record linking to company using service client (bypasses RLS)
-    const { error: userInsertError } = await supabaseServiceClient
-      .from("users")
-      .insert({
-        uuid: user.id,
-        company_uuid: company.uuid,
-      });
+    const { error: userInsertError } = await supabaseServiceClient.from("users").insert({
+      uuid: user.id,
+      company_uuid: company.uuid,
+    });
 
     if (userInsertError) {
       console.error("Error creating user record:", userInsertError);
-      
+
       // Attempt to clean up created company (best effort) using service client
-      const cleanupResult = await supabaseServiceClient
-        .from("companies")
-        .delete()
-        .eq("uuid", company.uuid);
-      
+      const cleanupResult = await supabaseServiceClient.from("companies").delete().eq("uuid", company.uuid);
+
       if (cleanupResult.error) {
         console.error("Failed to clean up company:", cleanupResult.error);
       }
 
-      return errorResponse(
-        "internal_error",
-        "Failed to associate user with company",
-        500
-      );
+      return errorResponse("internal_error", "Failed to associate user with company", 500);
     }
 
     // Step 7: Return success response with CompanyDTO
@@ -172,14 +138,8 @@ export const POST: APIRoute = async (context) => {
     };
 
     return jsonResponse(response, 201);
-
   } catch (error) {
     console.error("Unexpected error in POST /api/companies:", error);
-    return errorResponse(
-      "internal_error",
-      "An unexpected error occurred",
-      500
-    );
+    return errorResponse("internal_error", "An unexpected error occurred", 500);
   }
 };
-

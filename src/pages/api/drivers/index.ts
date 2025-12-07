@@ -7,7 +7,7 @@ export const prerender = false;
 
 /**
  * GET /api/drivers
- * 
+ *
  * Lists drivers with filtering, sorting, and pagination
  * Uses Supabase for persistent storage
  */
@@ -17,42 +17,36 @@ export const GET: APIRoute = async ({ locals, request }) => {
     const session = await supabase.auth.getSession();
 
     if (!session.data.session) {
-      return jsonResponse(
-        { code: 'UNAUTHORIZED', message: 'Authentication required' },
-        401
-      );
+      return jsonResponse({ code: "UNAUTHORIZED", message: "Authentication required" }, 401);
     }
 
     // Get user's company_uuid
     const { data: userData, error: userError } = await supabase
-      .from('users')
-      .select('company_uuid')
-      .eq('uuid', session.data.session.user.id)
+      .from("users")
+      .select("company_uuid")
+      .eq("uuid", session.data.session.user.id)
       .single();
 
     if (userError || !userData) {
-      return jsonResponse(
-        { code: 'FORBIDDEN', message: 'User not associated with a company' },
-        403
-      );
+      return jsonResponse({ code: "FORBIDDEN", message: "User not associated with a company" }, 403);
     }
 
     const companyUuid = userData.company_uuid;
 
     // Parse query parameters
     const url = new URL(request.url);
-    const q = url.searchParams.get('q') || '';
-    const isActiveParam = url.searchParams.get('isActive');
-    const includeDeleted = url.searchParams.get('includeDeleted') === 'true';
-    const sortBy = (url.searchParams.get('sortBy') || 'name') as 'name' | 'created_at';
-    const sortDir = (url.searchParams.get('sortDir') || 'asc') as 'asc' | 'desc';
-    const limit = parseInt(url.searchParams.get('limit') || '20', 10);
+    const q = url.searchParams.get("q") || "";
+    const isActiveParam = url.searchParams.get("isActive");
+    const includeDeleted = url.searchParams.get("includeDeleted") === "true";
+    const sortBy = (url.searchParams.get("sortBy") || "name") as "name" | "created_at";
+    const sortDir = (url.searchParams.get("sortDir") || "asc") as "asc" | "desc";
+    const limit = parseInt(url.searchParams.get("limit") || "20", 10);
 
     // Build query
     let query = supabase
-      .from('drivers')
-      .select('uuid, name, email, timezone, is_active, created_at, deleted_at')
-      .eq('company_uuid', companyUuid);
+      .from("drivers")
+      .select("uuid, name, email, timezone, is_active, created_at, deleted_at")
+      .eq("company_uuid", companyUuid);
 
     // Filter by search query
     if (q) {
@@ -61,18 +55,18 @@ export const GET: APIRoute = async ({ locals, request }) => {
 
     // Filter by active status
     if (isActiveParam !== null) {
-      const isActive = isActiveParam === 'true';
-      query = query.eq('is_active', isActive);
+      const isActive = isActiveParam === "true";
+      query = query.eq("is_active", isActive);
     }
 
     // Filter deleted
     if (!includeDeleted) {
-      query = query.is('deleted_at', null);
+      query = query.is("deleted_at", null);
     }
 
     // Sort
-    const sortColumn = sortBy === 'name' ? 'name' : 'created_at';
-    query = query.order(sortColumn, { ascending: sortDir === 'asc' });
+    const sortColumn = sortBy === "name" ? "name" : "created_at";
+    query = query.order(sortColumn, { ascending: sortDir === "asc" });
 
     // Limit
     query = query.limit(limit);
@@ -80,15 +74,12 @@ export const GET: APIRoute = async ({ locals, request }) => {
     const { data: drivers, error } = await query;
 
     if (error) {
-      console.error('Error fetching drivers:', error);
-      return jsonResponse(
-        { code: 'INTERNAL_ERROR', message: 'Failed to fetch drivers' },
-        500
-      );
+      console.error("Error fetching drivers:", error);
+      return jsonResponse({ code: "INTERNAL_ERROR", message: "Failed to fetch drivers" }, 500);
     }
 
     // Transform to camelCase (match DTO format)
-    const items = (drivers || []).map(driver => ({
+    const items = (drivers || []).map((driver) => ({
       uuid: driver.uuid,
       name: driver.name,
       email: driver.email,
@@ -100,22 +91,19 @@ export const GET: APIRoute = async ({ locals, request }) => {
 
     const response: DriversListResponseDTO = {
       items,
-      nextCursor: items.length >= limit ? 'has-more' : null, // Simplified pagination
+      nextCursor: items.length >= limit ? "has-more" : null, // Simplified pagination
     };
 
     return jsonResponse(response, 200);
   } catch (error) {
-    console.error('Unexpected error in GET /api/drivers:', error);
-    return jsonResponse(
-      { code: 'INTERNAL_ERROR', message: 'Internal server error' },
-      500
-    );
+    console.error("Unexpected error in GET /api/drivers:", error);
+    return jsonResponse({ code: "INTERNAL_ERROR", message: "Internal server error" }, 500);
   }
 };
 
 /**
  * POST /api/drivers
- * 
+ *
  * Creates a new driver
  * Uses Supabase for persistent storage
  */
@@ -125,58 +113,46 @@ export const POST: APIRoute = async ({ locals, request }) => {
     const session = await supabase.auth.getSession();
 
     if (!session.data.session) {
-      return jsonResponse(
-        { code: 'UNAUTHORIZED', message: 'Authentication required' },
-        401
-      );
+      return jsonResponse({ code: "UNAUTHORIZED", message: "Authentication required" }, 401);
     }
 
     // Get user's company_uuid
     const { data: userData, error: userError } = await supabase
-      .from('users')
-      .select('company_uuid')
-      .eq('uuid', session.data.session.user.id)
+      .from("users")
+      .select("company_uuid")
+      .eq("uuid", session.data.session.user.id)
       .single();
 
     if (userError || !userData) {
-      return jsonResponse(
-        { code: 'FORBIDDEN', message: 'User not associated with a company' },
-        403
-      );
+      return jsonResponse({ code: "FORBIDDEN", message: "User not associated with a company" }, 403);
     }
 
     const companyUuid = userData.company_uuid;
 
     // Parse request body
-    const body = await request.json() as CreateDriverCommand;
+    const body = (await request.json()) as CreateDriverCommand;
 
     // Validate required fields
     if (!body.name || !body.email || !body.timezone) {
-      return jsonResponse(
-        { code: 'VALIDATION_ERROR', message: 'Missing required fields: name, email, timezone' },
-        400
-      );
+      return jsonResponse({ code: "VALIDATION_ERROR", message: "Missing required fields: name, email, timezone" }, 400);
     }
 
     // Check for duplicate email (Supabase constraint will also catch this)
     const { data: existingDriver } = await supabase
-      .from('drivers')
-      .select('uuid')
-      .eq('company_uuid', companyUuid)
-      .eq('email', body.email.toLowerCase())
-      .is('deleted_at', null)
+      .from("drivers")
+      .select("uuid")
+      .eq("company_uuid", companyUuid)
+      .eq("email", body.email.toLowerCase())
+      .is("deleted_at", null)
       .maybeSingle();
 
     if (existingDriver) {
-      return jsonResponse(
-        { code: 'CONFLICT', message: 'Kierowca z tym adresem e-mail już istnieje' },
-        409
-      );
+      return jsonResponse({ code: "CONFLICT", message: "Kierowca z tym adresem e-mail już istnieje" }, 409);
     }
 
     // Insert new driver
     const { data: newDriver, error: insertError } = await supabase
-      .from('drivers')
+      .from("drivers")
       .insert({
         company_uuid: companyUuid,
         name: body.name,
@@ -184,24 +160,18 @@ export const POST: APIRoute = async ({ locals, request }) => {
         timezone: body.timezone,
         is_active: body.isActive ?? true,
       })
-      .select('uuid, name, email, timezone, is_active, created_at, deleted_at')
+      .select("uuid, name, email, timezone, is_active, created_at, deleted_at")
       .single();
 
     if (insertError) {
-      console.error('Error creating driver:', insertError);
-      
+      console.error("Error creating driver:", insertError);
+
       // Check for unique constraint violation
-      if (insertError.code === '23505') {
-        return jsonResponse(
-          { code: 'CONFLICT', message: 'Kierowca z tym adresem e-mail już istnieje' },
-          409
-        );
+      if (insertError.code === "23505") {
+        return jsonResponse({ code: "CONFLICT", message: "Kierowca z tym adresem e-mail już istnieje" }, 409);
       }
 
-      return jsonResponse(
-        { code: 'INTERNAL_ERROR', message: 'Failed to create driver' },
-        500
-      );
+      return jsonResponse({ code: "INTERNAL_ERROR", message: "Failed to create driver" }, 500);
     }
 
     // Transform to camelCase
@@ -217,10 +187,7 @@ export const POST: APIRoute = async ({ locals, request }) => {
 
     return jsonResponse(responseDriver, 201);
   } catch (error) {
-    console.error('Unexpected error in POST /api/drivers:', error);
-    return jsonResponse(
-      { code: 'INTERNAL_ERROR', message: 'Internal server error' },
-      500
-    );
+    console.error("Unexpected error in POST /api/drivers:", error);
+    return jsonResponse({ code: "INTERNAL_ERROR", message: "Internal server error" }, 500);
   }
 };

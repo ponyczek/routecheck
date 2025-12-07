@@ -50,4 +50,3 @@ export function validateForm(dateRange: DateRange): { dateRange?: string } {
 
   return errors;
 }
-

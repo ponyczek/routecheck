@@ -5,6 +5,7 @@
 Widok Pojazdy to moduł zarządzania flotą pojazdów w aplikacji RouteLog. Umożliwia spedytorom przeglądanie, dodawanie, edycję i usuwanie pojazdów (soft delete) z możliwością filtrowania, sortowania i paginacji. Widok jest oznaczony jako feature flag, co oznacza, że może być warunkowo dostępny w zależności od konfiguracji aplikacji. Implementacja wzorowana jest na widoku Kierowcy, zapewniając spójność UX i architektury.
 
 Główne funkcjonalności:
+
 - Lista pojazdów z filtrowaniem (wyszukiwarka tekstowa, status aktywności, usunięte)
 - Sortowanie po numerze rejestracyjnym lub dacie utworzenia
 - Paginacja cursorowa
@@ -23,6 +24,7 @@ Główne funkcjonalności:
 - **Guard:** Middleware automatycznie przekierowuje niezalogowanych użytkowników na `/signin`
 
 Struktura plików:
+
 ```
 src/
 ├── pages/
@@ -352,7 +354,7 @@ VehiclesView (główny orkestrator)
   ```typescript
   interface AddEditVehicleModalProps {
     isOpen: boolean;
-    mode: 'add' | 'edit';
+    mode: "add" | "edit";
     vehicle?: VehicleDTO;
     onClose: () => void;
     onSuccess: () => void;
@@ -504,7 +506,7 @@ VehiclesView (główny orkestrator)
 - **Propsy:**
   ```typescript
   interface LoadingSkeletonsProps {
-    variant: 'table' | 'cards';
+    variant: "table" | "cards";
     count?: number; // domyślnie 5
   }
   ```
@@ -568,12 +570,14 @@ VehiclesView (główny orkestrator)
 ### Typy z src/types.ts (już zdefiniowane)
 
 #### VehicleDTO
+
 ```typescript
 export type VehicleDTO = PickCamel<
   Tables<"vehicles">,
   "uuid" | "registration_number" | "vin" | "is_active" | "created_at" | "deleted_at"
 >;
 ```
+
 - `uuid: Uuid` - unikalny identyfikator pojazdu
 - `registrationNumber: string` - numer rejestracyjny pojazdu (unique w ramach firmy dla aktywnych)
 - `vin: string | null` - numer VIN pojazdu (opcjonalny)
@@ -582,32 +586,36 @@ export type VehicleDTO = PickCamel<
 - `deletedAt: IsoDateString | null` - data soft delete (null jeśli aktywny)
 
 #### CreateVehicleCommand
+
 ```typescript
-export type CreateVehicleCommand = PickCamel<
-  TablesInsert<"vehicles">,
-  "registration_number" | "vin" | "is_active"
->;
+export type CreateVehicleCommand = PickCamel<TablesInsert<"vehicles">, "registration_number" | "vin" | "is_active">;
 ```
+
 - `registrationNumber: string` - numer rejestracyjny (required)
 - `vin: string | null` - numer VIN (opcjonalny)
 - `isActive: boolean` - status aktywności (domyślnie true)
 
 #### UpdateVehicleCommand
+
 ```typescript
 export type UpdateVehicleCommand = Partial<CreateVehicleCommand>;
 ```
+
 - Częściowa aktualizacja pól pojazdu
 
 #### VehiclesListResponseDTO
+
 ```typescript
 export type VehiclesListResponseDTO = Paginated<VehicleDTO>;
 ```
+
 - `items: VehicleDTO[]` - lista pojazdów
 - `nextCursor: string | null` - cursor następnej strony (null jeśli ostatnia)
 
 ### Nowe typy w src/lib/vehicles/types.ts
 
 #### VehiclesFiltersState
+
 ```typescript
 export interface VehiclesFiltersState {
   /** Tekst wyszukiwania (numer rejestracyjny, VIN) */
@@ -617,35 +625,38 @@ export interface VehiclesFiltersState {
   /** Czy pokazywać usunięte pojazdy (soft delete) */
   includeDeleted: boolean;
   /** Pole sortowania */
-  sortBy: 'registrationNumber' | 'createdAt';
+  sortBy: "registrationNumber" | "createdAt";
   /** Kierunek sortowania */
-  sortDir: 'asc' | 'desc';
+  sortDir: "asc" | "desc";
   /** Cursor paginacji (opaque string z API) */
   cursor?: string;
 }
 ```
 
 #### defaultFilters
+
 ```typescript
 export const defaultFilters: VehiclesFiltersState = {
-  q: '',
+  q: "",
   isActive: undefined,
   includeDeleted: false,
-  sortBy: 'registrationNumber',
-  sortDir: 'asc',
+  sortBy: "registrationNumber",
+  sortDir: "asc",
 };
 ```
 
 #### ModalState
+
 ```typescript
 export type ModalState =
   | { type: null }
-  | { type: 'add' }
-  | { type: 'edit'; vehicle: VehicleDTO }
-  | { type: 'delete'; vehicle: VehicleDTO };
+  | { type: "add" }
+  | { type: "edit"; vehicle: VehicleDTO }
+  | { type: "delete"; vehicle: VehicleDTO };
 ```
 
 #### VehicleFormData
+
 ```typescript
 export interface VehicleFormData {
   registrationNumber: string;
@@ -655,6 +666,7 @@ export interface VehicleFormData {
 ```
 
 #### PaginationState
+
 ```typescript
 export interface PaginationState {
   /** Czy istnieje następna strona */
@@ -671,6 +683,7 @@ export interface PaginationState {
 ```
 
 #### VehiclesQueryParams
+
 ```typescript
 export interface VehiclesQueryParams {
   /** Wyszukiwarka tekstowa */
@@ -684,9 +697,9 @@ export interface VehiclesQueryParams {
   /** Cursor paginacji */
   cursor?: string;
   /** Pole sortowania */
-  sortBy?: 'registrationNumber' | 'createdAt';
+  sortBy?: "registrationNumber" | "createdAt";
   /** Kierunek sortowania */
-  sortDir?: 'asc' | 'desc';
+  sortDir?: "asc" | "desc";
 }
 ```
 
@@ -739,15 +752,17 @@ Widok używa TanStack Query do zarządzania stanem serwera i cache'owania danych
 ### Custom hooki
 
 1. **useVehiclesFilters** - zarządzanie filtrami z synchronizacją URL
+
    ```typescript
    function useVehiclesFilters(): {
      filters: VehiclesFiltersState;
      updateFilters: (updates: Partial<VehiclesFiltersState>) => void;
      resetFilters: () => void;
-   }
+   };
    ```
 
 2. **usePagination** - zarządzanie paginacją cursorową
+
    ```typescript
    function usePagination(): {
      currentCursor: string | undefined;
@@ -756,12 +771,12 @@ Widok używa TanStack Query do zarządzania stanem serwera i cache'owania danych
      hasNext: boolean;
      hasPrev: boolean;
      reset: () => void;
-   }
+   };
    ```
 
 3. **useDebouncedValue** - debounce wartości (dla wyszukiwarki)
    ```typescript
-   function useDebouncedValue<T>(value: T, delay: number): T
+   function useDebouncedValue<T>(value: T, delay: number): T;
    ```
 
 ## 7. Integracja API
@@ -769,6 +784,7 @@ Widok używa TanStack Query do zarządzania stanem serwera i cache'owania danych
 ### Endpointy API
 
 #### GET /api/vehicles
+
 - **Opis:** Lista pojazdów z filtrowaniem, sortowaniem i paginacją
 - **Query params:**
   - `q?: string` - wyszukiwarka tekstowa (numer rejestracyjny, VIN)
@@ -784,6 +800,7 @@ Widok używa TanStack Query do zarządzania stanem serwera i cache'owania danych
   - 500 Internal Server Error - błąd serwera
 
 #### POST /api/vehicles
+
 - **Opis:** Utworzenie nowego pojazdu
 - **Body:** `CreateVehicleCommand`
   ```json
@@ -800,6 +817,7 @@ Widok używa TanStack Query do zarządzania stanem serwera i cache'owania danych
   - 401 Unauthorized - brak sesji
 
 #### GET /api/vehicles/{uuid}
+
 - **Opis:** Szczegóły pojedynczego pojazdu
 - **Response:** `VehicleDTO` (200)
 - **Errors:**
@@ -807,6 +825,7 @@ Widok używa TanStack Query do zarządzania stanem serwera i cache'owania danych
   - 401 Unauthorized - brak sesji
 
 #### PATCH /api/vehicles/{uuid}
+
 - **Opis:** Aktualizacja pojazdu
 - **Body:** `UpdateVehicleCommand` (partial)
 - **Response:** `VehicleDTO` (200)
@@ -817,6 +836,7 @@ Widok używa TanStack Query do zarządzania stanem serwera i cache'owania danych
   - 401 Unauthorized - brak sesji
 
 #### DELETE /api/vehicles/{uuid}
+
 - **Opis:** Soft delete pojazdu (ustawia `deleted_at` i `is_active=false`)
 - **Response:** 204 No Content
 - **Errors:**
@@ -1301,19 +1321,21 @@ export const vehiclesService = {
 ### Feature Flags
 
 Dla modułu pojazdów:
+
 ```typescript
 const FEATURE_FLAGS = {
-  SHOW_VEHICLES: process.env.PUBLIC_SHOW_VEHICLES === 'true' || false,
+  SHOW_VEHICLES: process.env.PUBLIC_SHOW_VEHICLES === "true" || false,
 };
 ```
 
 Guard w `src/pages/vehicles/index.astro`:
+
 ```astro
 ---
-import { FEATURE_FLAGS } from '@/lib/features/flags';
+import { FEATURE_FLAGS } from "@/lib/features/flags";
 
 if (!FEATURE_FLAGS.SHOW_VEHICLES) {
-  return Astro.redirect('/dashboard');
+  return Astro.redirect("/dashboard");
 }
 ---
 ```
@@ -1328,10 +1350,9 @@ if (!FEATURE_FLAGS.SHOW_VEHICLES) {
 ### Wzorce do naśladowania
 
 Widok pojazdów powinien być wzorowany na widoku kierowców (`src/components/drivers/`), zachowując:
+
 - Spójną strukturę folderów
 - Podobne wzorce komponentów
 - Identyczne podejście do zarządzania stanem (TanStack Query)
 - Te same konwencje nazewnictwa
 - Podobny UX i flow użytkownika
-
-

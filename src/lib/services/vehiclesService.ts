@@ -1,10 +1,5 @@
-import type {
-  VehicleDTO,
-  CreateVehicleCommand,
-  UpdateVehicleCommand,
-  VehiclesListResponseDTO,
-} from '@/types';
-import type { VehiclesQueryParams } from '../vehicles/types';
+import type { VehicleDTO, CreateVehicleCommand, UpdateVehicleCommand, VehiclesListResponseDTO } from "@/types";
+import type { VehiclesQueryParams } from "../vehicles/types";
 
 /**
  * Serwis do komunikacji z API pojazdów
@@ -17,17 +12,17 @@ export const vehiclesService = {
   async list(params: VehiclesQueryParams): Promise<VehiclesListResponseDTO> {
     const queryParams = new URLSearchParams();
 
-    if (params.q) queryParams.set('q', params.q);
-    if (params.isActive !== undefined) queryParams.set('isActive', String(params.isActive));
-    if (params.includeDeleted) queryParams.set('includeDeleted', 'true');
-    if (params.limit) queryParams.set('limit', String(params.limit));
-    if (params.cursor) queryParams.set('cursor', params.cursor);
-    if (params.sortBy) queryParams.set('sortBy', params.sortBy);
-    if (params.sortDir) queryParams.set('sortDir', params.sortDir);
+    if (params.q) queryParams.set("q", params.q);
+    if (params.isActive !== undefined) queryParams.set("isActive", String(params.isActive));
+    if (params.includeDeleted) queryParams.set("includeDeleted", "true");
+    if (params.limit) queryParams.set("limit", String(params.limit));
+    if (params.cursor) queryParams.set("cursor", params.cursor);
+    if (params.sortBy) queryParams.set("sortBy", params.sortBy);
+    if (params.sortDir) queryParams.set("sortDir", params.sortDir);
 
     const response = await fetch(`/api/vehicles?${queryParams.toString()}`, {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
 
@@ -50,10 +45,10 @@ export const vehiclesService = {
    * Utworzenie nowego pojazdu
    */
   async create(data: CreateVehicleCommand): Promise<VehicleDTO> {
-    const response = await fetch('/api/vehicles', {
-      method: 'POST',
+    const response = await fetch("/api/vehicles", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     });
@@ -99,9 +94,9 @@ export const vehiclesService = {
    */
   async update(uuid: string, data: UpdateVehicleCommand): Promise<VehicleDTO> {
     const response = await fetch(`/api/vehicles/${uuid}`, {
-      method: 'PATCH',
+      method: "PATCH",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     });
@@ -126,7 +121,7 @@ export const vehiclesService = {
    */
   async delete(uuid: string): Promise<void> {
     const response = await fetch(`/api/vehicles/${uuid}`, {
-      method: 'DELETE',
+      method: "DELETE",
     });
 
     if (!response.ok) {
@@ -141,5 +136,3 @@ export const vehiclesService = {
     }
   },
 };
-
-

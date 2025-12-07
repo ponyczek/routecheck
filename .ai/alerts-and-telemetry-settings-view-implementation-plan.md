@@ -61,19 +61,24 @@ alerts.astro (Astro page)
 Wrapper komponent odpowiedzialny za zapewnienie kontekstu TanStack Query (`QueryClientProvider`) oraz przekazanie initial data do głównego widoku. Ten komponent jest oznaczony jako `client:load` w Astro.
 
 **Główne elementy:**
+
 - `QueryClientProvider` z `queryClient` zainicjalizowanym w `src/lib/query-client.tsx`.
 - Renderuje `AlertsAndTelemetryView` z przekazaniem initial props.
 
 **Obsługiwane zdarzenia:**
+
 - Brak (komponent tylko wrapper).
 
 **Warunki walidacji:**
+
 - Brak (tylko przekazanie danych).
 
 **Typy:**
+
 - Propsy: `{ initialTelemetryData?: TelemetryAggregatesDTO | null; initialEmailLogs?: EmailLogDTO[] | null }`
 
 **Propsy:**
+
 ```typescript
 interface AlertsAndTelemetryViewWithProviderProps {
   initialTelemetryData?: TelemetryAggregatesDTO | null;
@@ -89,6 +94,7 @@ interface AlertsAndTelemetryViewWithProviderProps {
 Główny komponent widoku. Zarządza stanem alertów (włączone/wyłączone), pobiera dane telemetryczne i logi e-mail za pomocą TanStack Query, i renderuje poszczególne sekcje (PageHeader, AlertsConfigSection, EmailLogsSection, TelemetrySection).
 
 **Główne elementy:**
+
 - `PageHeader` z tytułem "Alerty i telemetria" i opisem.
 - `AlertsConfigSection` – sekcja z przełącznikiem alertów.
 - `EmailLogsSection` (opcjonalne) – lista ostatnich wysłanych e-maili.
@@ -97,16 +103,20 @@ Główny komponent widoku. Zarządza stanem alertów (włączone/wyłączone), p
 - `Skeleton` dla stanów ładowania.
 
 **Obsługiwane zdarzenia:**
+
 - Brak bezpośrednich zdarzeń (deleguje do children).
 
 **Warunki walidacji:**
+
 - Brak (walidacja w sekcjach child).
 
 **Typy:**
+
 - Propsy: `AlertsAndTelemetryViewProps`
 - Wewnętrzne: `TelemetryAggregatesDTO`, `EmailLogDTO[]`
 
 **Propsy:**
+
 ```typescript
 interface AlertsAndTelemetryViewProps {
   initialTelemetryData?: TelemetryAggregatesDTO | null;
@@ -122,19 +132,24 @@ interface AlertsAndTelemetryViewProps {
 Komponent nagłówka strony, wyświetla tytuł i opis widoku.
 
 **Główne elementy:**
+
 - `<h1>` z tytułem.
 - `<p>` z opisem (muted-foreground).
 
 **Obsługiwane zdarzenia:**
+
 - Brak.
 
 **Warunki walidacji:**
+
 - Brak.
 
 **Typy:**
+
 - Propsy: `{ title: string; description?: string }`
 
 **Propsy:**
+
 ```typescript
 interface PageHeaderProps {
   title: string;
@@ -150,21 +165,26 @@ interface PageHeaderProps {
 Sekcja zarządzania konfiguracją alertów 24h. Zawiera `AlertToggleCard` z przełącznikiem (Switch) włączania/wyłączania alertów oraz `InfoBanner` z informacją o konsekwencjach i adresie docelowym. Opcjonalnie może zawierać `ManualTriggerSection` dla ręcznego wyzwalania generowania linków (`POST /api/report-links:generate`), jeśli będzie to udostępnione w MVP.
 
 **Główne elementy:**
+
 - `AlertToggleCard` – karta z konfiguracją.
 - `InfoBanner` (inline) – baner informacyjny o działaniu alertów.
 - `ManualTriggerSection` (opcjonalny) – przycisk do ręcznego uruchomienia generowania linków (dry-run preview).
 
 **Obsługiwane zdarzenia:**
+
 - Zmiana stanu przełącznika (toggle alerts on/off).
 - Kliknięcie przycisku ręcznego triggera (jeśli włączone).
 
 **Warunki walidacji:**
+
 - Brak bezpośredniej walidacji (tylko zmiana stanu boolean).
 
 **Typy:**
+
 - `AlertsConfigDTO` (nowy typ do utworzenia, zawierający: `alertsEnabled: boolean`, `alertRecipientEmail: string`).
 
 **Propsy:**
+
 ```typescript
 interface AlertsConfigSectionProps {
   // Brak props, pobiera dane z hooka
@@ -179,6 +199,7 @@ interface AlertsConfigSectionProps {
 Karta (Card) zawierająca przełącznik (Switch) do włączania/wyłączania alertów e-mail o brakujących raportach. Wyświetla aktualny stan, opis działania alertów, adres docelowy (info-only) oraz przełącznik. Zmiana stanu wywołuje mutację API (update company settings lub dedykowany endpoint).
 
 **Główne elementy:**
+
 - `Card` (shadcn/ui).
 - `CardHeader` z tytułem "Alerty o brakujących raportach".
 - `CardContent`:
@@ -189,15 +210,19 @@ Karta (Card) zawierająca przełącznik (Switch) do włączania/wyłączania ale
 - `toast` (sonner) dla feedbacku 202 accepted lub błędu.
 
 **Obsługiwane zdarzenia:**
+
 - `onToggle` – zmiana stanu przełącznika, wywołuje mutację API.
 
 **Warunki walidacji:**
+
 - Brak (boolean toggle).
 
 **Typy:**
+
 - `AlertsConfigDTO` (nowy).
 
 **Propsy:**
+
 ```typescript
 interface AlertToggleCardProps {
   alertsEnabled: boolean;
@@ -215,20 +240,25 @@ interface AlertToggleCardProps {
 Inline komponent baneru informacyjnego, wyświetla komunikat z ikoną (info circle) i tekstem. Używany w `AlertToggleCard` do wyświetlania informacji o działaniu alertów.
 
 **Główne elementy:**
+
 - `Alert` (shadcn/ui) z wariantem `default` lub `info`.
 - `AlertTitle` (opcjonalny).
 - `AlertDescription` z tekstem.
 
 **Obsługiwane zdarzenia:**
+
 - Brak.
 
 **Warunki walidacji:**
+
 - Brak.
 
 **Typy:**
+
 - Propsy: `{ title?: string; description: string; variant?: "default" | "info" }`
 
 **Propsy:**
+
 ```typescript
 interface InfoBannerProps {
   title?: string;
@@ -245,20 +275,25 @@ interface InfoBannerProps {
 Opcjonalna sekcja pozwalająca na ręczne wyzwolenie generowania linków raportowych (`POST /api/report-links:generate`). Wyświetla przycisk "Wygeneruj linki teraz" z informacją o dry-run (podgląd). Po kliknięciu wysyła żądanie i wyświetla toast z podsumowaniem (`{ generated: int, skipped: int }`).
 
 **Główne elementy:**
+
 - `Card` lub inline div.
 - `Button` z ikoną (np. `RefreshCw` z lucide-react).
 - `toast` (sonner) z wynikiem.
 
 **Obsługiwane zdarzenia:**
+
 - `onClick` – wywołuje mutację POST `/api/report-links:generate` z parametrem `dryRun: false`.
 
 **Warunki walidacji:**
+
 - Brak.
 
 **Typy:**
+
 - `GenerateReportLinksCommand`, `ReportLinksGenerateResponseDTO` (z `types.ts`).
 
 **Propsy:**
+
 ```typescript
 interface ManualTriggerSectionProps {
   onGenerate: () => Promise<void>;
@@ -274,6 +309,7 @@ interface ManualTriggerSectionProps {
 Sekcja wyświetlająca ostatnie logi e-mail (np. ostatnie 5-10 wysyłek). Zawiera kartę z listą (`EmailLogsList`) i przyciskiem/linkiem do pełnych logów (`/settings/email-logs` lub modal). Dane pobierane z `GET /api/email-logs?limit=10&sortBy=sentAt&sortDir=desc`.
 
 **Główne elementy:**
+
 - `Card` (shadcn/ui).
 - `CardHeader` z tytułem "Ostatnie alerty".
 - `CardContent`:
@@ -282,15 +318,19 @@ Sekcja wyświetlająca ostatnie logi e-mail (np. ostatnie 5-10 wysyłek). Zawier
 - `Skeleton` dla stanu ładowania.
 
 **Obsługiwane zdarzenia:**
+
 - Kliknięcie "Zobacz wszystkie" – nawigacja do `/settings/email-logs` (opcjonalnie).
 
 **Warunki walidacji:**
+
 - Brak.
 
 **Typy:**
+
 - `EmailLogDTO[]` (z `types.ts`).
 
 **Propsy:**
+
 ```typescript
 interface EmailLogsSectionProps {
   initialLogs?: EmailLogDTO[] | null;
@@ -305,20 +345,25 @@ interface EmailLogsSectionProps {
 Lista ostatnich logów e-mail, wyświetla w formie karty lub tabeli (responsive): recipient, subject, status (badge), sentAt (formatowany timestamp).
 
 **Główne elementy:**
+
 - `<ul>` lub `<table>` (responsive).
 - `EmailLogItem` dla każdego logu.
 - `Badge` (shadcn/ui) dla statusu (SENT – zielony, FAILED – czerwony).
 
 **Obsługiwane zdarzenia:**
+
 - Brak.
 
 **Warunki walidacji:**
+
 - Brak.
 
 **Typy:**
+
 - `EmailLogDTO[]`.
 
 **Propsy:**
+
 ```typescript
 interface EmailLogsListProps {
   logs: EmailLogDTO[];
@@ -333,20 +378,25 @@ interface EmailLogsListProps {
 Pojedynczy wiersz/karta reprezentująca log e-mail.
 
 **Główne elementy:**
+
 - `<li>` lub `<tr>`.
 - Wyświetla: recipient (e-mail), subject, status badge, sentAt (formatowana data).
 - Opcjonalnie: `errorMessage` (jeśli status FAILED).
 
 **Obsługiwane zdarzenia:**
+
 - Brak.
 
 **Warunki walidacji:**
+
 - Brak.
 
 **Typy:**
+
 - `EmailLogDTO`.
 
 **Propsy:**
+
 ```typescript
 interface EmailLogItemProps {
   log: EmailLogDTO;
@@ -361,6 +411,7 @@ interface EmailLogItemProps {
 Sekcja z agregowanymi metrykami telemetrycznymi UX, w szczególności median czasu wypełnienia formularza kierowcy. Zawiera kartę z metrykami (`TelemetryMetricCard`) i opcjonalny mini wykres (`TelemetryChart`). Dane pobierane z `GET /api/telemetry?eventType=FORM_SUBMIT&bucket=day&from=<7dni>&to=<today>`.
 
 **Główne elementy:**
+
 - `Card` (shadcn/ui).
 - `CardHeader` z tytułem "Telemetria UX".
 - `CardContent`:
@@ -369,15 +420,19 @@ Sekcja z agregowanymi metrykami telemetrycznymi UX, w szczególności median cza
 - `Skeleton` dla stanu ładowania.
 
 **Obsługiwane zdarzenia:**
+
 - Brak bezpośrednich zdarzeń.
 
 **Warunki walidacji:**
+
 - Brak.
 
 **Typy:**
+
 - `TelemetryAggregatesDTO` (nowy typ do utworzenia).
 
 **Propsy:**
+
 ```typescript
 interface TelemetrySectionProps {
   initialData?: TelemetryAggregatesDTO | null;
@@ -392,21 +447,26 @@ interface TelemetrySectionProps {
 Karta metryki telemetrycznej, wyświetla pojedynczą agregowaną wartość (np. "Mediana czasu wypełnienia: 85s"). Podobna do `MetricCard` z dashboardu, ale z inną stylistyką (mniejsza, inline).
 
 **Główne elementy:**
+
 - `Card` (shadcn/ui) lub inline div z border.
 - `<h3>` z labelą metryki.
 - `<p>` z wartością (duża liczba, bold).
 - Opcjonalnie: `Badge` z trendem (np. "↑ 5% vs poprzedni tydzień").
 
 **Obsługiwane zdarzenia:**
+
 - Brak.
 
 **Warunki walidacji:**
+
 - Brak.
 
 **Typy:**
+
 - `TelemetryMetric` (nowy typ).
 
 **Propsy:**
+
 ```typescript
 interface TelemetryMetricCardProps {
   label: string;
@@ -424,20 +484,25 @@ interface TelemetryMetricCardProps {
 Mini wykres (sparkline lub bar chart) prezentujący trend mediany czasu wypełnienia formularza w ciągu ostatnich 7 dni. Opcjonalny w MVP, można użyć prostej biblioteki jak recharts lub plotly.js lite.
 
 **Główne elementy:**
+
 - `ResponsiveContainer` (recharts).
 - `LineChart` lub `BarChart` z osią X (dni) i osią Y (czas w sekundach).
 - Tooltip z wartością.
 
 **Obsługiwane zdarzenia:**
+
 - Hover na wykresie (tooltip).
 
 **Warunki walidacji:**
+
 - Brak.
 
 **Typy:**
+
 - `TelemetryDataPoint[]` (nowy typ: `{ date: IsoDateOnlyString; medianDuration: number }`).
 
 **Propsy:**
+
 ```typescript
 interface TelemetryChartProps {
   data: TelemetryDataPoint[];
@@ -469,17 +534,17 @@ export interface TelemetryAggregatesDTO {
    * Mediana czasu wypełnienia formularza (w sekundach)
    */
   medianFormDurationSeconds: number;
-  
+
   /**
    * Łączna liczba wypełnień formularza w analizowanym okresie
    */
   totalFormSubmissions: number;
-  
+
   /**
    * Konwersja: % linków, które doprowadziły do wysłania raportu
    */
   conversionRate: number; // np. 0.73 = 73%
-  
+
   /**
    * Trend w porównaniu do poprzedniego okresu (opcjonalny)
    */
@@ -487,7 +552,7 @@ export interface TelemetryAggregatesDTO {
     medianDurationChange: number; // zmiana w sekundach (+ lub -)
     conversionRateChange: number; // zmiana w % (+ lub -)
   };
-  
+
   /**
    * Dane do wykresu (opcjonalne)
    */
@@ -514,6 +579,7 @@ export interface UpdateAlertsConfigCommand {
 ### 5.2 Istniejące typy (wykorzystywane)
 
 Z `src/types.ts`:
+
 - `EmailLogDTO` – już zdefiniowany (uuid, recipient, subject, status, sentAt, errorMessage, companyUuid).
 - `EmailLogsListResponseDTO` – już zdefiniowany (Paginated<EmailLogDTO>).
 - `GenerateReportLinksCommand` – już zdefiniowany (at, dryRun, driverUuids).
@@ -608,6 +674,7 @@ Widok wykorzystuje TanStack Query do zarządzania stanem danych telemetrycznych 
 Lokacja: `src/lib/settings/`
 
 1. **useAlertsConfig**
+
    ```typescript
    export function useAlertsConfig(initialData?: AlertsConfigDTO) {
      return useQuery({
@@ -624,6 +691,7 @@ Lokacja: `src/lib/settings/`
    ```
 
 2. **useUpdateAlertsConfig**
+
    ```typescript
    export function useUpdateAlertsConfig() {
      const queryClient = useQueryClient();
@@ -663,14 +731,18 @@ Lokacja: `src/lib/settings/`
    ```
 
 3. **useTelemetryAggregates**
+
    ```typescript
    export function useTelemetryAggregates(initialData?: TelemetryAggregatesDTO) {
      const from = new Date();
      from.setDate(from.getDate() - 7);
      const to = new Date();
-     
+
      return useQuery({
-       queryKey: ["telemetry-aggregates", { from: from.toISOString().split("T")[0], to: to.toISOString().split("T")[0] }],
+       queryKey: [
+         "telemetry-aggregates",
+         { from: from.toISOString().split("T")[0], to: to.toISOString().split("T")[0] },
+       ],
        queryFn: async () => {
          const params = new URLSearchParams({
            eventType: "FORM_SUBMIT",
@@ -904,19 +976,15 @@ Lokacja: `src/lib/settings/`
 - **401 Unauthorized:**
   - Opis: Utrata sesji podczas ładowania danych.
   - Obsługa: Redirect na `/signin?returnUrl=/settings/alerts`.
-  
 - **403 Forbidden:**
   - Opis: Brak uprawnień do przeglądania logów e-mail.
   - Obsługa: Wyświetlenie baneru "Brak uprawnień do tej funkcji. Skontaktuj się z administratorem."
-  
 - **404 Not Found:**
   - Opis: Dane nie istnieją (np. konfiguracja alertów nie została jeszcze utworzona).
   - Obsługa: Wyświetlenie komunikatu "Brak konfiguracji alertów. Użyj przełącznika, aby włączyć alerty."
-  
 - **429 Too Many Requests:**
   - Opis: Przekroczenie limitu żądań.
   - Obsługa: Toast "Przekroczono limit żądań. Spróbuj ponownie za {Retry-After} sekund."
-  
 - **500 Internal Server Error:**
   - Opis: Błąd serwera.
   - Obsługa: Alert "Wystąpił błąd serwera. Spróbuj ponownie później." z przyciskiem "Odśwież".
@@ -926,19 +994,15 @@ Lokacja: `src/lib/settings/`
 - **400 Bad Request:**
   - Opis: Walidacja failed (np. niepoprawny format danych).
   - Obsługa: Toast z komunikatem z pola `message` w ProblemDetail, rollback optimistic update.
-  
 - **401 Unauthorized:**
   - Opis: Utrata sesji podczas wysyłania żądania.
   - Obsługa: Redirect na `/signin?returnUrl=/settings/alerts`.
-  
 - **409 Conflict:**
   - Opis: Konflikt (np. próba aktualizacji przestarzałych danych).
   - Obsługa: Toast "Konfiguracja została zmieniona. Odśwież stronę i spróbuj ponownie.", rollback.
-  
 - **429 Too Many Requests:**
   - Opis: Przekroczenie limitu.
   - Obsługa: Toast "Przekroczono limit żądań. Spróbuj ponownie za chwilę.", rollback.
-  
 - **500 Internal Server Error:**
   - Opis: Błąd serwera.
   - Obsługa: Toast "Nie udało się zaktualizować ustawień. Spróbuj ponownie później.", rollback.
@@ -992,35 +1056,26 @@ Lokacja: `src/lib/settings/`
 
 1. **InfoBanner** (`src/components/settings/InfoBanner.tsx`):
    - Prosty komponent z `Alert` (shadcn/ui).
-   
 2. **AlertToggleCard** (`src/components/settings/AlertToggleCard.tsx`):
    - Karta z przełącznikiem `Switch`.
    - Używa hooka `useUpdateAlertsConfig`.
    - Obsługuje optimistic update i toast.
-   
 3. **ManualTriggerSection** (`src/components/settings/ManualTriggerSection.tsx`) – opcjonalny:
    - Przycisk do ręcznego generowania linków.
    - Używa hooka `useGenerateReportLinks`.
-   
 4. **AlertsConfigSection** (`src/components/settings/AlertsConfigSection.tsx`):
    - Kompozycja `AlertToggleCard` + `InfoBanner` + `ManualTriggerSection`.
-   
 5. **EmailLogItem** (`src/components/settings/EmailLogItem.tsx`):
    - Wiersz/karta z pojedynczym logiem e-mail.
-   
 6. **EmailLogsList** (`src/components/settings/EmailLogsList.tsx`):
    - Lista logów z mapowaniem `EmailLogItem`.
-   
 7. **EmailLogsSection** (`src/components/settings/EmailLogsSection.tsx`):
    - Karta z listą logów.
    - Używa hooka `useEmailLogs`.
-   
 8. **TelemetryMetricCard** (`src/components/settings/TelemetryMetricCard.tsx`):
    - Karta z pojedynczą metryką.
-   
 9. **TelemetryChart** (`src/components/settings/TelemetryChart.tsx`) – opcjonalny:
    - Mini wykres z recharts.
-   
 10. **TelemetrySection** (`src/components/settings/TelemetrySection.tsx`):
     - Karta z metrykami i wykresem.
     - Używa hooka `useTelemetryAggregates`.
@@ -1099,5 +1154,3 @@ Plan implementacji widoku **Ustawienia – Alerty i Telemetria** obejmuje:
 - **Obsługa błędów:** Rollback optimistic updates, toasty z komunikatami, redirect przy 401.
 
 Widok jest zgodny z PRD (US-014, US-017), UI plan oraz stack technologiczny (Astro 5, React 19, TanStack Query, Shadcn/ui, Tailwind 4).
-
-

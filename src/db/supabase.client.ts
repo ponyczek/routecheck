@@ -43,13 +43,13 @@ if (!supabaseUrl || !supabaseAnonKey) {
   }
   throw new Error(
     `Missing required environment variables: ${missing.join(", ")}.\n` +
-    `Please add them to your .env file.\n` +
-    `For client-side access, use PUBLIC_ prefix (e.g., PUBLIC_SUPABASE_URL).`
+      `Please add them to your .env file.\n` +
+      `For client-side access, use PUBLIC_ prefix (e.g., PUBLIC_SUPABASE_URL).`
   );
 }
 
 // Only get service role key on the server
-const supabaseServiceRoleKey = !isBrowser ? (import.meta.env.SUPABASE_SERVICE_ROLE_KEY || "") : "";
+const supabaseServiceRoleKey = !isBrowser ? import.meta.env.SUPABASE_SERVICE_ROLE_KEY || "" : "";
 
 // Anonymous client for authenticated routes (uses RLS)
 // This client works in both server and browser contexts
@@ -79,7 +79,7 @@ export const supabaseServiceClient = !isBrowser
 /**
  * Create a Supabase client for server-side use with Astro cookies
  * This client can read/write session from/to cookies
- * 
+ *
  * @param cookies - Astro cookies object from context
  * @returns Supabase client with cookie-based session storage
  */

@@ -1,4 +1,4 @@
-import type { IsoDateString } from '@/types';
+import type { IsoDateString } from "@/types";
 
 /**
  * Formats an ISO date string to a localized date and time
@@ -6,12 +6,12 @@ import type { IsoDateString } from '@/types';
  * @param locale - Locale code (defaults to 'pl-PL')
  * @returns Formatted date and time string
  */
-export function formatDateTime(isoDate: IsoDateString, locale = 'pl-PL'): string {
+export function formatDateTime(isoDate: IsoDateString, locale = "pl-PL"): string {
   const date = new Date(isoDate);
-  
+
   return date.toLocaleString(locale, {
-    dateStyle: 'short',
-    timeStyle: 'short',
+    dateStyle: "short",
+    timeStyle: "short",
   });
 }
 
@@ -24,11 +24,11 @@ export function formatDuration(milliseconds: number): string {
   const totalSeconds = Math.floor(milliseconds / 1000);
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
-  
+
   if (minutes > 0) {
     return `${minutes} min ${seconds} s`;
   }
-  
+
   return `${seconds} s`;
 }
 
@@ -41,7 +41,7 @@ export function getTimeLeft(targetDate: IsoDateString): number {
   const now = new Date().getTime();
   const target = new Date(targetDate).getTime();
   const timeLeft = target - now;
-  
+
   return Math.max(0, timeLeft);
 }
 
@@ -53,5 +53,3 @@ export function getTimeLeft(targetDate: IsoDateString): number {
 export function isBefore(targetDate: IsoDateString): boolean {
   return getTimeLeft(targetDate) > 0;
 }
-
-

@@ -1,6 +1,6 @@
 import type { APIRoute } from "astro";
 import { z } from "zod";
-import type { ReportListItemDTO, CreateReportCommand, ReportsListResponseDTO } from "@/types";
+import type { ReportListItemDTO, ReportsListResponseDTO } from "@/types";
 import { jsonResponse, errorResponse, formatZodError } from "@/lib/utils/errors";
 
 // Disable prerendering for this API route
@@ -26,7 +26,7 @@ const createReportSchema = z.object({
 
 /**
  * GET /api/reports
- * 
+ *
  * Lists reports with filtering
  */
 export const GET: APIRoute = async ({ locals, request }) => {
@@ -35,70 +35,73 @@ export const GET: APIRoute = async ({ locals, request }) => {
     const session = await supabase.auth.getSession();
 
     if (!session.data.session) {
-      return errorResponse('UNAUTHORIZED', 'Authentication required', 401);
+      return errorResponse("UNAUTHORIZED", "Authentication required", 401);
     }
 
     // Get user's company_uuid
     const { data: userData, error: userError } = await supabase
-      .from('users')
-      .select('company_uuid')
-      .eq('uuid', session.data.session.user.id)
+      .from("users")
+      .select("company_uuid")
+      .eq("uuid", session.data.session.user.id)
       .single();
 
     if (userError || !userData) {
-      return errorResponse('FORBIDDEN', 'User not associated with a company', 403);
+      return errorResponse("FORBIDDEN", "User not associated with a company", 403);
     }
 
     const companyUuid = userData.company_uuid;
 
     // Parse query parameters
     const url = new URL(request.url);
-    const from = url.searchParams.get('from') || new Date().toISOString().split('T')[0];
-    const to = url.searchParams.get('to') || new Date().toISOString().split('T')[0];
-    const includeAi = url.searchParams.get('includeAi') !== 'false';
-    const limit = parseInt(url.searchParams.get('limit') || '20', 10);
-    const sortBy = url.searchParams.get('sortBy') || 'reportDate';
-    const sortDir = (url.searchParams.get('sortDir') || 'desc') as 'asc' | 'desc';
+    const from = url.searchParams.get("from") || new Date().toISOString().split("T")[0];
+    const to = url.searchParams.get("to") || new Date().toISOString().split("T")[0];
+    const includeAi = url.searchParams.get("includeAi") !== "false";
+    const limit = parseInt(url.searchParams.get("limit") || "20", 10);
+    const sortBy = url.searchParams.get("sortBy") || "reportDate";
+    const sortDir = (url.searchParams.get("sortDir") || "desc") as "asc" | "desc";
 
     // Build query
     let query = supabase
-      .from('reports')
-      .select(includeAi 
-        ? 'uuid, company_uuid, driver_uuid, report_date, timezone, occurred_at, route_status, delay_minutes, delay_reason, cargo_damage_description, vehicle_damage_description, next_day_blockers, is_problem, risk_level, created_at, updated_at, report_ai_results(report_uuid, report_date, ai_summary, risk_level, created_at, updated_at)'
-        : 'uuid, company_uuid, driver_uuid, report_date, timezone, occurred_at, route_status, delay_minutes, delay_reason, cargo_damage_description, vehicle_damage_description, next_day_blockers, is_problem, risk_level, created_at, updated_at'
+      .from("reports")
+      .select(
+        includeAi
+          ? "uuid, company_uuid, driver_uuid, report_date, timezone, occurred_at, route_status, delay_minutes, delay_reason, cargo_damage_description, vehicle_damage_description, next_day_blockers, is_problem, risk_level, created_at, updated_at, report_ai_results(report_uuid, report_date, ai_summary, risk_level, created_at, updated_at)"
+          : "uuid, company_uuid, driver_uuid, report_date, timezone, occurred_at, route_status, delay_minutes, delay_reason, cargo_damage_description, vehicle_damage_description, next_day_blockers, is_problem, risk_level, created_at, updated_at"
       )
-      .eq('company_uuid', companyUuid)
-      .gte('report_date', from)
-      .lte('report_date', to);
+      .eq("company_uuid", companyUuid)
+      .gte("report_date", from)
+      .lte("report_date", to);
 
     // Filter by driver
-    const driverUuids = url.searchParams.getAll('driverUuid');
+    const driverUuids = url.searchParams.getAll("driverUuid");
     if (driverUuids.length > 0) {
-      query = query.in('driver_uuid', driverUuids);
+      query = query.in("driver_uuid", driverUuids);
     }
 
     // Filter by risk level
-    const riskLevels = url.searchParams.getAll('riskLevel');
+    const riskLevels = url.searchParams.getAll("riskLevel");
     if (riskLevels.length > 0) {
-      query = query.in('risk_level', riskLevels);
+      query = query.in("risk_level", riskLevels);
     }
 
     // Filter by route status
-    const routeStatuses = url.searchParams.getAll('routeStatus');
+    const routeStatuses = url.searchParams.getAll("routeStatus");
     if (routeStatuses.length > 0) {
-      query = query.in('route_status', routeStatuses);
+      query = query.in("route_status", routeStatuses);
     }
 
     // Search query (full-text search on driver names would need JOIN - simplified for now)
-    const q = url.searchParams.get('q');
+    const q = url.searchParams.get("q");
     if (q) {
       // This is a simplified search - in production you'd want to use PostgreSQL full-text search
-      query = query.or(`delay_reason.ilike.%${q}%,cargo_damage_description.ilike.%${q}%,vehicle_damage_description.ilike.%${q}%,next_day_blockers.ilike.%${q}%`);
+      query = query.or(
+        `delay_reason.ilike.%${q}%,cargo_damage_description.ilike.%${q}%,vehicle_damage_description.ilike.%${q}%,next_day_blockers.ilike.%${q}%`
+      );
     }
 
     // Sort
-    const sortColumn = sortBy === 'occurredAt' ? 'occurred_at' : 'report_date';
-    query = query.order(sortColumn, { ascending: sortDir === 'asc' });
+    const sortColumn = sortBy === "occurredAt" ? "occurred_at" : "report_date";
+    query = query.order(sortColumn, { ascending: sortDir === "asc" });
 
     // Limit
     query = query.limit(limit);
@@ -106,8 +109,8 @@ export const GET: APIRoute = async ({ locals, request }) => {
     const { data, error } = await query;
 
     if (error) {
-      console.error('Error fetching reports:', error);
-      return errorResponse('DATABASE_ERROR', error.message, 500);
+      console.error("Error fetching reports:", error);
+      return errorResponse("DATABASE_ERROR", error.message, 500);
     }
 
     // Transform to camelCase DTOs
@@ -128,14 +131,16 @@ export const GET: APIRoute = async ({ locals, request }) => {
       riskLevel: report.risk_level,
       createdAt: report.created_at,
       updatedAt: report.updated_at,
-      ai: report.report_ai_results?.[0] ? {
-        reportUuid: report.report_ai_results[0].report_uuid,
-        reportDate: report.report_ai_results[0].report_date,
-        aiSummary: report.report_ai_results[0].ai_summary,
-        riskLevel: report.report_ai_results[0].risk_level,
-        createdAt: report.report_ai_results[0].created_at,
-        updatedAt: report.report_ai_results[0].updated_at,
-      } : null,
+      ai: report.report_ai_results?.[0]
+        ? {
+            reportUuid: report.report_ai_results[0].report_uuid,
+            reportDate: report.report_ai_results[0].report_date,
+            aiSummary: report.report_ai_results[0].ai_summary,
+            riskLevel: report.report_ai_results[0].risk_level,
+            createdAt: report.report_ai_results[0].created_at,
+            updatedAt: report.report_ai_results[0].updated_at,
+          }
+        : null,
     }));
 
     const response: ReportsListResponseDTO = {
@@ -145,14 +150,14 @@ export const GET: APIRoute = async ({ locals, request }) => {
 
     return jsonResponse(response, 200);
   } catch (error) {
-    console.error('Error in GET /api/reports:', error);
-    return errorResponse('INTERNAL_ERROR', 'An unexpected error occurred', 500);
+    console.error("Error in GET /api/reports:", error);
+    return errorResponse("INTERNAL_ERROR", "An unexpected error occurred", 500);
   }
 };
 
 /**
  * POST /api/reports
- * 
+ *
  * Creates a new report (admin/dispatcher action)
  */
 export const POST: APIRoute = async ({ locals, request }) => {
@@ -161,18 +166,18 @@ export const POST: APIRoute = async ({ locals, request }) => {
     const session = await supabase.auth.getSession();
 
     if (!session.data.session) {
-      return errorResponse('UNAUTHORIZED', 'Authentication required', 401);
+      return errorResponse("UNAUTHORIZED", "Authentication required", 401);
     }
 
     // Get user's company_uuid
     const { data: userData, error: userError } = await supabase
-      .from('users')
-      .select('company_uuid')
-      .eq('uuid', session.data.session.user.id)
+      .from("users")
+      .select("company_uuid")
+      .eq("uuid", session.data.session.user.id)
       .single();
 
     if (userError || !userData) {
-      return errorResponse('FORBIDDEN', 'User not associated with a company', 403);
+      return errorResponse("FORBIDDEN", "User not associated with a company", 403);
     }
 
     const companyUuid = userData.company_uuid;
@@ -182,49 +187,43 @@ export const POST: APIRoute = async ({ locals, request }) => {
     const validation = createReportSchema.safeParse(body);
 
     if (!validation.success) {
-      return errorResponse(
-        'VALIDATION_ERROR',
-        'Invalid request body',
-        400,
-        { errors: formatZodError(validation.error) }
-      );
+      return errorResponse("VALIDATION_ERROR", "Invalid request body", 400, {
+        errors: formatZodError(validation.error),
+      });
     }
 
     const data = validation.data;
 
     // Check if report already exists for this driver and date
     const { data: existingReport } = await supabase
-      .from('reports')
-      .select('uuid')
-      .eq('company_uuid', companyUuid)
-      .eq('driver_uuid', data.driverUuid)
-      .eq('report_date', data.reportDate)
+      .from("reports")
+      .select("uuid")
+      .eq("company_uuid", companyUuid)
+      .eq("driver_uuid", data.driverUuid)
+      .eq("report_date", data.reportDate)
       .single();
 
     if (existingReport) {
-      return errorResponse(
-        'DUPLICATE_REPORT',
-        'A report for this driver and date already exists',
-        409,
-        { existingReportUuid: existingReport.uuid }
-      );
+      return errorResponse("DUPLICATE_REPORT", "A report for this driver and date already exists", 409, {
+        existingReportUuid: existingReport.uuid,
+      });
     }
 
     // Verify driver belongs to company
     const { data: driver, error: driverError } = await supabase
-      .from('drivers')
-      .select('uuid')
-      .eq('uuid', data.driverUuid)
-      .eq('company_uuid', companyUuid)
+      .from("drivers")
+      .select("uuid")
+      .eq("uuid", data.driverUuid)
+      .eq("company_uuid", companyUuid)
       .single();
 
     if (driverError || !driver) {
-      return errorResponse('NOT_FOUND', 'Driver not found or does not belong to your company', 404);
+      return errorResponse("NOT_FOUND", "Driver not found or does not belong to your company", 404);
     }
 
     // Create report
     const { data: newReport, error: createError } = await supabase
-      .from('reports')
+      .from("reports")
       .insert({
         company_uuid: companyUuid,
         driver_uuid: data.driverUuid,
@@ -244,8 +243,8 @@ export const POST: APIRoute = async ({ locals, request }) => {
       .single();
 
     if (createError) {
-      console.error('Error creating report:', createError);
-      return errorResponse('DATABASE_ERROR', createError.message, 500);
+      console.error("Error creating report:", createError);
+      return errorResponse("DATABASE_ERROR", createError.message, 500);
     }
 
     // TODO: Handle tags if provided
@@ -273,7 +272,7 @@ export const POST: APIRoute = async ({ locals, request }) => {
 
     return jsonResponse(reportDto, 201);
   } catch (error) {
-    console.error('Error in POST /api/reports:', error);
-    return errorResponse('INTERNAL_ERROR', 'An unexpected error occurred', 500);
+    console.error("Error in POST /api/reports:", error);
+    return errorResponse("INTERNAL_ERROR", "An unexpected error occurred", 500);
   }
 };

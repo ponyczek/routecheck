@@ -23,30 +23,18 @@ function isPublicApiEndpoint(pathname: string): boolean {
  * Check if the request is for a protected (authenticated) route
  */
 function isProtectedRoute(pathname: string): boolean {
-  const protectedRoutes = [
-    "/dashboard",
-    "/drivers",
-    "/reports",
-    "/settings",
-    "/vehicles",
-    "/assignments",
-  ];
-  
-  return protectedRoutes.some(route => pathname === route || pathname.startsWith(route + "/"));
+  const protectedRoutes = ["/dashboard", "/drivers", "/reports", "/settings", "/vehicles", "/assignments"];
+
+  return protectedRoutes.some((route) => pathname === route || pathname.startsWith(route + "/"));
 }
 
 /**
  * Check if the request is for a public route (no auth required)
  */
 function isPublicRoute(pathname: string): boolean {
-  const publicRoutes = [
-    "/",
-    "/signin",
-    "/signup",
-    "/api/public/",
-  ];
-  
-  return publicRoutes.some(route => pathname === route || pathname.startsWith(route));
+  const publicRoutes = ["/", "/signin", "/signup", "/api/public/"];
+
+  return publicRoutes.some((route) => pathname === route || pathname.startsWith(route));
 }
 
 export const onRequest = defineMiddleware(async (context, next) => {
@@ -85,8 +73,11 @@ export const onRequest = defineMiddleware(async (context, next) => {
   if (isProtectedRoute(context.url.pathname)) {
     // IMPORTANT: Use context.locals.supabase (request-specific) instead of global supabaseClient
     // This ensures we have access to cookies from the current request
-    const { data: { session }, error: sessionError } = await context.locals.supabase.auth.getSession();
-    
+    const {
+      data: { session },
+      error: sessionError,
+    } = await context.locals.supabase.auth.getSession();
+
     // Redirect to sign in if no valid session
     if (sessionError || !session?.user) {
       const returnTo = encodeURIComponent(context.url.pathname);

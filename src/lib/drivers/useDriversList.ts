@@ -1,7 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
-import { driversService } from '@/lib/services/driversService';
-import { driversKeys } from './queryKeys';
-import type { DriversQueryParams } from './types';
+import { useQuery } from "@tanstack/react-query";
+import { driversService } from "@/lib/services/driversService";
+import { driversKeys } from "./queryKeys";
+import type { DriversQueryParams } from "./types";
 
 /**
  * Hook do pobierania listy kierowców z filtrowaniem i paginacją
@@ -16,6 +16,3 @@ export function useDriversList(params: DriversQueryParams) {
     retry: 2, // Retry 2 razy w przypadku błędu
   });
 }
-
-
-

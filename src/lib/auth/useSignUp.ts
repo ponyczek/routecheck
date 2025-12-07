@@ -43,13 +43,13 @@ function mapSupabaseAuthError(error: any): AuthErrorState {
 
 /**
  * Hook for handling sign-up with Supabase Auth and company creation
- * 
+ *
  * Process:
  * 1. Register user with Supabase Auth (session stored in localStorage)
  * 2. Create company record in database via API
  * 3. Sync session to cookies (required for server-side middleware)
  * 4. Handle success/error callbacks
- * 
+ *
  * Uses React Query for state management
  */
 export function useSignUp({ supabase, returnTo, onSuccess, onError }: UseSignUpOptions) {
@@ -167,4 +167,3 @@ export function useSignUp({ supabase, returnTo, onSuccess, onError }: UseSignUpO
     reset: mutation.reset,
   };
 }
-

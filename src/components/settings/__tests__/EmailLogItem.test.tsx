@@ -31,9 +31,7 @@ describe("EmailLogItem", () => {
     it("renders log subject", () => {
       render(<EmailLogItem log={mockLog} />);
 
-      expect(
-        screen.getByText("Alert: Brakujący raport dzienny - 2025-11-22")
-      ).toBeInTheDocument();
+      expect(screen.getByText("Alert: Brakujący raport dzienny - 2025-11-22")).toBeInTheDocument();
     });
 
     it("renders log recipient", () => {
@@ -108,9 +106,7 @@ describe("EmailLogItem", () => {
     it("applies truncate class to subject", () => {
       render(<EmailLogItem log={mockLog} />);
 
-      const subject = screen.getByText(
-        "Alert: Brakujący raport dzienny - 2025-11-22"
-      );
+      const subject = screen.getByText("Alert: Brakujący raport dzienny - 2025-11-22");
       expect(subject).toHaveClass("truncate");
     });
 
@@ -189,5 +185,3 @@ describe("EmailLogItem", () => {
     });
   });
 });
-
-

@@ -32,6 +32,7 @@ SettingsProfilePage (Astro)
 ```
 
 **Uwagi:**
+
 - `SettingsLayout` może być dodatkową warstwą dla zakładek (`Profil`, `Alerty`, `Konto`) jeśli aplikacja posiada wiele ustawień; opcjonalnie w MVP może być zintegrowany bezpośrednio w `AuthenticatedLayout`.
 - `CompanyProfileView` to główny komponent React odpowiedzialny za logikę, komunikację z API i zarządzanie stanem.
 
@@ -43,21 +44,26 @@ SettingsProfilePage (Astro)
 Strona Astro dla `/settings/profile`; wrapper dla komponentu React. Odpowiada za preload danych firmy z API w server-side rendering i przekazanie ich jako props do React.
 
 **Główne elementy:**
+
 - Odczyt sesji użytkownika z `Astro.locals.user` (z middleware)
 - Wywołanie `GET /api/companies/me` w server-side Astro
 - Przekazanie danych `CompanyDTO` do `CompanyProfileView` jako props
 - Obsługa błędów 404/500 (fallback do widoku błędu)
 
 **Obsługiwane zdarzenia:**
+
 - Nie dotyczy (strona statyczna Astro, logika w React)
 
 **Warunki walidacji:**
+
 - Weryfikacja obecności sesji przed renderowaniem (guard middleware)
 
 **Typy:**
+
 - `CompanyDTO` (import z `src/types.ts`)
 
 **Propsy:**
+
 - Brak (strona główna)
 
 ---
@@ -68,6 +74,7 @@ Strona Astro dla `/settings/profile`; wrapper dla komponentu React. Odpowiada za
 Główny komponent widoku; zarządza stanem lokalnym edycji nazwy firmy oraz wywołaniami API do aktualizacji danych. Wyświetla informacje o firmie i formularz edycji nazwy. Obsługuje feedback użytkownika (toasty sukcesu/błędu). Wykorzystuje TanStack Query do synchronizacji danych z backendem.
 
 **Główne elementy:**
+
 ```tsx
 <div className="container mx-auto p-6 space-y-8">
   <PageHeader title="Profil firmy" description="Zarządzaj danymi swojej firmy" />
@@ -77,16 +84,20 @@ Główny komponent widoku; zarządza stanem lokalnym edycji nazwy firmy oraz wyw
 ```
 
 **Obsługiwane zdarzenia:**
+
 - `onUpdate` – callback wywoływany po pomyślnej aktualizacji nazwy (rewalidacja danych w TanStack Query)
 
 **Warunki walidacji:**
+
 - Brak (delegowane do `EditCompanyNameForm`)
 
 **Typy:**
+
 - `CompanyDTO` (wejście)
 - `UpdateCompanyCommand` (wyjście do API)
 
 **Propsy:**
+
 ```tsx
 interface CompanyProfileViewProps {
   initialCompany: CompanyDTO;
@@ -101,6 +112,7 @@ interface CompanyProfileViewProps {
 Prezentuje informacje o firmie tylko do odczytu: nazwa, UUID, data utworzenia. Widoczne w formacie karty z odpowiednim stylowaniem (shadcn/ui Card). Zapewnia użytkownikowi kontekst i wgląd w dane firmowe, które nie są edytowalne w tym widoku (UUID, created_at).
 
 **Główne elementy:**
+
 ```tsx
 <Card>
   <CardHeader>
@@ -118,15 +130,19 @@ Prezentuje informacje o firmie tylko do odczytu: nazwa, UUID, data utworzenia. W
 ```
 
 **Obsługiwane zdarzenia:**
+
 - Kliknięcie na `copyable` dla UUID (kopiowanie do schowka z feedbackiem toast)
 
 **Warunki walidacji:**
+
 - Brak (widok tylko do odczytu)
 
 **Typy:**
+
 - `CompanyDTO`
 
 **Propsy:**
+
 ```tsx
 interface CompanyInfoCardProps {
   company: CompanyDTO;
@@ -141,26 +157,35 @@ interface CompanyInfoCardProps {
 Pojedynczy wiersz informacji klucz–wartość, używany w `CompanyInfoCard`. Opcjonalnie wspiera kopiowanie wartości do schowka (np. dla UUID).
 
 **Główne elementy:**
+
 ```tsx
 <div className="flex justify-between items-center py-2 border-b last:border-0">
   <span className="text-sm font-medium text-muted-foreground">{label}</span>
   <div className="flex items-center gap-2">
     <span className="text-sm font-semibold">{value}</span>
-    {copyable && <Button variant="ghost" size="icon" onClick={handleCopy}><CopyIcon /></Button>}
+    {copyable && (
+      <Button variant="ghost" size="icon" onClick={handleCopy}>
+        <CopyIcon />
+      </Button>
+    )}
   </div>
 </div>
 ```
 
 **Obsługiwane zdarzenia:**
+
 - `onClick` (kopiowanie wartości przy `copyable=true`)
 
 **Warunki walidacji:**
+
 - Brak
 
 **Typy:**
+
 - `string` dla label i value
 
 **Propsy:**
+
 ```tsx
 interface InfoRowProps {
   label: string;
@@ -177,6 +202,7 @@ interface InfoRowProps {
 Formularz edycji nazwy firmy. Używa React Hook Form + Zod do walidacji. Wyświetla pole tekstowe dla nazwy oraz przycisk „Zapisz". Po pomyślnym zapisie wyświetla toast z potwierdzeniem i rewaliduje dane w cache TanStack Query. Obsługuje stany ładowania i błędy API (400, 403).
 
 **Główne elementy:**
+
 ```tsx
 <Card>
   <CardHeader>
@@ -209,10 +235,12 @@ Formularz edycji nazwy firmy. Używa React Hook Form + Zod do walidacji. Wyświe
 ```
 
 **Obsługiwane zdarzenia:**
+
 - `onSubmit` – walidacja formularza i wywołanie `PATCH /api/companies/me`
 - Zmiana wartości pola (`onChange`)
 
 **Warunki walidacji:**
+
 - **Pole `name` (wymagane):**
   - Minimum 2 znaki
   - Maksimum 100 znaków
@@ -220,10 +248,12 @@ Formularz edycji nazwy firmy. Używa React Hook Form + Zod do walidacji. Wyświe
 - Przycisk „Zapisz" wyłączony, gdy formularz nie jest zmieniony (`isDirty=false`) lub w trakcie wysyłania
 
 **Typy:**
+
 - `UpdateCompanyCommand` (zod schema dla walidacji)
 - `CompanyDTO` (dane wejściowe dla initialValues)
 
 **Propsy:**
+
 ```tsx
 interface EditCompanyNameFormProps {
   company: CompanyDTO;
@@ -239,6 +269,7 @@ interface EditCompanyNameFormProps {
 Uniwersalny nagłówek strony z tytułem i opcjonalnym opisem. Używany na górze widoku settings i innych widoków aplikacji dla spójności UI.
 
 **Główne elementy:**
+
 ```tsx
 <div className="space-y-1">
   <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
@@ -247,15 +278,19 @@ Uniwersalny nagłówek strony z tytułem i opcjonalnym opisem. Używany na górz
 ```
 
 **Obsługiwane zdarzenia:**
+
 - Brak
 
 **Warunki walidacji:**
+
 - Brak
 
 **Typy:**
+
 - `string` dla title i description
 
 **Propsy:**
+
 ```tsx
 interface PageHeaderProps {
   title: string;
@@ -271,6 +306,7 @@ interface PageHeaderProps {
 Link do strony pomocy lub kontaktu. Wyświetlany w stopce `CompanyInfoCard` jako prosty text link z ikoną.
 
 **Główne elementy:**
+
 ```tsx
 <a href={href} className="text-sm text-primary hover:underline inline-flex items-center gap-1">
   <HelpCircleIcon className="w-4 h-4" />
@@ -279,15 +315,19 @@ Link do strony pomocy lub kontaktu. Wyświetlany w stopce `CompanyInfoCard` jako
 ```
 
 **Obsługiwane zdarzenia:**
+
 - `onClick` (nawigacja do strony pomocy)
 
 **Warunki walidacji:**
+
 - Brak
 
 **Typy:**
+
 - `string` dla href
 
 **Propsy:**
+
 ```tsx
 interface HelpLinkProps {
   href: string;
@@ -372,6 +412,7 @@ export type EditCompanyNameFormValues = z.infer<typeof editCompanyNameSchema>;
 Komponenty `CompanyInfoCard` i `PageHeader` są bezstanowe (stateless) – otrzymują dane jako props i renderują je.
 
 `EditCompanyNameForm` zarządza stanem formularza poprzez React Hook Form:
+
 ```typescript
 const form = useForm<EditCompanyNameFormValues>({
   resolver: zodResolver(editCompanyNameSchema),
@@ -407,11 +448,11 @@ export function useCompany() {
           "Content-Type": "application/json",
         },
       });
-      
+
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
       }
-      
+
       return response.json() as Promise<CompanyDTO>;
     },
     staleTime: 5 * 60 * 1000, // 5 minut
@@ -421,7 +462,7 @@ export function useCompany() {
 // Hook do aktualizacji nazwy firmy
 export function useUpdateCompany() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: async (command: UpdateCompanyCommand) => {
       const response = await fetch("/api/companies/me", {
@@ -431,18 +472,18 @@ export function useUpdateCompany() {
         },
         body: JSON.stringify(command),
       });
-      
+
       if (!response.ok) {
         const error = await response.json();
         throw error;
       }
-      
+
       return response.json() as Promise<CompanyDTO>;
     },
     onSuccess: (updatedCompany) => {
       // Aktualizacja cache
       queryClient.setQueryData(companyKeys.me(), updatedCompany);
-      
+
       // Opcjonalnie invalidate dla pewności
       queryClient.invalidateQueries({ queryKey: companyKeys.me() });
     },
@@ -464,26 +505,26 @@ import type { CompanyDTO } from "@/types";
 
 export function useCompanyNameForm(company: CompanyDTO) {
   const { mutateAsync: updateCompany, isPending } = useUpdateCompany();
-  
+
   const form = useForm<EditCompanyNameFormValues>({
     resolver: zodResolver(editCompanyNameSchema),
     defaultValues: {
       name: company.name,
     },
   });
-  
+
   const onSubmit = async (values: EditCompanyNameFormValues) => {
     try {
       const updated = await updateCompany({ name: values.name });
-      
+
       toast.success("Nazwa firmy została zaktualizowana", {
         description: `Nowa nazwa: ${updated.name}`,
       });
-      
+
       form.reset({ name: updated.name });
     } catch (error) {
       const apiError = error as CompanyApiError;
-      
+
       if (apiError.code === "forbidden") {
         toast.error("Nie masz uprawnień do edycji profilu firmy");
       } else if (apiError.code === "validation_error") {
@@ -497,7 +538,7 @@ export function useCompanyNameForm(company: CompanyDTO) {
       }
     }
   };
-  
+
   return {
     form,
     onSubmit: form.handleSubmit(onSubmit),
@@ -513,6 +554,7 @@ export function useCompanyNameForm(company: CompanyDTO) {
 **Opis:** Pobiera dane firmy zalogowanego użytkownika.
 
 **Request:**
+
 ```http
 GET /api/companies/me
 Authorization: Bearer <supabase_jwt>
@@ -520,6 +562,7 @@ Content-Type: application/json
 ```
 
 **Response (200 OK):**
+
 ```typescript
 CompanyDTO {
   uuid: string;
@@ -529,11 +572,13 @@ CompanyDTO {
 ```
 
 **Możliwe błędy:**
+
 - `401 Unauthorized` – brak lub nieprawidłowy JWT
 - `404 Not Found` – brak firmy dla użytkownika (nie powinno wystąpić w prawidłowym flow)
 - `500 Internal Server Error` – błąd serwera
 
 **Wykorzystanie w widoku:**
+
 - Wywołanie w server-side Astro przy SSR strony (opcjonalnie)
 - Wywołanie w React poprzez `useCompany()` hook dla odświeżenia danych
 
@@ -544,6 +589,7 @@ CompanyDTO {
 **Opis:** Aktualizuje nazwę firmy zalogowanego użytkownika.
 
 **Request:**
+
 ```http
 PATCH /api/companies/me
 Authorization: Bearer <supabase_jwt>
@@ -557,6 +603,7 @@ Content-Type: application/json
 **Request Type:** `UpdateCompanyCommand`
 
 **Response (200 OK):**
+
 ```typescript
 CompanyDTO {
   uuid: string;
@@ -566,6 +613,7 @@ CompanyDTO {
 ```
 
 **Możliwe błędy:**
+
 - `400 Bad Request` – walidacja nie powiodła się (np. nazwa za krótka, za długa)
   ```json
   {
@@ -579,6 +627,7 @@ CompanyDTO {
 - `500 Internal Server Error` – błąd serwera
 
 **Wykorzystanie w widoku:**
+
 - Wywołanie przez `useUpdateCompany()` mutation w reakcji na submit formularza
 
 ---
@@ -588,11 +637,13 @@ CompanyDTO {
 ### 8.1 Przeglądanie danych firmy
 
 **Ścieżka:**
+
 1. Użytkownik nawiguje do `/settings/profile` przez menu nawigacji (`Ustawienia → Profil`)
 2. Widok ładuje się z preloadowanymi danymi firmy (SSR Astro)
 3. Użytkownik widzi kartę z danymi firmy: nazwą, UUID, datą utworzenia
 
 **Rezultat:**
+
 - Dane są wyświetlone w czytelnym formacie
 - UUID jest kopiowalne do schowka (kliknięcie ikony kopiowania)
 
@@ -601,11 +652,13 @@ CompanyDTO {
 ### 8.2 Kopiowanie UUID do schowka
 
 **Ścieżka:**
+
 1. Użytkownik klika ikonę kopiowania obok UUID w `CompanyInfoCard`
 2. UUID jest kopiowane do schowka systemowego
 3. Wyświetla się toast z potwierdzeniem: "UUID skopiowano do schowka"
 
 **Rezultat:**
+
 - UUID jest w schowku użytkownika
 - Toast znika po 3 sekundach
 
@@ -614,6 +667,7 @@ CompanyDTO {
 ### 8.3 Edycja nazwy firmy (happy path)
 
 **Ścieżka:**
+
 1. Użytkownik widzi formularz edycji z aktualną nazwą firmy
 2. Użytkownik modyfikuje nazwę w polu tekstowym
 3. Przycisk „Zapisz" staje się aktywny (zmiana wykryta przez `isDirty`)
@@ -625,6 +679,7 @@ CompanyDTO {
 9. Formularz resetuje stan `isDirty` i przycisk staje się nieaktywny
 
 **Rezultat:**
+
 - Nazwa firmy jest zaktualizowana w bazie danych i w UI
 - Cache TanStack Query jest zaktualizowany
 - Użytkownik widzi potwierdzenie
@@ -634,6 +689,7 @@ CompanyDTO {
 ### 8.4 Edycja nazwy firmy (błąd walidacji)
 
 **Ścieżka:**
+
 1. Użytkownik wprowadza nazwę za krótką (np. 1 znak) lub za długą (>100 znaków)
 2. Użytkownik klika „Zapisz"
 3. Walidacja Zod wykrywa błąd po stronie klienta
@@ -641,6 +697,7 @@ CompanyDTO {
 5. Formularz nie jest wysyłany do API
 
 **Rezultat:**
+
 - Błąd jest wyświetlony inline pod polem
 - Użytkownik może poprawić wartość bez ponownego wysyłania
 
@@ -649,6 +706,7 @@ CompanyDTO {
 ### 8.5 Edycja nazwy firmy (błąd API)
 
 **Ścieżka:**
+
 1. Użytkownik wprowadza poprawną nazwę i klika „Zapisz"
 2. API zwraca błąd (np. 403 Forbidden – brak uprawnień, lub 500 Internal Server Error)
 3. Hook mutation przechwytuje błąd
@@ -656,6 +714,7 @@ CompanyDTO {
 5. Formularz pozostaje w stanie edycji
 
 **Rezultat:**
+
 - Użytkownik jest informowany o błędzie
 - Może spróbować ponownie po chwili
 
@@ -664,10 +723,12 @@ CompanyDTO {
 ### 8.6 Link do pomocy
 
 **Ścieżka:**
+
 1. Użytkownik klika link „Potrzebujesz pomocy?" w stopce karty
 2. Nawigacja do strony `/help` (lub zewnętrzny URL do dokumentacji)
 
 **Rezultat:**
+
 - Użytkownik jest przekierowany do strony pomocy
 
 ---
@@ -678,16 +739,17 @@ CompanyDTO {
 
 **Pole: `name` (nazwa firmy)**
 
-| Warunek | Walidacja | Komunikat błędu |
-|---------|-----------|-----------------|
-| Wymagane | `z.string()` | "Pole jest wymagane" (domyślny) |
-| Min długość | `.min(2)` | "Nazwa firmy musi mieć co najmniej 2 znaki" |
-| Max długość | `.max(100)` | "Nazwa firmy może mieć maksymalnie 100 znaków" |
-| Nie może być puste (tylko białe znaki) | `.trim().refine(val => val.length > 0)` | "Nazwa firmy nie może być pusta" |
+| Warunek                                | Walidacja                               | Komunikat błędu                                |
+| -------------------------------------- | --------------------------------------- | ---------------------------------------------- |
+| Wymagane                               | `z.string()`                            | "Pole jest wymagane" (domyślny)                |
+| Min długość                            | `.min(2)`                               | "Nazwa firmy musi mieć co najmniej 2 znaki"    |
+| Max długość                            | `.max(100)`                             | "Nazwa firmy może mieć maksymalnie 100 znaków" |
+| Nie może być puste (tylko białe znaki) | `.trim().refine(val => val.length > 0)` | "Nazwa firmy nie może być pusta"               |
 
 **Komponent:** `EditCompanyNameForm`
 
 **Wpływ na UI:**
+
 - Jeśli walidacja nie przechodzi, komunikat błędu jest wyświetlany pod polem (`FormMessage`)
 - Przycisk „Zapisz" jest wyłączony, gdy formularz nie jest zmieniony (`isDirty=false`)
 - Podczas wysyłania (`isPending=true`) przycisk pokazuje spinner i jest wyłączony
@@ -698,17 +760,18 @@ CompanyDTO {
 
 **Endpoint:** `PATCH /api/companies/me`
 
-| Warunek | Kod błędu | Reakcja UI |
-|---------|-----------|------------|
-| JWT brak lub nieprawidłowy | 401 | Redirect do `/signin` (middleware) |
-| Nazwa za krótka/długa (backend validation) | 400 | Toast błędu z treścią z API |
-| Brak uprawnień (403) | 403 | Toast: "Nie masz uprawnień do edycji profilu firmy" + baner informacyjny (opcjonalnie) |
-| Firma nie istnieje | 404 | Toast ogólnego błędu (rzadki przypadek) |
-| Błąd serwera | 500 | Toast: "Nie udało się zaktualizować nazwy firmy. Spróbuj ponownie później." |
+| Warunek                                    | Kod błędu | Reakcja UI                                                                             |
+| ------------------------------------------ | --------- | -------------------------------------------------------------------------------------- |
+| JWT brak lub nieprawidłowy                 | 401       | Redirect do `/signin` (middleware)                                                     |
+| Nazwa za krótka/długa (backend validation) | 400       | Toast błędu z treścią z API                                                            |
+| Brak uprawnień (403)                       | 403       | Toast: "Nie masz uprawnień do edycji profilu firmy" + baner informacyjny (opcjonalnie) |
+| Firma nie istnieje                         | 404       | Toast ogólnego błędu (rzadki przypadek)                                                |
+| Błąd serwera                               | 500       | Toast: "Nie udało się zaktualizować nazwy firmy. Spróbuj ponownie później."            |
 
 **Komponent:** `EditCompanyNameForm` + `useUpdateCompany` mutation
 
 **Wpływ na UI:**
+
 - Błędy 400/403/500 wyświetlają toast z odpowiednim komunikatem
 - W przypadku 403 można dodatkowo wyświetlić trwały baner (Alert z shadcn/ui) informujący o braku uprawnień
 - Użytkownik pozostaje na stronie i może spróbować ponownie
@@ -717,12 +780,12 @@ CompanyDTO {
 
 ### 9.3 Warunki UX
 
-| Warunek | Komponent | Reakcja |
-|---------|-----------|---------|
-| Formularz nie zmieniony | `EditCompanyNameForm` | Przycisk „Zapisz" wyłączony (`disabled={!isDirty}`) |
-| Formularz w trakcie wysyłania | `EditCompanyNameForm` | Przycisk wyłączony, spinner, `isPending=true` |
-| Sukces zapisu | `EditCompanyNameForm` | Toast sukcesu, reset `isDirty`, przycisk nieaktywny |
-| Błąd zapisu | `EditCompanyNameForm` | Toast błędu, formularz pozostaje w stanie edycji |
+| Warunek                       | Komponent             | Reakcja                                             |
+| ----------------------------- | --------------------- | --------------------------------------------------- |
+| Formularz nie zmieniony       | `EditCompanyNameForm` | Przycisk „Zapisz" wyłączony (`disabled={!isDirty}`) |
+| Formularz w trakcie wysyłania | `EditCompanyNameForm` | Przycisk wyłączony, spinner, `isPending=true`       |
+| Sukces zapisu                 | `EditCompanyNameForm` | Toast sukcesu, reset `isDirty`, przycisk nieaktywny |
+| Błąd zapisu                   | `EditCompanyNameForm` | Toast błędu, formularz pozostaje w stanie edycji    |
 
 ---
 
@@ -733,6 +796,7 @@ CompanyDTO {
 **Scenariusz:** Użytkownik niezalogowany lub sesja wygasła
 
 **Obsługa:**
+
 - Middleware Astro wykrywa brak JWT i przekierowuje do `/signin`
 - Po zalogowaniu użytkownik jest kierowany z powrotem do `/settings/profile` (jeśli zapisano `returnUrl`)
 
@@ -743,6 +807,7 @@ CompanyDTO {
 **Scenariusz:** Błąd podczas ładowania danych firmy (SSR lub CSR)
 
 **Obsługa w Astro SSR:**
+
 ```typescript
 try {
   const response = await fetch(`${Astro.url.origin}/api/companies/me`, {
@@ -750,12 +815,12 @@ try {
       Authorization: `Bearer ${accessToken}`,
     },
   });
-  
+
   if (!response.ok) {
     // Redirect do strony błędu lub wyświetl fallback
     return Astro.redirect("/error?code=500");
   }
-  
+
   const company = await response.json();
 } catch (error) {
   // Fallback UI
@@ -764,6 +829,7 @@ try {
 ```
 
 **Obsługa w React (TanStack Query):**
+
 ```typescript
 const { data: company, isLoading, error } = useCompany();
 
@@ -791,6 +857,7 @@ if (error) {
 **Scenariusz:** Błąd podczas zapisywania nazwy firmy
 
 **Obsługa w mutation:**
+
 ```typescript
 const { mutateAsync: updateCompany } = useUpdateCompany();
 
@@ -799,7 +866,7 @@ try {
   toast.success("...");
 } catch (error) {
   const apiError = error as CompanyApiError;
-  
+
   // Mapowanie błędów na komunikaty
   if (apiError.code === "validation_error") {
     toast.error("Błąd walidacji", { description: apiError.message });
@@ -819,6 +886,7 @@ try {
 **Scenariusz:** Użytkownik wprowadza nieprawidłowe dane (np. za krótka nazwa)
 
 **Obsługa:**
+
 - React Hook Form + Zod automatycznie wyświetla błędy walidacji pod polem tekstowym
 - Użytkownik nie może wysłać formularza, dopóki błędy nie zostaną poprawione
 
@@ -829,6 +897,7 @@ try {
 **Scenariusz:** Użytkownik traci połączenie internetowe podczas próby zapisu
 
 **Obsługa:**
+
 - TanStack Query mutation wykrywa błąd sieci
 - Toast błędu: "Brak połączenia z internetem. Sprawdź połączenie i spróbuj ponownie."
 - Opcjonalnie: mechanizm retry (TanStack Query retry)
@@ -837,12 +906,12 @@ try {
 
 ### 10.6 Przypadki brzegowe
 
-| Przypadek | Obsługa |
-|-----------|---------|
-| Firma nie istnieje w bazie (404 na GET) | Redirect do strony błędu lub wyświetlenie komunikatu z linkiem do kontaktu |
-| Duplikat nazwy firmy (jeśli backend wymusza unikalność, rzadkie) | Toast błędu z komunikatem z API |
-| Sesja wygasła podczas edycji | Middleware przekierowuje do `/signin`, po zalogowaniu użytkownik wraca do settings |
-| Bardzo długa nazwa (>100 znaków) | Walidacja Zod blokuje submit, komunikat błędu pod polem |
+| Przypadek                                                        | Obsługa                                                                            |
+| ---------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Firma nie istnieje w bazie (404 na GET)                          | Redirect do strony błędu lub wyświetlenie komunikatu z linkiem do kontaktu         |
+| Duplikat nazwy firmy (jeśli backend wymusza unikalność, rzadkie) | Toast błędu z komunikatem z API                                                    |
+| Sesja wygasła podczas edycji                                     | Middleware przekierowuje do `/signin`, po zalogowaniu użytkownik wraca do settings |
+| Bardzo długa nazwa (>100 znaków)                                 | Walidacja Zod blokuje submit, komunikat błędu pod polem                            |
 
 ---
 
@@ -855,12 +924,14 @@ try {
 1.2. Utwórz folder `src/lib/settings/`
 
 1.3. Utwórz plik `src/lib/settings/types.ts` z typami ViewModel:
-   - `EditCompanyNameFormValues`
-   - `UseUpdateCompanyOptions`
-   - `CompanyApiError`
+
+- `EditCompanyNameFormValues`
+- `UseUpdateCompanyOptions`
+- `CompanyApiError`
 
 1.4. Utwórz plik `src/lib/settings/validation.ts` ze schematem Zod:
-   - `editCompanyNameSchema`
+
+- `editCompanyNameSchema`
 
 ---
 
@@ -869,21 +940,24 @@ try {
 2.1. Utwórz plik `src/lib/settings/queries.ts`
 
 2.2. Zaimplementuj query key factory:
-   ```typescript
-   export const companyKeys = {
-     all: ["companies"] as const,
-     me: () => [...companyKeys.all, "me"] as const,
-   };
-   ```
+
+```typescript
+export const companyKeys = {
+  all: ["companies"] as const,
+  me: () => [...companyKeys.all, "me"] as const,
+};
+```
 
 2.3. Zaimplementuj `useCompany()` hook:
-   - `queryKey: companyKeys.me()`
-   - `queryFn`: wywołanie `GET /api/companies/me`
-   - `staleTime: 5 * 60 * 1000` (5 minut)
+
+- `queryKey: companyKeys.me()`
+- `queryFn`: wywołanie `GET /api/companies/me`
+- `staleTime: 5 * 60 * 1000` (5 minut)
 
 2.4. Zaimplementuj `useUpdateCompany()` mutation:
-   - `mutationFn`: wywołanie `PATCH /api/companies/me`
-   - `onSuccess`: aktualizacja cache (`setQueryData` + opcjonalnie `invalidateQueries`)
+
+- `mutationFn`: wywołanie `PATCH /api/companies/me`
+- `onSuccess`: aktualizacja cache (`setQueryData` + opcjonalnie `invalidateQueries`)
 
 2.5. Dodaj obsługę błędów HTTP w obu funkcjach (sprawdź `response.ok`, parsuj JSON error)
 
@@ -894,13 +968,14 @@ try {
 3.1. Utwórz plik `src/lib/settings/useCompanyNameForm.ts`
 
 3.2. Zaimplementuj hook `useCompanyNameForm(company: CompanyDTO)`:
-   - Inicjalizuj React Hook Form z `zodResolver` i `defaultValues`
-   - Wykorzystaj `useUpdateCompany()` mutation
-   - Zaimplementuj funkcję `onSubmit`:
-     - Wywołaj `updateCompany()`
-     - W przypadku sukcesu: wyświetl toast, zresetuj formularz
-     - W przypadku błędu: wyświetl toast z odpowiednim komunikatem (mapowanie kodów błędów)
-   - Zwróć `{ form, onSubmit, isPending }`
+
+- Inicjalizuj React Hook Form z `zodResolver` i `defaultValues`
+- Wykorzystaj `useUpdateCompany()` mutation
+- Zaimplementuj funkcję `onSubmit`:
+  - Wywołaj `updateCompany()`
+  - W przypadku sukcesu: wyświetl toast, zresetuj formularz
+  - W przypadku błędu: wyświetl toast z odpowiednim komunikatem (mapowanie kodów błędów)
+- Zwróć `{ form, onSubmit, isPending }`
 
 ---
 
@@ -909,20 +984,23 @@ try {
 4.1. Utwórz folder `src/components/settings/`
 
 4.2. Utwórz `src/components/settings/PageHeader.tsx`:
-   - Props: `title`, `description?`
-   - Renderuj nagłówek z h1 i opcjonalnym paragrafem
-   - Użyj Tailwind dla stylowania
+
+- Props: `title`, `description?`
+- Renderuj nagłówek z h1 i opcjonalnym paragrafem
+- Użyj Tailwind dla stylowania
 
 4.3. Utwórz `src/components/settings/HelpLink.tsx`:
-   - Props: `href`, `children?`
-   - Renderuj link z ikoną `HelpCircleIcon` z `lucide-react`
-   - Użyj stylów shadcn/ui dla linków
+
+- Props: `href`, `children?`
+- Renderuj link z ikoną `HelpCircleIcon` z `lucide-react`
+- Użyj stylów shadcn/ui dla linków
 
 4.4. Utwórz `src/components/settings/InfoRow.tsx`:
-   - Props: `label`, `value`, `copyable?`
-   - Renderuj wiersz klucz-wartość
-   - Jeśli `copyable=true`, dodaj przycisk kopiowania z obsługą `navigator.clipboard.writeText()`
-   - Po skopiowaniu wyświetl toast: "Skopiowano do schowka"
+
+- Props: `label`, `value`, `copyable?`
+- Renderuj wiersz klucz-wartość
+- Jeśli `copyable=true`, dodaj przycisk kopiowania z obsługą `navigator.clipboard.writeText()`
+- Po skopiowaniu wyświetl toast: "Skopiowano do schowka"
 
 ---
 
@@ -935,24 +1013,26 @@ try {
 5.3. Props: `company: CompanyDTO`
 
 5.4. Renderuj:
-   - `CardHeader` z tytułem "Dane firmy"
-   - `CardContent` z trzema `InfoRow`:
-     - Nazwa: `company.name`
-     - Identyfikator: `company.uuid` (copyable)
-     - Data utworzenia: `formatDate(company.createdAt)` (użyj helpera do formatowania daty)
-   - `CardFooter` z `HelpLink`
+
+- `CardHeader` z tytułem "Dane firmy"
+- `CardContent` z trzema `InfoRow`:
+  - Nazwa: `company.name`
+  - Identyfikator: `company.uuid` (copyable)
+  - Data utworzenia: `formatDate(company.createdAt)` (użyj helpera do formatowania daty)
+- `CardFooter` z `HelpLink`
 
 5.5. Utwórz helper do formatowania daty:
-   ```typescript
-   // src/lib/utils/date.ts
-   export function formatDate(isoString: string): string {
-     return new Intl.DateTimeFormat("pl-PL", {
-       year: "numeric",
-       month: "long",
-       day: "numeric",
-     }).format(new Date(isoString));
-   }
-   ```
+
+```typescript
+// src/lib/utils/date.ts
+export function formatDate(isoString: string): string {
+  return new Intl.DateTimeFormat("pl-PL", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(new Date(isoString));
+}
+```
 
 ---
 
@@ -965,30 +1045,32 @@ try {
 6.3. Użyj `useCompanyNameForm(company)` hook
 
 6.4. Zaimportuj komponenty formularza z shadcn/ui:
-   - `Form`, `FormField`, `FormItem`, `FormLabel`, `FormControl`, `FormMessage` z `@/components/ui/form`
-   - `Input` z `@/components/ui/input`
-   - `Button` z `@/components/ui/button`
-   - `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent` z `@/components/ui/card`
+
+- `Form`, `FormField`, `FormItem`, `FormLabel`, `FormControl`, `FormMessage` z `@/components/ui/form`
+- `Input` z `@/components/ui/input`
+- `Button` z `@/components/ui/button`
+- `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent` z `@/components/ui/card`
 
 6.5. Renderuj formularz w strukturze:
-   ```tsx
-   <Card>
-     <CardHeader>
-       <CardTitle>Edytuj nazwę firmy</CardTitle>
-       <CardDescription>Zmień nazwę wyświetlaną w aplikacji</CardDescription>
-     </CardHeader>
-     <CardContent>
-       <Form {...form}>
-         <form onSubmit={onSubmit}>
-           <FormField name="name" ... />
-           <Button type="submit" disabled={isDisabled}>
-             {isPending ? <Loader2 className="animate-spin" /> : "Zapisz"}
-           </Button>
-         </form>
-       </Form>
-     </CardContent>
-   </Card>
-   ```
+
+```tsx
+<Card>
+  <CardHeader>
+    <CardTitle>Edytuj nazwę firmy</CardTitle>
+    <CardDescription>Zmień nazwę wyświetlaną w aplikacji</CardDescription>
+  </CardHeader>
+  <CardContent>
+    <Form {...form}>
+      <form onSubmit={onSubmit}>
+        <FormField name="name" ... />
+        <Button type="submit" disabled={isDisabled}>
+          {isPending ? <Loader2 className="animate-spin" /> : "Zapisz"}
+        </Button>
+      </form>
+    </Form>
+  </CardContent>
+</Card>
+```
 
 6.6. Ustaw warunek `isDisabled = isPending || !form.formState.isDirty`
 
@@ -1003,19 +1085,20 @@ try {
 7.3. Użyj `useCompany()` hook do zarządzania danymi (z `initialData: initialCompany`)
 
 7.4. Renderuj strukturę:
-   ```tsx
-   <div className="container mx-auto p-6 space-y-8 max-w-4xl">
-     <PageHeader title="Profil firmy" description="Zarządzaj podstawowymi danymi swojej firmy" />
-     {isLoading && <Skeleton ... />}
-     {error && <Alert variant="destructive" ... />}
-     {company && (
-       <>
-         <CompanyInfoCard company={company} />
-         <EditCompanyNameForm company={company} />
-       </>
-     )}
-   </div>
-   ```
+
+```tsx
+<div className="container mx-auto p-6 space-y-8 max-w-4xl">
+  <PageHeader title="Profil firmy" description="Zarządzaj podstawowymi danymi swojej firmy" />
+  {isLoading && <Skeleton ... />}
+  {error && <Alert variant="destructive" ... />}
+  {company && (
+    <>
+      <CompanyInfoCard company={company} />
+      <EditCompanyNameForm company={company} />
+    </>
+  )}
+</div>
+```
 
 7.5. Dodaj skeletony ładowania dla lepszej UX podczas refetch
 
@@ -1028,47 +1111,49 @@ try {
 8.2. Zaimportuj `AuthenticatedLayout` i `CompanyProfileView`
 
 8.3. W części frontmatter (server-side):
-   ```typescript
-   ---
-   import AuthenticatedLayout from "@/layouts/AuthenticatedLayout.astro";
-   import CompanyProfileView from "@/components/settings/CompanyProfileView";
-   import { createServerSupabaseClient } from "@/db/supabase.client";
-   
-   // Guard: sprawdź sesję (middleware powinien to obsłużyć, ale dla pewności)
-   const supabase = createServerSupabaseClient(Astro);
-   const { data: { session } } = await supabase.auth.getSession();
-   
-   if (!session) {
-     return Astro.redirect("/signin?returnUrl=/settings/profile");
-   }
-   
-   // Pobierz dane firmy
-   let company;
-   try {
-     const response = await fetch(`${Astro.url.origin}/api/companies/me`, {
-       headers: {
-         Authorization: `Bearer ${session.access_token}`,
-       },
-     });
-     
-     if (!response.ok) {
-       throw new Error(`HTTP ${response.status}`);
-     }
-     
-     company = await response.json();
-   } catch (error) {
-     console.error("Failed to fetch company:", error);
-     return Astro.redirect("/error?code=500&message=company_fetch_failed");
-   }
-   ---
-   ```
+
+```typescript
+---
+import AuthenticatedLayout from "@/layouts/AuthenticatedLayout.astro";
+import CompanyProfileView from "@/components/settings/CompanyProfileView";
+import { createServerSupabaseClient } from "@/db/supabase.client";
+
+// Guard: sprawdź sesję (middleware powinien to obsłużyć, ale dla pewności)
+const supabase = createServerSupabaseClient(Astro);
+const { data: { session } } = await supabase.auth.getSession();
+
+if (!session) {
+  return Astro.redirect("/signin?returnUrl=/settings/profile");
+}
+
+// Pobierz dane firmy
+let company;
+try {
+  const response = await fetch(`${Astro.url.origin}/api/companies/me`, {
+    headers: {
+      Authorization: `Bearer ${session.access_token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+
+  company = await response.json();
+} catch (error) {
+  console.error("Failed to fetch company:", error);
+  return Astro.redirect("/error?code=500&message=company_fetch_failed");
+}
+---
+```
 
 8.4. W części template:
-   ```astro
-   <AuthenticatedLayout title="Profil firmy">
-     <CompanyProfileView client:load initialCompany={company} />
-   </AuthenticatedLayout>
-   ```
+
+```astro
+<AuthenticatedLayout title="Profil firmy">
+  <CompanyProfileView client:load initialCompany={company} />
+</AuthenticatedLayout>
+```
 
 ---
 
@@ -1077,14 +1162,15 @@ try {
 9.1. Otwórz komponent nawigacji w `AuthenticatedLayout` lub dedykowanym komponencie sidebara/menu
 
 9.2. Dodaj link do `/settings/profile` w sekcji „Ustawienia":
-   ```tsx
-   <NavigationItem
-     href="/settings/profile"
-     icon={<UserIcon />}
-     label="Profil firmy"
-     active={currentPath === "/settings/profile"}
-   />
-   ```
+
+```tsx
+<NavigationItem
+  href="/settings/profile"
+  icon={<UserIcon />}
+  label="Profil firmy"
+  active={currentPath === "/settings/profile"}
+/>
+```
 
 9.3. Jeśli istnieją inne widoki settings (Alerty, Konto), rozważ dodanie zakładek (tabs) w layoutcie settings
 
@@ -1110,10 +1196,10 @@ const updateCompanySchema = z.object({
 // GET /api/companies/me
 export const GET: APIRoute = async ({ request, locals }) => {
   const supabase = createServerSupabaseClient({ request, locals });
-  
+
   // Pobierz company_uuid z pomocnika RLS
   const { data: user, error: userError } = await supabase.auth.getUser();
-  
+
   if (userError || !user) {
     return new Response(
       JSON.stringify({
@@ -1123,14 +1209,14 @@ export const GET: APIRoute = async ({ request, locals }) => {
       { status: 401, headers: { "Content-Type": "application/json" } }
     );
   }
-  
+
   // Pobierz company_uuid z tabeli users
   const { data: userData, error: userDataError } = await supabase
     .from("users")
     .select("company_uuid")
     .eq("uuid", user.user.id)
     .single();
-  
+
   if (userDataError || !userData) {
     return new Response(
       JSON.stringify({
@@ -1140,14 +1226,14 @@ export const GET: APIRoute = async ({ request, locals }) => {
       { status: 404, headers: { "Content-Type": "application/json" } }
     );
   }
-  
+
   // Pobierz firmę
   const { data: company, error: companyError } = await supabase
     .from("companies")
     .select("uuid, name, created_at")
     .eq("uuid", userData.company_uuid)
     .single();
-  
+
   if (companyError || !company) {
     return new Response(
       JSON.stringify({
@@ -1157,14 +1243,14 @@ export const GET: APIRoute = async ({ request, locals }) => {
       { status: 404, headers: { "Content-Type": "application/json" } }
     );
   }
-  
+
   // Mapuj na DTO (camelCase)
   const dto: CompanyDTO = {
     uuid: company.uuid,
     name: company.name,
     createdAt: company.created_at,
   };
-  
+
   return new Response(JSON.stringify(dto), {
     status: 200,
     headers: { "Content-Type": "application/json" },
@@ -1174,7 +1260,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
 // PATCH /api/companies/me
 export const PATCH: APIRoute = async ({ request, locals }) => {
   const supabase = createServerSupabaseClient({ request, locals });
-  
+
   // Pobierz body
   let body: UpdateCompanyCommand;
   try {
@@ -1188,7 +1274,7 @@ export const PATCH: APIRoute = async ({ request, locals }) => {
       { status: 400, headers: { "Content-Type": "application/json" } }
     );
   }
-  
+
   // Walidacja
   const validation = updateCompanySchema.safeParse(body);
   if (!validation.success) {
@@ -1201,10 +1287,10 @@ export const PATCH: APIRoute = async ({ request, locals }) => {
       { status: 400, headers: { "Content-Type": "application/json" } }
     );
   }
-  
+
   // Pobierz company_uuid użytkownika
   const { data: user, error: userError } = await supabase.auth.getUser();
-  
+
   if (userError || !user) {
     return new Response(
       JSON.stringify({
@@ -1214,13 +1300,9 @@ export const PATCH: APIRoute = async ({ request, locals }) => {
       { status: 401, headers: { "Content-Type": "application/json" } }
     );
   }
-  
-  const { data: userData } = await supabase
-    .from("users")
-    .select("company_uuid")
-    .eq("uuid", user.user.id)
-    .single();
-  
+
+  const { data: userData } = await supabase.from("users").select("company_uuid").eq("uuid", user.user.id).single();
+
   if (!userData) {
     return new Response(
       JSON.stringify({
@@ -1230,7 +1312,7 @@ export const PATCH: APIRoute = async ({ request, locals }) => {
       { status: 404, headers: { "Content-Type": "application/json" } }
     );
   }
-  
+
   // Aktualizuj firmę
   const { data: updated, error: updateError } = await supabase
     .from("companies")
@@ -1238,7 +1320,7 @@ export const PATCH: APIRoute = async ({ request, locals }) => {
     .eq("uuid", userData.company_uuid)
     .select("uuid, name, created_at")
     .single();
-  
+
   if (updateError) {
     console.error("Failed to update company:", updateError);
     return new Response(
@@ -1249,14 +1331,14 @@ export const PATCH: APIRoute = async ({ request, locals }) => {
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
-  
+
   // Mapuj na DTO
   const dto: CompanyDTO = {
     uuid: updated.uuid,
     name: updated.name,
     createdAt: updated.created_at,
   };
-  
+
   return new Response(JSON.stringify(dto), {
     status: 200,
     headers: { "Content-Type": "application/json" },
@@ -1279,10 +1361,11 @@ export const PATCH: APIRoute = async ({ request, locals }) => {
 11.5. Przetestuj kopiowanie UUID do schowka
 
 11.6. Przetestuj edycję nazwy firmy:
-   - Wprowadź poprawną nazwę → sprawdź toast sukcesu
-   - Wprowadź nazwę za krótką (1 znak) → sprawdź komunikat walidacji
-   - Wprowadź nazwę za długą (>100 znaków) → sprawdź komunikat walidacji
-   - Nie zmieniaj nazwy → sprawdź, czy przycisk jest wyłączony
+
+- Wprowadź poprawną nazwę → sprawdź toast sukcesu
+- Wprowadź nazwę za krótką (1 znak) → sprawdź komunikat walidacji
+- Wprowadź nazwę za długą (>100 znaków) → sprawdź komunikat walidacji
+- Nie zmieniaj nazwy → sprawdź, czy przycisk jest wyłączony
 
 11.7. Symuluj błędy API (np. odłącz sieć) → sprawdź toasty błędów
 
@@ -1291,12 +1374,14 @@ export const PATCH: APIRoute = async ({ request, locals }) => {
 ### Krok 12: Testy jednostkowe (opcjonalnie)
 
 12.1. Utwórz `src/lib/settings/__tests__/validation.test.ts`:
-   - Przetestuj schema `editCompanyNameSchema` dla różnych przypadków (poprawne, za krótkie, za długie, puste)
+
+- Przetestuj schema `editCompanyNameSchema` dla różnych przypadków (poprawne, za krótkie, za długie, puste)
 
 12.2. Utwórz `src/components/settings/__tests__/EditCompanyNameForm.test.tsx`:
-   - Przetestuj renderowanie formularza
-   - Przetestuj walidację (używając `@testing-library/react`)
-   - Przetestuj submit i obsługę błędów (mockuj `useUpdateCompany`)
+
+- Przetestuj renderowanie formularza
+- Przetestuj walidację (używając `@testing-library/react`)
+- Przetestuj submit i obsługę błędów (mockuj `useUpdateCompany`)
 
 12.3. Uruchom testy: `npm test`
 
@@ -1319,15 +1404,17 @@ export const PATCH: APIRoute = async ({ request, locals }) => {
 ### Krok 14: Commit i deploy
 
 14.1. Dodaj zmiany do gita:
-   ```bash
-   git add .
-   git commit -m "feat: implement company profile settings view"
-   ```
+
+```bash
+git add .
+git commit -m "feat: implement company profile settings view"
+```
 
 14.2. Push do repozytorium:
-   ```bash
-   git push origin feature/company-profile-settings
-   ```
+
+```bash
+git push origin feature/company-profile-settings
+```
 
 14.3. Utwórz Pull Request i poproś o review
 
@@ -1340,12 +1427,10 @@ export const PATCH: APIRoute = async ({ request, locals }) => {
 Ten plan implementacji obejmuje kompletny widok Ustawień – Profil firmy, zgodny z wymaganiami PRD i User Story US-001. Widok umożliwia przeglądanie danych firmy oraz edycję nazwy z pełną walidacją, obsługą błędów i feedback użytkownika. Implementacja wykorzystuje nowoczesny stack technologiczny (Astro, React, TanStack Query, shadcn/ui) i jest zgodna z najlepszymi praktykami UX/A11y.
 
 Kluczowe elementy:
+
 - **Komponenty:** Modułowe, reużywalne komponenty React z shadcn/ui
 - **Zarządzanie stanem:** TanStack Query dla synchronizacji z API
 - **Walidacja:** Zod schema dla frontendowej i backendowej walidacji
 - **UX:** Toasty, walidacja inline, disabled states, loading states
 - **Dostępność:** ARIA labels, focus management, keyboard navigation
 - **Bezpieczeństwo:** JWT-based auth, RLS w Supabase, walidacja na każdym poziomie
-
-
-

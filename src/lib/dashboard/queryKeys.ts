@@ -8,4 +8,3 @@ export const dashboardQueryKeys = {
   todayReports: (date: string) => ["dashboard", "reports", date] as const,
   pendingDrivers: (date: string) => ["dashboard", "pending", date] as const,
 };
-

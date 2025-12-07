@@ -58,4 +58,3 @@ export function ConnectionBadge({ isOnline, refetchInterval = 60000, className }
     </Badge>
   );
 }
-

@@ -1,8 +1,8 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { vehiclesService } from '@/lib/services/vehiclesService';
-import { vehiclesKeys } from './queryKeys';
-import { toast } from 'sonner';
-import type { CreateVehicleCommand } from '@/types';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { vehiclesService } from "@/lib/services/vehiclesService";
+import { vehiclesKeys } from "./queryKeys";
+import { toast } from "sonner";
+import type { CreateVehicleCommand } from "@/types";
 
 /**
  * Hook do tworzenia nowego pojazdu
@@ -16,22 +16,20 @@ export function useCreateVehicle() {
     onSuccess: () => {
       // Invalidate wszystkie listy pojazdów
       queryClient.invalidateQueries({ queryKey: vehiclesKeys.lists() });
-      toast.success('Pojazd został dodany pomyślnie');
+      toast.success("Pojazd został dodany pomyślnie");
     },
     onError: (error: any) => {
       // Obsługa specyficznych błędów
       if (error.response?.status === 409) {
-        toast.error('Pojazd o tym numerze rejestracyjnym już istnieje');
+        toast.error("Pojazd o tym numerze rejestracyjnym już istnieje");
       } else if (error.response?.status === 400) {
-        const message = error.response?.data?.message || 'Nieprawidłowe dane';
+        const message = error.response?.data?.message || "Nieprawidłowe dane";
         toast.error(message);
       } else if (error.response?.status === 403) {
-        toast.error('Brak uprawnień do dodania pojazdu');
+        toast.error("Brak uprawnień do dodania pojazdu");
       } else {
-        toast.error('Nie udało się dodać pojazdu');
+        toast.error("Nie udało się dodać pojazdu");
       }
     },
   });
 }
-
-

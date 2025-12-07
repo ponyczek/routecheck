@@ -19,5 +19,3 @@ export function CompanyProfileViewWithProvider(props: CompanyProfileViewProps) {
     </QueryProvider>
   );
 }
-
-

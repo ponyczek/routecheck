@@ -26,5 +26,3 @@ export function EmailLogsList({ logs }: EmailLogsListProps) {
     </ul>
   );
 }
-
-

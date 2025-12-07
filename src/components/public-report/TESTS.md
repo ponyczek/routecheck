@@ -16,13 +16,16 @@ Dodano kompleksowy zestaw testów dla publicznego formularza raportu!
 ## 🎯 Pokrycie Testów
 
 ### Utility Functions (100%)
+
 ✅ **formatters.test.ts** - 12 testów
+
 - formatDateTime (2 testy)
 - formatDuration (4 testy)
 - getTimeLeft (3 testy)
 - isBefore (3 testy)
 
 ✅ **storage.test.ts** - 9 testów
+
 - isTokenUsed (2 testy)
 - markTokenAsUsed (2 testy)
 - storeReportToken (1 test)
@@ -30,6 +33,7 @@ Dodano kompleksowy zestaw testów dla publicznego formularza raportu!
 - clearReportStorage (2 testy)
 
 ✅ **validation.test.ts** - 13 testów
+
 - Happy Path (2 testy)
 - Problem Path - Delay (4 testy)
 - Problem Path - Partial Completion (3 testy)
@@ -38,7 +42,9 @@ Dodano kompleksowy zestaw testów dla publicznego formularza raportu!
 - Timezone (1 test)
 
 ### Custom Hooks (100%)
+
 ✅ **useTokenValidation.test.tsx** - 5 testów
+
 - Initial state
 - Success validation
 - Error handling
@@ -46,6 +52,7 @@ Dodano kompleksowy zestaw testów dla publicznego formularza raportu!
 - Cleanup on unmount
 
 ✅ **useNetworkStatus.test.tsx** - 6 testów
+
 - Online status
 - Offline status
 - Going offline
@@ -54,6 +61,7 @@ Dodano kompleksowy zestaw testów dla publicznego formularza raportu!
 - Cleanup on unmount
 
 ✅ **useTelemetry.test.tsx** - 7 testów
+
 - Initial state
 - Interaction counting
 - Problem switch recording
@@ -63,7 +71,9 @@ Dodano kompleksowy zestaw testów dla publicznego formularza raportu!
 - Without report UUID
 
 ### React Components (100%)
+
 ✅ **StatusSwitch.test.tsx** - 6 testów
+
 - Render both options
 - Happy path highlight
 - Problem path highlight
@@ -71,12 +81,14 @@ Dodano kompleksowy zestaw testów dla publicznego formularza raportu!
 - Keyboard accessibility
 
 ✅ **HappyPathSection.test.tsx** - 4 testy
+
 - Success icon
 - Confirmation message
 - Edit info
 - Mobile structure
 
 ✅ **OfflineBanner.test.tsx** - 5 testów
+
 - Not render when online
 - Render when offline
 - Offline message
@@ -84,6 +96,7 @@ Dodano kompleksowy zestaw testów dla publicznego formularza raportu!
 - Info icon
 
 ✅ **SubmitButton.test.tsx** - 9 testów
+
 - Happy path text
 - Problem path text
 - Submitting text
@@ -94,6 +107,7 @@ Dodano kompleksowy zestaw testów dla publicznego formularza raportu!
 - ARIA busy
 
 ✅ **FormHeader.test.tsx** - 5 testów
+
 - Driver name
 - Vehicle registration
 - No vehicle message
@@ -101,6 +115,7 @@ Dodano kompleksowy zestaw testów dla publicznego formularza raportu!
 - Time element with datetime
 
 ✅ **FormFooter.test.tsx** - 4 testy
+
 - Edit window info
 - Editable until timestamp
 - Privacy notice
@@ -109,26 +124,31 @@ Dodano kompleksowy zestaw testów dla publicznego formularza raportu!
 ## 🚀 Uruchomienie Testów
 
 ### Wszystkie testy
+
 ```bash
 npm test
 ```
 
 ### Tylko public-report testy
+
 ```bash
 npm test -- src/lib/public-report src/components/public-report --run
 ```
 
 ### Z pokryciem kodu
+
 ```bash
 npm test -- --coverage
 ```
 
 ### W trybie watch
+
 ```bash
 npm test:watch
 ```
 
 ### Z UI
+
 ```bash
 npm test:ui
 ```
@@ -136,7 +156,9 @@ npm test:ui
 ## 📝 Dodatkowe Scenariusze Do Przetestowania
 
 ### Manualne Testy E2E
+
 Patrz `TESTING.md` dla 11 szczegółowych scenariuszy:
+
 1. Token validation (valid/invalid/expired/used)
 2. Happy path submission
 3. Problem path with all fields
@@ -150,6 +172,7 @@ Patrz `TESTING.md` dla 11 szczegółowych scenariuszy:
 11. Accessibility
 
 ### Przyszłe Testy (Do Dodania)
+
 - [ ] Testy integracyjne pełnego formularza
 - [ ] Testy E2E z Playwright
 - [ ] Visual regression tests
@@ -180,23 +203,27 @@ src/
 ## ✨ Wzorce Testowe Użyte
 
 ### 1. Unit Testing
+
 - Pure functions (formatters, storage)
 - Zod schemas
 - Isolated logic
 
 ### 2. Hook Testing
+
 - @testing-library/react hooks
 - Mocking z vitest
 - Async behavior
 - Cleanup verification
 
 ### 3. Component Testing
+
 - @testing-library/react
 - User interaction simulation
 - ARIA verification
 - Conditional rendering
 
 ### 4. Mocking
+
 - API calls (vi.mock)
 - Browser APIs (navigator.onLine)
 - Event listeners
@@ -222,26 +249,29 @@ src/
 ## 🔍 Przykłady Użycia
 
 ### Test Utility Function
-```typescript
-import { formatDuration } from '../utils/formatters';
 
-it('should format duration', () => {
-  expect(formatDuration(125000)).toBe('2 min 5 s');
+```typescript
+import { formatDuration } from "../utils/formatters";
+
+it("should format duration", () => {
+  expect(formatDuration(125000)).toBe("2 min 5 s");
 });
 ```
 
 ### Test Custom Hook
-```typescript
-import { renderHook } from '@testing-library/react';
-import { useNetworkStatus } from '../hooks/useNetworkStatus';
 
-it('should return online status', () => {
+```typescript
+import { renderHook } from "@testing-library/react";
+import { useNetworkStatus } from "../hooks/useNetworkStatus";
+
+it("should return online status", () => {
   const { result } = renderHook(() => useNetworkStatus());
   expect(result.current).toBe(true);
 });
 ```
 
 ### Test Component
+
 ```typescript
 import { render, screen } from '@testing-library/react';
 import { StatusSwitch } from '../StatusSwitch';
@@ -264,9 +294,8 @@ it('should render both options', () => {
 **Test Suite Status:** 🟢 **All Green!**
 
 **Next Steps:**
+
 1. Dodaj E2E testy z Playwright
 2. Zwiększ pokrycie do pozostałych komponentów
 3. Dodaj visual regression tests
 4. Setup CI/CD dla automatycznych testów
-
-

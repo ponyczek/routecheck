@@ -6,8 +6,8 @@ import { DashboardViewWithProvider } from "@/components/dashboard";
 const timezone = Astro.locals.user?.timezone || "Europe/Warsaw";
 ---
 
-<AuthenticatedLayout 
-  title="Dashboard – Dzisiaj | RouteCheck" 
+<AuthenticatedLayout
+  title="Dashboard – Dzisiaj | RouteCheck"
   description="Przegląd dzisiejszych raportów kierowców i statusu floty"
 >
   <div class="container mx-auto p-4 sm:p-6 lg:p-8">
@@ -15,4 +15,3 @@ const timezone = Astro.locals.user?.timezone || "Europe/Warsaw";
     <DashboardViewWithProvider client:load timezone={timezone} />
   </div>
 </AuthenticatedLayout>
-

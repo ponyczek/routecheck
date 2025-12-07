@@ -450,4 +450,3 @@ describe("useSignUp", () => {
     expect(result.current.error).toBe(null);
   });
 });
-

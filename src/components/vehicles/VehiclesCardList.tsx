@@ -1,7 +1,7 @@
-import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { VehicleCard } from './VehicleCard';
-import type { VehicleDTO } from '@/types';
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { VehicleCard } from "./VehicleCard";
+import type { VehicleDTO } from "@/types";
 
 interface VehiclesCardListProps {
   vehicles: VehicleDTO[];
@@ -33,9 +33,7 @@ export function VehiclesCardList({
       {/* Grid kart */}
       <div className="grid gap-4">
         {vehicles.length === 0 ? (
-          <div className="py-12 text-center text-muted-foreground">
-            Brak pojazdów do wyświetlenia.
-          </div>
+          <div className="py-12 text-center text-muted-foreground">Brak pojazdów do wyświetlenia.</div>
         ) : (
           vehicles.map((vehicle) => (
             <VehicleCard
@@ -82,5 +80,3 @@ export function VehiclesCardList({
     </div>
   );
 }
-
-

@@ -12,6 +12,7 @@
 ## 2. Lista widoków
 
 ### Panel logowania
+
 - **Ścieżka:** `/signin`
 - **Główny cel:** Autoryzacja spedytora z użyciem Supabase Auth.
 - **Kluczowe informacje:** Pola e-mail i hasło, link do przypomnienia hasła (opcjonalnie), komunikaty o błędach (401, 429), status systemowy.
@@ -22,6 +23,7 @@
 - **Powiązane endpointy:** Supabase Auth SDK (`signInWithPassword`).
 
 ### Rejestracja firmy
+
 - **Ścieżka:** `/signup` (opcjonalnie dostępna publicznie lub tylko w trybie onboarding).
 - **Główny cel:** Utworzenie konta firmowego i pierwszego użytkownika.
 - **Kluczowe informacje:** Formularz nazwa firmy + e-mail, potwierdzenie utworzenia konta, wskazówki dotyczące łączenia z Supabase.
@@ -32,6 +34,7 @@
 - **Powiązane endpointy:** Supabase Auth (`signUp`), `/api/companies/me` po zalogowaniu dla potwierdzenia.
 
 ### AuthenticatedLayout
+
 - **Ścieżka:** Shell dla `/dashboard`, `/drivers`, `/reports`, `/settings`, flagowanych modułów.
 - **Główny cel:** Zapewnienie wspólnego layoutu i guardu; dostarczenie kontekstu użytkownika i nawigacji.
 - **Kluczowe informacje:** Nazwa firmy, aktualny użytkownik, wskaźnik sieci, slot na treść, fallback offline.
@@ -42,6 +45,7 @@
 - **Powiązane endpointy:** `/api/users/me`, `/api/companies/me`.
 
 ### Dashboard „Dzisiaj”
+
 - **Ścieżka:** `/dashboard`
 - **Główny cel:** Szybki przegląd statusu raportów bieżącego dnia i poziomów ryzyka.
 - **Kluczowe informacje:** Łączna liczba aktywnych kierowców, wysłane/pending, rozkład ryzyka, lista oczekujących, ostatnia aktualizacja, skróty do działań.
@@ -52,6 +56,7 @@
 - **Powiązane endpointy:** `GET /api/reports/today/summary`, `GET /api/reports?from=today&to=today&includeAi=true`.
 
 ### Lista kierowców
+
 - **Ścieżka:** `/drivers`
 - **Główny cel:** Zarządzanie bazą kierowców (przegląd, filtrowanie, akcje CRUD).
 - **Kluczowe informacje:** Imię i nazwisko, e-mail, strefa czasowa, status aktywności, powiązany pojazd, data dodania.
@@ -62,6 +67,7 @@
 - **Powiązane endpointy:** `GET/POST/PATCH/DELETE /api/drivers`.
 
 ### Modal dodawania/edycji kierowcy
+
 - **Ścieżka:** Modal w `/drivers` (Shadcn Dialog / Sheet mobile).
 - **Główny cel:** Dodanie lub edycja danych kierowcy z walidacją.
 - **Kluczowe informacje:** Imię, e-mail, strefa czasowa (combobox), przełącznik aktywności, informacja o konfliktach.
@@ -72,6 +78,7 @@
 - **Powiązane endpointy:** `POST /api/drivers`, `PATCH /api/drivers/{uuid}`.
 
 ### Potwierdzenie usunięcia kierowcy
+
 - **Ścieżka:** Modal dialog w `/drivers`.
 - **Główny cel:** Potwierdzenie soft-delete kierowcy z informacją o skutkach.
 - **Kluczowe informacje:** Nazwa kierowcy, ostrzeżenie o zachowaniu historii, CTA `Usuń`, CTA `Anuluj`.
@@ -82,6 +89,7 @@
 - **Powiązane endpointy:** `DELETE /api/drivers/{uuid}`.
 
 ### Historia raportów
+
 - **Ścieżka:** `/reports`
 - **Główny cel:** Przegląd raportów z możliwością filtrowania, wyszukiwania, eksportu.
 - **Kluczowe informacje:** Filtrowalna lista raportów (data, kierowca, pojazd, status, opóźnienie, ryzyko, tagi), filtry (daty, kierowcy, ryzyko, status, wyszukiwarka `q`), paginacja cursorowa, info o liczbie wyników.
@@ -92,6 +100,7 @@
 - **Powiązane endpointy:** `GET /api/reports`, `GET /api/risk-tags` (prefetch tagów), `GET /api/drivers` (dla filtrów).
 
 ### Szczegóły raportu
+
 - **Ścieżka:** `/reports/[uuid]` (modal nad listą lub osobny widok).
 - **Główny cel:** Wgląd w szczegóły raportu, AI, możliwość ręcznej aktualizacji.
 - **Kluczowe informacje:** Nagłówek (data, kierowca, pojazd, status), sekcja opóźnień, szkód, blockerów, AI summary + risk badge, lista tagów, historia zmian, editableUntil (jeśli publiczna edycja w toku), przycisk „Przeprocesuj AI”.
@@ -102,6 +111,7 @@
 - **Powiązane endpointy:** `GET /api/reports/{uuid}?includeAi=true&includeTags=true`, `GET /api/reports/{uuid}/ai`, `POST /api/reports/{uuid}/ai/reprocess`, `PATCH /api/reports/{uuid}`.
 
 ### Formularz manualnego raportu
+
 - **Ścieżka:** Modal lub `/reports/new`.
 - **Główny cel:** Dodanie raportu przez spedytora (US-013).
 - **Kluczowe informacje:** Selektor kierowcy, data raportu, status trasy, pola problemów (opóźnienia, powód, szkody, blokery), tagi ryzyka, opcjonalny poziom ryzyka, strefa czasowa.
@@ -112,6 +122,7 @@
 - **Powiązane endpointy:** `POST /api/reports`.
 
 ### Modal eksportu CSV
+
 - **Ścieżka:** Modal w `/reports`.
 - **Główny cel:** Przygotowanie i pobranie pliku CSV z raportami.
 - **Kluczowe informacje:** Zakres dat (obowiązkowy), checkboxy `Uwzględnij AI`, `Uwzględnij tagi`, status przygotowania pliku, informacja o limicie zakresu i czasie.
@@ -122,6 +133,7 @@
 - **Powiązane endpointy:** `GET /api/reports/export`.
 
 ### Ustawienia – profil firmy
+
 - **Ścieżka:** `/settings/profile`
 - **Główny cel:** Zarządzanie podstawowymi danymi firmy.
 - **Kluczowe informacje:** Nazwa firmy, identyfikator, data utworzenia, informacja o planie, link do pomocy.
@@ -132,6 +144,7 @@
 - **Powiązane endpointy:** `GET /api/companies/me`, `PATCH /api/companies/me`.
 
 ### Ustawienia – alerty i telemetria
+
 - **Ścieżka:** `/settings/alerts`
 - **Główny cel:** Konfiguracja alertów e-mail i wgląd w telemetrię UX.
 - **Kluczowe informacje:** Stan alertu 24h (włącz/wyłącz), adres docelowy (info-only, bo jedno konto), ostatnie wysłane alerty (link do email logs), wgląd w agregaty telemetryczne (czas wypełnienia formularza).
@@ -142,6 +155,7 @@
 - **Powiązane endpointy:** `POST /api/report-links:generate` (ręczne uruchomienie, jeśli udostępnione), `GET /api/email-logs` (opcjonalne), `GET /api/telemetry` (jeśli włączone).
 
 ### Ustawienia – konto i sesja
+
 - **Ścieżka:** `/settings/account`
 - **Główny cel:** Zarządzanie sesją Supabase i wylogowaniem.
 - **Kluczowe informacje:** Adres e-mail użytkownika, status sesji, przycisk `Wyloguj`, informacja o automatycznym wygaśnięciu 24h.
@@ -152,6 +166,7 @@
 - **Powiązane endpointy:** Supabase Auth (`signOut`), `/api/users/me`.
 
 ### Pojazdy (feature flag)
+
 - **Ścieżka:** `/vehicles`
 - **Główny cel:** (Jeśli odblokowane) zarządzanie flotą.
 - **Kluczowe informacje:** Numer rejestracyjny, VIN, status aktywności, przypisania, data utworzenia.
@@ -162,6 +177,7 @@
 - **Powiązane endpointy:** `GET/POST/PATCH/DELETE /api/vehicles`.
 
 ### Przypisania kierowca–pojazd (feature flag)
+
 - **Ścieżka:** `/assignments`
 - **Główny cel:** Zarządzanie harmonogramem przypisań z walidacją zakładek dat.
 - **Kluczowe informacje:** Driver, vehicle, zakres dat, status aktywny, konflikty.
@@ -172,6 +188,7 @@
 - **Powiązane endpointy:** `GET/POST/PATCH/DELETE /api/assignments`.
 
 ### Publiczny formularz raportu
+
 - **Ścieżka:** `/public/report-links/[token]`
 - **Główny cel:** Umożliwić kierowcy szybkie zgłoszenie statusu trasy.
 - **Kluczowe informacje:** Imię kierowcy, pojazd, czas wygaśnięcia linku, przełącznik „Wszystko OK” vs „Problem”, dynamiczne pola problemów, licznik czasu wypełnienia.
@@ -182,6 +199,7 @@
 - **Powiązane endpointy:** `GET /api/public/report-links/{token}`, `POST /api/public/report-links/{token}/reports`, `POST /api/telemetry`.
 
 ### Publiczne potwierdzenie + edycja
+
 - **Ścieżka:** `/public/report-links/[token]/success` (lub stan w tej samej stronie po POST).
 - **Główny cel:** Potwierdzenie wysłania raportu i umożliwienie edycji w limicie 10 min.
 - **Kluczowe informacje:** Komunikat sukcesu, `editableUntil`, licznik, przycisk „Edytuj raport”, informacja o ponownym przetwarzaniu AI, ostrzeżenie po upływie czasu.
@@ -192,6 +210,7 @@
 - **Powiązane endpointy:** `PATCH /api/public/reports/{uuid}`, `GET /api/public/report-links/{token}` (rewalidacja).
 
 ### Publiczny widok błędu tokenu
+
 - **Ścieżka:** `/public/report-links/[token]/error`
 - **Główny cel:** Wyświetlenie jasnego komunikatu dla wygasłych, zużytych lub błędnych tokenów.
 - **Kluczowe informacje:** Typ błędu (404/409/410), zalecane działania (kontakt z spedytorem), link `Spróbuj ponownie` (odśwież).
@@ -202,6 +221,7 @@
 - **Powiązane endpointy:** `GET /api/public/report-links/{token}` (obsługa błędu).
 
 ### Widoki błędów globalnych
+
 - **Ścieżka:** `/404`, `/500`, fallback w ErrorBoundary.
 - **Główny cel:** Przyjazne komunikaty o błędach i odzyskanie nawigacji.
 - **Kluczowe informacje:** Komunikat, CTA `Wróć do dashboardu` lub `Zaloguj ponownie`, numer wsparcia.
@@ -240,5 +260,3 @@
 - **Toasts (Sonner)** – warstwa notyfikacji o sukcesach/błędach; integrowana z interceptorami API i formularzami.
 - **ErrorBoundary & ErrorState** – przechwytują błędy renderowania, oferują CTA do odświeżenia lub powrotu.
 - **TelemetryHook (`useTelemetry`)** – wysyła zdarzenia na `/api/telemetry` (np. czas wypełnienia formularza, niepowodzenia tokenu), wykorzystywany w publicznym flow i w panelu (np. monitorowanie eksportu).
-
-

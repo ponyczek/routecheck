@@ -139,4 +139,3 @@ export function SignInForm({ returnTo, onSuccess, onError, supabaseUrl, supabase
     </form>
   );
 }
-

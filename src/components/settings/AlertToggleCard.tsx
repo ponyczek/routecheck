@@ -13,25 +13,25 @@ interface AlertToggleCardProps {
 
 /**
  * Karta z przełącznikiem alertów e-mail o brakujących raportach
- * 
+ *
  * @description
  * Komponent UI do zarządzania alertami e-mail o brakujących raportach kierowców.
  * Wyświetla aktualny stan alertów, opis działania, adres docelowy oraz przełącznik (Switch)
  * do włączania/wyłączania alertów.
- * 
+ *
  * @features
  * - InfoBanner z informacją o działaniu alertów (24h delay, raz na raport)
  * - InfoRow z adresem e-mail administratora (read-only)
  * - Switch z labelą i statusem (włączone/wyłączone)
  * - Disabled state podczas pending (optimistic update)
  * - Responsywny layout (mobile-first, sm: horizontal)
- * 
+ *
  * @param props - Props komponentu
  * @param props.alertsEnabled - Czy alerty są obecnie włączone
  * @param props.recipientEmail - Adres e-mail administratora (info-only)
  * @param props.onToggle - Callback wywoływany przy zmianie stanu (async)
  * @param props.isPending - Czy trwa aktualizacja (disables switch)
- * 
+ *
  * @example
  * ```tsx
  * <AlertToggleCard
@@ -42,12 +42,7 @@ interface AlertToggleCardProps {
  * />
  * ```
  */
-export function AlertToggleCard({
-  alertsEnabled,
-  recipientEmail,
-  onToggle,
-  isPending,
-}: AlertToggleCardProps) {
+export function AlertToggleCard({ alertsEnabled, recipientEmail, onToggle, isPending }: AlertToggleCardProps) {
   const handleToggle = async (checked: boolean) => {
     await onToggle(checked);
   };
@@ -56,14 +51,10 @@ export function AlertToggleCard({
     <Card>
       <CardHeader>
         <CardTitle>Alerty o brakujących raportach</CardTitle>
-        <CardDescription>
-          Automatyczne powiadomienia e-mail wysyłane do kierowców
-        </CardDescription>
+        <CardDescription>Automatyczne powiadomienia e-mail wysyłane do kierowców</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <InfoBanner
-          description="Alert jest wysyłany raz na brakujący raport, 24 godziny od planowanego terminu wypełnienia. Każdy kierowca otrzymuje powiadomienie na swój adres e-mail."
-        />
+        <InfoBanner description="Alert jest wysyłany raz na brakujący raport, 24 godziny od planowanego terminu wypełnienia. Każdy kierowca otrzymuje powiadomienie na swój adres e-mail." />
 
         <InfoRow label="Adres e-mail administratora" value={recipientEmail} />
 
@@ -73,9 +64,7 @@ export function AlertToggleCard({
               Włącz alerty
             </Label>
             <p className="text-sm text-muted-foreground">
-              {alertsEnabled
-                ? "Alerty są obecnie włączone"
-                : "Alerty są obecnie wyłączone"}
+              {alertsEnabled ? "Alerty są obecnie włączone" : "Alerty są obecnie wyłączone"}
             </p>
           </div>
           <Switch
@@ -90,4 +79,3 @@ export function AlertToggleCard({
     </Card>
   );
 }
-

@@ -233,11 +233,7 @@ import { QueryProvider } from "@/lib/query-client";
 import { Toaster } from "@/components/ui/sonner";
 
 <QueryProvider client:only="react">
-  <PublicReportForm
-    client:only="react"
-    token={token}
-    onSuccess={(data) => console.log("Report submitted:", data)}
-  />
+  <PublicReportForm client:only="react" token={token} onSuccess={(data) => console.log("Report submitted:", data)} />
   <Toaster client:only="react" />
 </QueryProvider>;
 ```

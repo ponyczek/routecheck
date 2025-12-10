@@ -31,7 +31,6 @@ import type {
 interface PublicReportFormProps {
   token: string;
   onSuccess?: (data: PublicReportSubmitResponseDTO) => void;
-  onError?: (error: ProblemDetail) => void;
 }
 
 /**
@@ -43,10 +42,9 @@ interface PublicReportFormProps {
  * <PublicReportForm
  *   token={token}
  *   onSuccess={(data) => navigate('/success')}
- *   onError={(error) => console.error(error)}
  * />
  */
-export function PublicReportForm({ token, onSuccess, onError }: PublicReportFormProps) {
+export function PublicReportForm({ token, onSuccess }: PublicReportFormProps) {
   const [viewState, setViewState] = useState<FormViewState>({ type: "loading" });
   const [validationData, setValidationData] = useState<PublicReportLinkValidationDTO | null>(null);
 
@@ -174,9 +172,6 @@ export function PublicReportForm({ token, onSuccess, onError }: PublicReportForm
           description: "Spróbuj ponownie za chwilę.",
         });
       }
-
-      // Call onError callback
-      onError?.(error);
     },
   });
 

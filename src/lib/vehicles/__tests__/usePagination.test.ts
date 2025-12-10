@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { renderHook, act } from "@testing-library/react";
-import { usePagination } from "../usePagination";
+import { usePagination } from "../../hooks/usePagination";
 
 describe("usePagination", () => {
   it("should initialize with no cursor and no previous pages", () => {

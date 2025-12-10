@@ -12,8 +12,8 @@ import { useVehiclesFilters } from "@/lib/vehicles/useVehiclesFilters";
 import { useVehiclesList } from "@/lib/vehicles/useVehiclesList";
 import { useUpdateVehicle } from "@/lib/vehicles/useUpdateVehicle";
 import { useDeleteVehicle } from "@/lib/vehicles/useDeleteVehicle";
-import { usePagination } from "@/lib/vehicles/usePagination";
-import { useMediaQuery } from "@/lib/vehicles/useMediaQuery";
+import { usePagination } from "@/lib/hooks/usePagination";
+import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 import type { VehicleDTO } from "@/types";
 import type { ModalState } from "@/lib/vehicles/types";
 

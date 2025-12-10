@@ -28,15 +28,6 @@ function isProtectedRoute(pathname: string): boolean {
   return protectedRoutes.some((route) => pathname === route || pathname.startsWith(route + "/"));
 }
 
-/**
- * Check if the request is for a public route (no auth required)
- */
-function _isPublicRoute(pathname: string): boolean {
-  const publicRoutes = ["/", "/signin", "/signup", "/api/public/"];
-
-  return publicRoutes.some((route) => pathname === route || pathname.startsWith(route));
-}
-
 export const onRequest = defineMiddleware(async (context, next) => {
   // Create server-side Supabase client with access to cookies
   // This client can read/write session from/to cookies

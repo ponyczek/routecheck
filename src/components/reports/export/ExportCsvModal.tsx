@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Loader2, Download } from "lucide-react";
-import { useMediaQuery } from "@/lib/drivers/useMediaQuery";
+import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 import type { ExportCsvModalProps, ExportCsvFormData, ExportCsvValidationErrors } from "@/lib/reports/export/types";
 import { validateDateRange } from "@/lib/reports/export/validation";
 import { formatDateToIsoDateOnly } from "@/lib/reports/export/utils";

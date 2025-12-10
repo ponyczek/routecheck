@@ -12,8 +12,8 @@ import { useDriversFilters } from "@/lib/drivers/useDriversFilters";
 import { useDriversList } from "@/lib/drivers/useDriversList";
 import { useUpdateDriver } from "@/lib/drivers/useUpdateDriver";
 import { useDeleteDriver } from "@/lib/drivers/useDeleteDriver";
-import { usePagination } from "@/lib/drivers/usePagination";
-import { useMediaQuery } from "@/lib/drivers/useMediaQuery";
+import { usePagination } from "@/lib/hooks/usePagination";
+import { useMediaQuery } from "@/lib/hooks/useMediaQuery";
 import type { DriverDTO } from "@/types";
 import type { ModalState } from "@/lib/drivers/types";
 

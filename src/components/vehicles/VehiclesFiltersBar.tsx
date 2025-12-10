@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search } from "lucide-react";
-import { useDebouncedValue } from "@/lib/vehicles/useDebouncedValue";
+import { useDebouncedValue } from "@/lib/hooks/useDebouncedValue";
 import type { VehiclesFiltersState } from "@/lib/vehicles/types";
 
 interface VehiclesFiltersBarProps {

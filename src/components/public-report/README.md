@@ -237,7 +237,6 @@ import { Toaster } from "@/components/ui/sonner";
     client:only="react"
     token={token}
     onSuccess={(data) => console.log("Report submitted:", data)}
-    onError={(error) => console.error("Submission failed:", error)}
   />
   <Toaster client:only="react" />
 </QueryProvider>;

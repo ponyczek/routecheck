@@ -57,7 +57,7 @@ describe("StatusBadge", () => {
     });
 
     it("should render without icons in compact variant", () => {
-      const { container } = render(<StatusBadge vehicle={activeVehicle} variant="compact" />);
+      render(<StatusBadge vehicle={activeVehicle} variant="compact" />);
       // In compact variant, icons might still be present but smaller
       // The main difference is styling, so we just check text is present
       expect(screen.getByText("Aktywny")).toBeInTheDocument();

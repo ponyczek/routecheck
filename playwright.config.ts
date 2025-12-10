@@ -3,6 +3,9 @@ import { defineConfig, devices } from "@playwright/test";
 /**
  * Playwright configuration for E2E tests
  *
+ * Environment variables are loaded by dotenv in test-env.ts
+ * This keeps test credentials isolated and doesn't leak them to the application
+ *
  * @see https://playwright.dev/docs/test-configuration
  */
 export default defineConfig({
@@ -39,7 +42,16 @@ export default defineConfig({
 
     // Video on failure
     video: "retain-on-failure",
+
+    // Pass environment variables to test context
+    // This makes them available in worker processes
+    extraHTTPHeaders: {
+      // These are just for context, actual env vars are set below
+    },
   },
+
+  // Make environment variables available to all test workers
+  metadata: {},
 
   // Configure projects for major browsers
   // Best Practice: Start with Chromium only for faster CI/CD
@@ -75,8 +87,15 @@ export default defineConfig({
   // Run your local dev server before starting the tests
   webServer: {
     command: "npm run dev",
-    url: "http://localhost:4321",
+    url: "http://127.0.0.1:4321",
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
+    stdout: "pipe",
+    stderr: "pipe",
+    env: {
+      // Pass test environment variables to the dev server
+      ...process.env,
+      NODE_ENV: "test",
+    },
   },
 });

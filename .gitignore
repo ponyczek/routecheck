@@ -23,6 +23,7 @@ lerna-debug.log*
 .env.production
 .env.local
 .env.test
+.cursorignore
 
 # macOS-specific files
 .DS_Store

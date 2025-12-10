@@ -13,7 +13,7 @@ export function useReportsParams(): {
   resetFilters: () => void;
 } {
   // Track URL changes
-  const [urlChangeCounter, setUrlChangeCounter] = useState(0);
+  const [, setUrlChangeCounter] = useState(0);
 
   // Listen for URL changes (popstate and custom event)
   useEffect(() => {

@@ -41,7 +41,7 @@ export function useUpdateVehicle() {
     },
 
     // Rollback w przypadku błędu
-    onError: (error: any, _variables, context) => {
+    onError: (error: { response?: { status?: number } }, _variables, context) => {
       // Przywróć poprzedni stan
       if (context?.previousData) {
         context.previousData.forEach(([queryKey, data]) => {

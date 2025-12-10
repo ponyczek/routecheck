@@ -6,21 +6,32 @@ Before running E2E tests, you need:
 
 1. **Test Database**: Separate Supabase project for testing (recommended) or seed data in dev database
 2. **Test User**: A user account with valid credentials
+3. **.env.test file**: Environment configuration with test credentials
 
 ## Environment Variables
 
-Create a `.env.test` file (or set in CI):
+Create a `.env.test` file in the project root with the following variables:
 
 ```bash
 # Test user credentials
-TEST_USER_EMAIL=test@routecheck.app
-TEST_USER_PASSWORD=TestPassword123!
+TEST_USER_EMAIL=
+TEST_USER_PASSWORD=
 
 # Supabase configuration (can be same as dev or separate test project)
 PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+PUBLIC_SUPABASE_KEY=your-anon-key
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_KEY=your-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
+# Optional: Private token pepper for link generation
+PRIVATE_TOKEN_PEPPER=test-pepper-key-for-tokens
+
+# Optional: Base URL for tests (default: http://127.0.0.1:4321)
+BASE_URL=http://127.0.0.1:4321
 ```
+
+**Important**: The `.env.test` file is automatically loaded by Playwright configuration before running tests.
 
 ## Creating Test User
 

@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { driversService } from "@/lib/services/driversService";
 import { driversKeys } from "./queryKeys";
 import { toast } from "sonner";
-import type { UpdateDriverCommand, DriverDTO, DriversListResponseDTO } from "@/types";
+import type { UpdateDriverCommand, DriversListResponseDTO } from "@/types";
 
 interface UpdateDriverVariables {
   uuid: string;
@@ -41,7 +41,7 @@ export function useUpdateDriver() {
     },
 
     // Rollback w przypadku błędu
-    onError: (error: any, _variables, context) => {
+    onError: (error: { response?: { status?: number } }, _variables, context) => {
       // Przywróć poprzedni stan
       if (context?.previousData) {
         context.previousData.forEach(([queryKey, data]) => {

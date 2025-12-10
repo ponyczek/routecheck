@@ -135,11 +135,10 @@ export interface SecurityTipsCardProps {
 }
 
 /**
- * Props dla SecurityTipsList
+ * Props dla SecurityTipsList - komponent nie wymaga żadnych propsów
  */
-export interface SecurityTipsListProps {
-  // Brak propsów - statyczna zawartość
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface SecurityTipsListProps {}
 
 /**
  * Props dla AccountActionsCard

@@ -1,11 +1,4 @@
-import type {
-  ReportsTodaySummaryDTO,
-  ReportListItemDTO,
-  DriverDTO,
-  ReportRiskLevel,
-  Uuid,
-  IsoDateString,
-} from "@/types";
+import type { ReportsTodaySummaryDTO, ReportListItemDTO, ReportRiskLevel, Uuid, IsoDateString } from "@/types";
 
 /**
  * DashboardData – główny ViewModel dla widoku Dashboard.

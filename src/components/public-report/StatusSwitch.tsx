@@ -31,7 +31,6 @@ export function StatusSwitch({ value, onChange }: StatusSwitchProps) {
               : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
           }
         `}
-        aria-pressed={isHappyPath}
         role="radio"
         aria-checked={isHappyPath}
       >
@@ -60,7 +59,6 @@ export function StatusSwitch({ value, onChange }: StatusSwitchProps) {
               : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
           }
         `}
-        aria-pressed={isProblemPath}
         role="radio"
         aria-checked={isProblemPath}
       >

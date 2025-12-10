@@ -56,7 +56,12 @@ export function useNetworkStatus(): { isOnline: boolean; status: NetworkStatus }
     // Optional: Detect slow connections using Network Information API
     // This is experimental and not supported in all browsers
     if ("connection" in navigator) {
-      const connection = (navigator as any).connection;
+      interface NetworkConnection {
+        effectiveType: string;
+        addEventListener: (event: string, handler: () => void) => void;
+        removeEventListener: (event: string, handler: () => void) => void;
+      }
+      const connection = (navigator as unknown as { connection: NetworkConnection }).connection;
 
       const updateConnectionStatus = () => {
         if (connection.effectiveType === "slow-2g" || connection.effectiveType === "2g") {

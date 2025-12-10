@@ -75,10 +75,13 @@ export function useAuthContext(options?: UseAuthContextOptions): AuthContextValu
   const signOut = useCallback(async () => {
     try {
       await supabaseBrowserClient.auth.signOut();
+      // eslint-disable-next-line react-compiler/react-compiler
       window.location.href = "/signin?reason=signed-out";
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error("Sign out error:", error);
       // Force redirect even if sign out fails
+
       window.location.href = "/signin?reason=signed-out";
     }
   }, []);

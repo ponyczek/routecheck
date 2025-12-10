@@ -137,9 +137,10 @@ export async function createReportFromPublic(
 /**
  * Schedules AI reprocessing for a report (stub implementation)
  * In production, this would trigger an edge function or queue job
- * @param reportUuid - UUID of the report to reprocess
+ * @param _reportUuid - UUID of the report to reprocess (unused in stub)
  */
-export async function scheduleAiReprocess(reportUuid: Uuid): Promise<void> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function scheduleAiReprocess(_reportUuid: Uuid): Promise<void> {
   // TODO: Implement actual AI reprocessing trigger
   // This could be:
   // - Edge function invocation

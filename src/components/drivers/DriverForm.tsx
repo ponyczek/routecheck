@@ -37,7 +37,16 @@ export function DriverForm({ defaultValues, onSubmit, isSubmitting }: DriverForm
     } catch (error: unknown) {
       // Obsługa błędów z API
       // Np. 409 Conflict dla duplikatu emaila
-      const apiError = error as any;
+      interface ApiError {
+        response?: {
+          status?: number;
+          data?: {
+            errors?: Record<string, string>;
+          };
+        };
+      }
+
+      const apiError = error as ApiError;
       if (apiError?.response?.status === 409) {
         form.setError("email", {
           type: "manual",

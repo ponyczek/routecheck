@@ -1,5 +1,4 @@
 import { CheckCircle } from "lucide-react";
-import type { SecurityTipsListProps } from "@/lib/settings/types";
 
 /**
  * SecurityTipsList - Lista najlepszych praktyk bezpieczeństwa
@@ -19,7 +18,7 @@ import type { SecurityTipsListProps } from "@/lib/settings/types";
  * <SecurityTipsList />
  * ```
  */
-export function SecurityTipsList(_props: SecurityTipsListProps) {
+export function SecurityTipsList() {
   const tips = [
     "Sesja wygasa automatycznie po 24 godzinach braku aktywności dla Twojego bezpieczeństwa.",
     "Regularnie zmieniaj hasło do swojego konta, szczególnie jeśli podejrzewasz nieautoryzowany dostęp.",

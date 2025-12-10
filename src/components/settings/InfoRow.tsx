@@ -19,7 +19,7 @@ export function InfoRow({ label, value, copyable }: InfoRowProps) {
       toast.success("Skopiowano do schowka", {
         description: value,
       });
-    } catch (error) {
+    } catch {
       toast.error("Nie udało się skopiować");
     }
   };

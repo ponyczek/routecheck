@@ -17,7 +17,7 @@ export function useDeleteVehicle() {
       queryClient.invalidateQueries({ queryKey: vehiclesKeys.lists() });
       toast.success("Pojazd został usunięty");
     },
-    onError: (error: any) => {
+    onError: (error: { response?: { status?: number } }) => {
       // Obsługa błędów
       if (error.response?.status === 404) {
         toast.error("Pojazd nie został znaleziony");

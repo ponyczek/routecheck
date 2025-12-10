@@ -90,8 +90,8 @@ export async function updateCurrentCompany(command: UpdateCompanyCommand): Promi
   // Validate input
   const validation = updateCompanySchema.safeParse(command);
   if (!validation.success) {
-    const error = new Error("VALIDATION_ERROR");
-    (error as any).details = validation.error.flatten().fieldErrors;
+    const error: Error & { details?: unknown } = new Error("VALIDATION_ERROR");
+    error.details = validation.error.flatten().fieldErrors;
     throw error;
   }
 
@@ -178,7 +178,7 @@ export function createCompanyErrorResponse(error: unknown): {
         body: {
           code: "validation_error",
           message: "Błąd walidacji danych.",
-          details: (error as any).details || {},
+          details: (error as Error & { details?: unknown }).details || {},
         },
       };
     }

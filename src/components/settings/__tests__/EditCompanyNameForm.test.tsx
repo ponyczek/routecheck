@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { EditCompanyNameForm } from "../EditCompanyNameForm";
 import type { CompanyDTO } from "@/types";
 
@@ -65,10 +64,7 @@ describe("EditCompanyNameForm", () => {
     createdAt: "2024-01-15T10:30:00Z",
   };
 
-  let user: ReturnType<typeof userEvent.setup>;
-
   beforeEach(() => {
-    user = userEvent.setup();
     vi.clearAllMocks();
     // Reset form state
     mockForm.formState.isDirty = false;

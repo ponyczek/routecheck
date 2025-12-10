@@ -87,8 +87,6 @@ describe("useTelemetry", () => {
   it("should calculate duration correctly", async () => {
     const { result } = renderHook(() => useTelemetry("test-token"));
 
-    const startTime = result.current.telemetryState.startTime;
-
     // Wait a bit
     await new Promise((resolve) => setTimeout(resolve, 100));
 

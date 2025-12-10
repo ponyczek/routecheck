@@ -1,5 +1,4 @@
 import { z } from "zod";
-import type { ReportRouteStatus } from "@/types";
 
 /**
  * Zod schema for public report form validation

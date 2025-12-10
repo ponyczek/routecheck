@@ -84,7 +84,6 @@ export function DesktopSidebar({ activeRoute, user, company, onSignOut }: Deskto
   return (
     <aside
       className="fixed left-0 top-0 z-40 hidden h-screen w-64 flex-col border-r border-border bg-background md:flex"
-      role="complementary"
       aria-label="Nawigacja główna"
     >
       {/* Logo and company name */}

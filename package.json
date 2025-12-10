@@ -16,7 +16,9 @@
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "test:e2e:debug": "playwright test --debug"
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:report": "playwright show-report",
+    "test:e2e:headed": "playwright test --headed"
   },
   "dependencies": {
     "@astrojs/node": "^9.4.3",
@@ -68,6 +70,7 @@
     "@typescript-eslint/parser": "8.28.0",
     "@vitest/browser": "^4.0.8",
     "@vitest/ui": "^4.0.8",
+    "dotenv": "^17.2.3",
     "eslint": "9.23.0",
     "eslint-config-prettier": "10.1.1",
     "eslint-import-resolver-typescript": "4.2.5",

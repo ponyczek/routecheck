@@ -18,7 +18,7 @@ export function useCreateVehicle() {
       queryClient.invalidateQueries({ queryKey: vehiclesKeys.lists() });
       toast.success("Pojazd został dodany pomyślnie");
     },
-    onError: (error: any) => {
+    onError: (error: { response?: { status?: number } }) => {
       // Obsługa specyficznych błędów
       if (error.response?.status === 409) {
         toast.error("Pojazd o tym numerze rejestracyjnym już istnieje");

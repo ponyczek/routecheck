@@ -52,10 +52,11 @@ export async function fetchReportsTodaySummary(date: string, timezone: string): 
 /**
  * Fetches today's reports with AI data
  * @param date - Date in YYYY-MM-DD format
- * @param timezone - IANA timezone identifier
+ * @param _timezone - IANA timezone identifier (unused but kept for future use)
  * @returns List of reports with AI analysis
  */
-export async function fetchTodayReports(date: string, timezone: string): Promise<ReportListItemDTO[]> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function fetchTodayReports(date: string, _timezone: string): Promise<ReportListItemDTO[]> {
   const token = await getSupabaseToken();
   const response = await fetch(`/api/reports?from=${date}&to=${date}&includeAi=true&sortBy=reportDate&sortDir=desc`, {
     headers: {
@@ -77,10 +78,11 @@ export async function fetchTodayReports(date: string, timezone: string): Promise
 /**
  * Fetches list of drivers who haven't submitted a report today
  * @param date - Date in YYYY-MM-DD format
- * @param timezone - IANA timezone identifier
+ * @param _timezone - IANA timezone identifier (unused but kept for future use)
  * @returns List of pending drivers
  */
-export async function fetchPendingDrivers(date: string, timezone: string): Promise<PendingDriver[]> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function fetchPendingDrivers(date: string, _timezone: string): Promise<PendingDriver[]> {
   const token = await getSupabaseToken();
 
   // 1. Fetch all active drivers

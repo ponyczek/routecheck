@@ -90,7 +90,7 @@ export function useSignIn({ supabase, returnTo, onSuccess, onError }: UseSignInO
 
       return authData;
     },
-    onSuccess: (data, variables) => {
+    onSuccess: () => {
       // Session is automatically persisted by Supabase client
       // Could optionally prefetch user data here
       const redirectTo = returnTo || "/dashboard";

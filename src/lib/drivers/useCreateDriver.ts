@@ -18,7 +18,7 @@ export function useCreateDriver() {
       queryClient.invalidateQueries({ queryKey: driversKeys.lists() });
       toast.success("Kierowca został dodany pomyślnie");
     },
-    onError: (error: any) => {
+    onError: (error: { response?: { status?: number } }) => {
       // Obsługa specyficznych błędów
       if (error.response?.status === 409) {
         toast.error("Kierowca z tym adresem e-mail już istnieje");

@@ -1,4 +1,4 @@
-import type { AssignmentDTO, DriverDTO, VehicleDTO, IsoDateOnlyString, Uuid } from "@/types";
+import type { AssignmentDTO, IsoDateOnlyString } from "@/types";
 
 /**
  * ViewModel dla przypisania z dodatkowymi polami do prezentacji

@@ -24,11 +24,12 @@ const baseConfig = tseslint.config({
 });
 
 const testConfig = tseslint.config({
-  files: ["**/__tests__/**/*", "**/*.test.*", "**/*.spec.*"],
+  files: ["**/__tests__/**/*", "**/*.test.*", "**/*.spec.*", "**/lib/test/**/*"],
   rules: {
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-dynamic-delete": "off",
     "react-hooks/exhaustive-deps": "off",
     "jsx-a11y/label-has-associated-control": "off",
   },
@@ -38,6 +39,29 @@ const componentsConfig = tseslint.config({
   files: ["src/components/**/*.tsx"],
   rules: {
     "react-hooks/exhaustive-deps": "warn", // Downgrade to warning for components
+  },
+});
+
+const scriptsConfig = tseslint.config({
+  files: ["scripts/**/*.ts"],
+  rules: {
+    "no-console": "off", // Allow console.log in scripts
+  },
+});
+
+const apiConfig = tseslint.config({
+  files: ["src/pages/api/**/*.ts", "src/middleware/**/*.ts"],
+  rules: {
+    "@typescript-eslint/no-explicit-any": "off", // Allow any in API routes
+    "@typescript-eslint/no-non-null-assertion": "off", // Allow non-null assertions in API
+    "no-console": "warn", // Warn but don't error on console in API
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        argsIgnorePattern: "^_",
+        varsIgnorePattern: "^_",
+      },
+    ],
   },
 });
 
@@ -81,6 +105,8 @@ export default tseslint.config(
   reactConfig,
   testConfig,
   componentsConfig,
+  scriptsConfig,
+  apiConfig,
   eslintPluginAstro.configs["flat/recommended"],
   eslintPluginPrettier
 );

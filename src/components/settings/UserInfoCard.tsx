@@ -68,13 +68,13 @@ export function UserInfoCard({ user, company, email, isLoading = false }: UserIn
       <CardContent className="space-y-4">
         {/* Adres e-mail z możliwością kopiowania */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-muted-foreground">Adres e-mail</label>
+          <div className="text-sm font-medium text-muted-foreground">Adres e-mail</div>
           <UserEmailDisplay email={email} />
         </div>
 
         {/* UUID użytkownika */}
         <div className="space-y-1">
-          <label className="text-sm font-medium text-muted-foreground">ID użytkownika</label>
+          <div className="text-sm font-medium text-muted-foreground">ID użytkownika</div>
           <p className="text-xs font-mono text-foreground break-all bg-muted px-2 py-1 rounded">{user.uuid}</p>
         </div>
 
@@ -89,7 +89,7 @@ export function UserInfoCard({ user, company, email, isLoading = false }: UserIn
 
         {/* UUID firmy */}
         <div className="space-y-1 pl-6">
-          <label className="text-xs font-medium text-muted-foreground">ID firmy</label>
+          <div className="text-xs font-medium text-muted-foreground">ID firmy</div>
           <p className="text-xs font-mono text-foreground break-all bg-muted px-2 py-1 rounded">{company.uuid}</p>
         </div>
 

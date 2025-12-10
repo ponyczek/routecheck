@@ -10,7 +10,11 @@ import node from "@astrojs/node";
 export default defineConfig({
   output: "server",
   integrations: [react(), sitemap()],
-  server: { port: 3000 },
+  server: {
+    // eslint-disable-next-line no-undef
+    port: process.env.PORT ? parseInt(process.env.PORT) : 4321,
+    host: true,
+  },
   vite: {
     plugins: [tailwindcss()],
   },

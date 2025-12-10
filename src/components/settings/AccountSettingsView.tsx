@@ -43,7 +43,7 @@ import type { AccountSettingsViewProps } from "@/lib/settings/types";
  * />
  * ```
  */
-export function AccountSettingsView({ initialUser, initialSession }: AccountSettingsViewProps) {
+export function AccountSettingsView({ initialSession }: AccountSettingsViewProps) {
   // Stan procesu wylogowania
   const [isSigningOut, setIsSigningOut] = useState(false);
 

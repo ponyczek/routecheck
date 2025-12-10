@@ -29,7 +29,7 @@ export function useDeleteAssignment() {
       queryClient.invalidateQueries({ queryKey: ["assignments"] });
       toast.success("Przypisanie zostało usunięte");
     },
-    onError: (error: any) => {
+    onError: (error: { status?: number; message?: string }) => {
       // Błąd 404 - przypisanie zostało już usunięte
       if (error.status === 404) {
         toast.error("Nie znaleziono przypisania. Mogło zostać już usunięte.");

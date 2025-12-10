@@ -54,11 +54,7 @@ export function RiskBreakdownCard({ breakdown, onRiskClick, isLoading = false, c
         <CardTitle className="text-base">Rozkład poziomów ryzyka</CardTitle>
       </CardHeader>
       <CardContent>
-        <div
-          className="grid grid-cols-2 gap-3 sm:grid-cols-4"
-          role="list"
-          aria-label="Rozkład raportów według poziomu ryzyka"
-        >
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4" aria-label="Rozkład raportów według poziomu ryzyka">
           {riskLevels.map(({ level, count }) => (
             <button
               key={level}
@@ -70,7 +66,6 @@ export function RiskBreakdownCard({ breakdown, onRiskClick, isLoading = false, c
                   ? "cursor-pointer hover:bg-accent hover:shadow-sm active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   : "cursor-default"
               )}
-              role="listitem"
               aria-label={`${count} raportów z poziomem ryzyka ${level}`}
             >
               <RiskBadge level={level} size="sm" showIcon={false} />

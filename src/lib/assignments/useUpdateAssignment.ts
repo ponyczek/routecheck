@@ -32,7 +32,7 @@ export function useUpdateAssignment() {
       queryClient.invalidateQueries({ queryKey: ["assignments"] });
       toast.success("Przypisanie zostało zaktualizowane");
     },
-    onError: (error: any) => {
+    onError: (error: { code?: string; message?: string }) => {
       // Błąd 409 (konflikt) jest obsługiwany w komponencie formularza
       if (error.code === "ASSIGNMENT_OVERLAP") {
         return;

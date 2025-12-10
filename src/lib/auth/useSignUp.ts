@@ -12,7 +12,7 @@ interface UseSignUpOptions {
 /**
  * Maps Supabase auth errors to AuthErrorState
  */
-function mapSupabaseAuthError(error: any): AuthErrorState {
+function mapSupabaseAuthError(error: { message: string; code?: string }): AuthErrorState {
   if (error.message.includes("User already registered")) {
     return {
       code: "email_already_exists",

@@ -31,7 +31,7 @@ function isProtectedRoute(pathname: string): boolean {
 /**
  * Check if the request is for a public route (no auth required)
  */
-function isPublicRoute(pathname: string): boolean {
+function _isPublicRoute(pathname: string): boolean {
   const publicRoutes = ["/", "/signin", "/signup", "/api/public/"];
 
   return publicRoutes.some((route) => pathname === route || pathname.startsWith(route));

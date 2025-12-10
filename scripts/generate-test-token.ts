@@ -27,13 +27,23 @@ import { createHash, randomBytes } from "crypto";
 // Load env variables
 const SUPABASE_URL = process.env.PUBLIC_SUPABASE_URL;
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const TOKEN_PEPPER = process.env.PRIVATE_TOKEN_PEPPER || "dev-pepper-change-in-production";
+const TOKEN_PEPPER = process.env.PRIVATE_TOKEN_PEPPER;
 
+// Validate required environment variables
 if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-  console.error("❌ Missing environment variables!");
+  console.error("❌ Missing required environment variables!");
   console.error("   Required: PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY");
   process.exit(1);
 }
+
+// Warn if TOKEN_PEPPER is not set (use default for dev only)
+if (!TOKEN_PEPPER) {
+  console.warn("⚠️  WARNING: PRIVATE_TOKEN_PEPPER not set in environment!");
+  console.warn("   Using default dev value. This is OK for local testing only.");
+  console.warn("   For production, always set PRIVATE_TOKEN_PEPPER to a secure random value.");
+}
+
+const FINAL_TOKEN_PEPPER = TOKEN_PEPPER || "dev-pepper-change-in-production";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
@@ -42,7 +52,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
  */
 function hashToken(token: string): string {
   return createHash("sha256")
-    .update(token + TOKEN_PEPPER)
+    .update(token + FINAL_TOKEN_PEPPER)
     .digest("hex");
 }
 

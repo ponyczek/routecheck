@@ -70,8 +70,12 @@ Additional documentation: see the full product requirements in `.ai/prd.md` and 
 
 3. **Create Test User** (for E2E tests)
 
+⚠️ **Security Note:** Replace `YOUR_TEST_PASSWORD_HERE` with your own test password!
+
    ```sql
    -- Run in Supabase SQL Editor
+   -- IMPORTANT: Replace YOUR_TEST_PASSWORD_HERE before running!
+   
    -- 1. Create auth user
    INSERT INTO auth.users (
      instance_id, id, aud, role, email, encrypted_password,
@@ -82,7 +86,7 @@ Additional documentation: see the full product requirements in `.ai/prd.md` and 
      'authenticated',
      'authenticated',
      'test@routecheck.app',
-     crypt('TestPassword123!', gen_salt('bf')),
+     crypt('YOUR_TEST_PASSWORD_HERE', gen_salt('bf')),
      now(), now(), now()
    );
 
@@ -101,10 +105,16 @@ Additional documentation: see the full product requirements in `.ai/prd.md` and 
 
 ### Environment Configuration
 
+⚠️ **Security Warning:**
+- Never commit `.env` files to version control
+- Use strong, unique values for all secrets
+- Generate `TOKEN_PEPPER` with: `openssl rand -hex 32`
+- Get Supabase keys from Dashboard → Settings → API
+
 Create `.env` file in project root:
 
 ```bash
-# Supabase Configuration
+# Supabase Configuration (get from Supabase Dashboard)
 PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
@@ -112,12 +122,12 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
 # Application
 PUBLIC_URL=http://localhost:4321
 
-# Token Security (generate random string)
-TOKEN_PEPPER=your-random-secret-pepper-min-32-chars
+# Token Security - GENERATE with: openssl rand -hex 32
+TOKEN_PEPPER=generate-secure-random-value-min-32-chars
 
-# Testing (optional)
+# Testing (optional - use your test password)
 TEST_USER_EMAIL=test@routecheck.app
-TEST_USER_PASSWORD=TestPassword123!
+TEST_USER_PASSWORD=your-test-password-here
 ```
 
 ### Run Development Server

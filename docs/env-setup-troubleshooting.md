@@ -1,5 +1,15 @@
 # ⚠️ Problem: Brakujące zmienne środowiskowe
 
+## 🔒 UWAGA BEZPIECZEŃSTWA
+
+**Wartości poniżej są TYLKO PRZYKŁADAMI!** 
+- Nie są prawdziwymi kluczami API
+- Nigdy nie używaj przykładowych wartości w produkcji
+- Zawsze generuj własne, unikalne klucze
+- **NIGDY nie commituj pliku `.env` do repozytorium!**
+
+---
+
 ## Rozwiązanie
 
 Twój skrypt wymaga trzech zmiennych środowiskowych. Oto jak je dodać:
@@ -11,10 +21,10 @@ Otwórz plik `.env` w edytorze i dodaj:
 ```bash
 # Supabase Configuration
 PUBLIC_SUPABASE_URL=https://twoj-projekt.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+SUPABASE_SERVICE_ROLE_KEY=twoj-prawdziwy-service-role-key
 
 # Public Report Token Security
-PRIVATE_TOKEN_PEPPER=zmien-to-na-losowy-string-w-produkcji
+PRIVATE_TOKEN_PEPPER=wygeneruj-losowy-string-32-znaki
 ```
 
 **Gdzie znaleźć te wartości:**
@@ -28,15 +38,17 @@ PRIVATE_TOKEN_PEPPER=zmien-to-na-losowy-string-w-produkcji
 
 2. **PRIVATE_TOKEN_PEPPER**:
    - To może być dowolny losowy string (min 32 znaki)
-   - Przykład: `my-super-secret-pepper-string-2024`
-   - W produkcji użyj: `openssl rand -hex 32`
+   - **Wygeneruj unikalną wartość:** `openssl rand -hex 32`
+   - **NIE używaj wartości z tego przykładu w produkcji!**
 
 ### Metoda 2: Export w terminalu (tymczasowe)
 
+⚠️ **Uwaga:** Zastąp przykładowe wartości swoimi prawdziwymi kluczami!
+
 ```bash
 export PUBLIC_SUPABASE_URL="https://twoj-projekt.supabase.co"
-export SUPABASE_SERVICE_ROLE_KEY="eyJhbGci..."
-export PRIVATE_TOKEN_PEPPER="my-secret-pepper"
+export SUPABASE_SERVICE_ROLE_KEY="twoj-service-role-key"
+export PRIVATE_TOKEN_PEPPER="$(openssl rand -hex 32)"
 
 # Teraz uruchom skrypt
 npx tsx scripts/generate-test-token.ts
@@ -55,20 +67,26 @@ npx tsx scripts/generate-test-token.ts
 
 ## Przykładowy plik `.env`
 
+⚠️ **OSTRZEŻENIE:** Poniższe wartości są **PRZYKŁADOWE I NIEWAŻNE**!
+- `EXAMPLE` w tokenie oznacza, że to nie jest prawdziwy klucz
+- Zastąp wszystkie wartości swoimi prawdziwymi kluczami z Supabase Dashboard
+- Nigdy nie używaj tych wartości w rzeczywistej aplikacji!
+
 ```bash
 # ===========================================
 # Supabase Configuration
 # ===========================================
-PUBLIC_SUPABASE_URL=https://abcdefghijk.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFiY2RlZmdoaWprIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTYzOTU4NzI4MCwiZXhwIjoxOTU1MTYzMjgwfQ.XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.EXAMPLE_NOT_REAL_TOKEN.REPLACE_WITH_YOUR_ACTUAL_SERVICE_ROLE_KEY
 
 # Public Supabase Anon Key (for client-side)
-PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFiY2RlZmdoaWprIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Mzk1ODcyODAsImV4cCI6MTk1NTE2MzI4MH0.YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
+PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.EXAMPLE_NOT_REAL_TOKEN.REPLACE_WITH_YOUR_ACTUAL_ANON_KEY
 
 # ===========================================
 # Security & Tokens
 # ===========================================
-PRIVATE_TOKEN_PEPPER=change-this-to-random-string-in-production-min-32-chars
+# Generate with: openssl rand -hex 32
+PRIVATE_TOKEN_PEPPER=replace-with-output-from-openssl-rand-hex-32
 
 # ===========================================
 # Optional: Other Configuration
@@ -76,6 +94,11 @@ PRIVATE_TOKEN_PEPPER=change-this-to-random-string-in-production-min-32-chars
 # NODE_ENV=development
 # PORT=4321
 ```
+
+**Jak pobrać prawdziwe klucze:**
+1. Idź do [Supabase Dashboard](https://supabase.com/dashboard)
+2. Wybierz projekt → Settings → API
+3. Skopiuj swoje prawdziwe klucze
 
 ---
 

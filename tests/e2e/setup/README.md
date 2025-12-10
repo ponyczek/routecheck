@@ -10,43 +10,57 @@ Before running E2E tests, you need:
 
 ## Environment Variables
 
+⚠️ **Security Warning**: 
+- Never commit `.env.test` to version control
+- Use a separate test Supabase project (recommended)
+- Never use production credentials for testing
+
 Create a `.env.test` file in the project root with the following variables:
 
 ```bash
 # Test user credentials
-TEST_USER_EMAIL=
-TEST_USER_PASSWORD=
+TEST_USER_EMAIL=test@routecheck.app
+TEST_USER_PASSWORD=your-secure-test-password
 
-# Supabase configuration (can be same as dev or separate test project)
-PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-PUBLIC_SUPABASE_KEY=your-anon-key
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_KEY=your-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+# Supabase configuration (use separate test project, NOT production!)
+PUBLIC_SUPABASE_URL=https://your-test-project.supabase.co
+PUBLIC_SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.YOUR_ANON_KEY
+SUPABASE_URL=https://your-test-project.supabase.co
+SUPABASE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.YOUR_ANON_KEY
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.YOUR_SERVICE_ROLE_KEY
 
-# Optional: Private token pepper for link generation
-PRIVATE_TOKEN_PEPPER=test-pepper-key-for-tokens
+# Optional: Private token pepper for link generation (use random string)
+PRIVATE_TOKEN_PEPPER=test-pepper-key-for-tokens-change-this
 
 # Optional: Base URL for tests (default: http://127.0.0.1:4321)
 BASE_URL=http://127.0.0.1:4321
 ```
 
-**Important**: The `.env.test` file is automatically loaded by Playwright configuration before running tests.
+**Important**: 
+- The `.env.test` file is automatically loaded by Playwright configuration before running tests
+- This file should be listed in `.gitignore` (already configured)
+- Get your Supabase keys from: Dashboard → Settings → API
 
 ## Creating Test User
+
+⚠️ **Security Note**: Use a dedicated test database or separate Supabase project for E2E tests. Never use production credentials in test files.
 
 ### Option 1: Supabase Dashboard
 
 1. Go to Authentication → Users
 2. Click "Add User"
 3. Email: `test@routecheck.app`
-4. Password: `TestPassword123!`
+4. Password: Choose a secure password (min 8 chars, uppercase, lowercase, number)
 5. Confirm email automatically
+6. Save credentials to your `.env.test` file
 
 ### Option 2: SQL Script
 
+⚠️ **Replace `YOUR_SECURE_PASSWORD_HERE` with your actual test password before running!**
+
 ```sql
 -- Run in Supabase SQL Editor
+-- IMPORTANT: Replace YOUR_SECURE_PASSWORD_HERE with your test password
 INSERT INTO auth.users (
   instance_id,
   id,
@@ -63,7 +77,7 @@ INSERT INTO auth.users (
   'authenticated',
   'authenticated',
   'test@routecheck.app',
-  crypt('TestPassword123!', gen_salt('bf')),
+  crypt('YOUR_SECURE_PASSWORD_HERE', gen_salt('bf')),
   now(),
   now(),
   now()
@@ -80,6 +94,13 @@ SELECT u.id, c.uuid
 FROM auth.users u, companies c
 WHERE u.email = 'test@routecheck.app'
 AND c.name = 'Test Company';
+```
+
+**After creating the user**, add credentials to `.env.test`:
+
+```bash
+TEST_USER_EMAIL=test@routecheck.app
+TEST_USER_PASSWORD=your-actual-password-here
 ```
 
 ## Running Tests

@@ -51,6 +51,18 @@ if (!supabaseUrl || !supabaseAnonKey) {
 // Only get service role key on the server
 const supabaseServiceRoleKey = !isBrowser ? import.meta.env.SUPABASE_SERVICE_ROLE_KEY || "" : "";
 
+// Validate PRIVATE_TOKEN_PEPPER in production
+if (!isBrowser && import.meta.env.PROD) {
+  const tokenPepper = import.meta.env.PRIVATE_TOKEN_PEPPER;
+  if (!tokenPepper || tokenPepper === "dev-pepper-change-in-production") {
+    throw new Error(
+      "PRIVATE_TOKEN_PEPPER must be set to a secure random value in production.\n" +
+        "This is required for secure token hashing in public report links.\n" +
+        "Generate a secure value with: openssl rand -hex 32"
+    );
+  }
+}
+
 // Anonymous client for authenticated routes (uses RLS)
 // This client works in both server and browser contexts
 export const supabaseClient = createClient<Database>(supabaseUrl, supabaseAnonKey, {
